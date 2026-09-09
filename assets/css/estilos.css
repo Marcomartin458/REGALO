@@ -1,0 +1,335 @@
+/* ==========================================================================
+   ESTILOS GENERALES — MARTA AIRLINES (VUELO 23)
+   Sistema de diseño aeronáutico de lujo, tipografías fluidas y glassmorphism.
+   ========================================================================== */
+
+:root {
+  --c-espacio: #050811;
+  --c-cabina: #0a0f1c;
+  --c-cabina-suave: #131b2e;
+  --c-fuselaje-1: #dedad0;
+  --c-fuselaje-2: #b8b1a2;
+  --c-oro: #e5a93c;
+  --c-oro-claro: #f7d070;
+  --c-blanco: #ffffff;
+  --c-plata: #cbd5e1;
+  --c-plata-tenue: #94a3b8;
+  --c-rojo-alerta: #ef4444;
+
+  --f-titulos: 'Montserrat', sans-serif;
+  --f-display: 'Poppins', sans-serif;
+  --f-cuerpo: 'Inter', sans-serif;
+  --f-manuscrita: 'Caveat', cursive;
+
+  --nav-h: clamp(60px, 8vh, 76px);
+  --curva-cinema: cubic-bezier(0.16, 1, 0.3, 1);
+  --curva-suave: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--c-espacio);
+  color: var(--c-plata);
+  font-family: var(--f-cuerpo);
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow-x: hidden;
+  line-height: 1.55;
+  -webkit-tap-highlight-color: transparent;
+  background-color: var(--c-espacio);
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+}
+
+/* Scrollbar discreta */
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: var(--c-espacio);
+}
+::-webkit-scrollbar-thumb {
+  background: #1f293d;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--c-oro);
+}
+
+/* Tipografía fluida */
+h1, h2, h3, h4 {
+  font-family: var(--f-titulos);
+  color: var(--c-blanco);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.h-xl { font-size: clamp(2.2rem, 5vw + 1rem, 4.8rem); font-weight: 900; }
+.h-lg { font-size: clamp(1.8rem, 3.5vw + 0.5rem, 3.2rem); font-weight: 800; }
+.h-sm { font-size: clamp(1.1rem, 1.2vw + 0.4rem, 1.4rem); font-weight: 700; }
+
+.lead {
+  font-size: clamp(1rem, 0.4vw + 0.9rem, 1.15rem);
+  color: var(--c-plata-tenue);
+  max-width: 62ch;
+  line-height: 1.6;
+}
+
+.texto-oro {
+  color: var(--c-oro);
+  background: linear-gradient(135deg, #ffe89e, var(--c-oro));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.texto-rojo { color: var(--c-rojo-alerta); }
+.centro { text-align: center; }
+
+.contenedor {
+  width: min(1200px, 92%);
+  margin-inline: auto;
+}
+
+/* NAVBAR TRANSLÚCIDA CON DESFOQUE */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-h);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  background: rgba(9, 14, 26, 0.55);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(203, 213, 225, 0.08);
+  transition: transform 0.6s var(--curva-cinema), opacity 0.6s ease, background 0.3s ease;
+}
+
+.navbar.encogida {
+  background: rgba(9, 14, 26, 0.92);
+  border-bottom-color: rgba(229, 169, 60, 0.2);
+}
+
+.navbar__inner {
+  width: min(1200px, 92%);
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.marca__icono {
+  width: 28px;
+  height: 28px;
+  color: var(--c-oro);
+  filter: drop-shadow(0 0 8px rgba(229, 169, 60, 0.4));
+  animation: vibracionVuelo 5s ease-in-out infinite;
+}
+@keyframes vibracionVuelo {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-2px) rotate(-3deg); }
+}
+
+.marca__texto {
+  font-family: var(--f-titulos);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.05em;
+  color: var(--c-blanco);
+}
+.marca__texto span { color: var(--c-oro); }
+.marca__vuelo {
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  padding: 0.15rem 0.45rem;
+  background: rgba(229, 169, 60, 0.12);
+  border: 1px solid rgba(229, 169, 60, 0.3);
+  border-radius: 4px;
+  color: var(--c-oro-claro);
+  margin-left: 0.3rem;
+  font-weight: 600;
+}
+
+.nav-enlaces {
+  display: flex;
+  gap: clamp(1rem, 2vw, 2.2rem);
+  align-items: center;
+}
+
+.nav-enlaces a {
+  position: relative;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--c-plata-tenue);
+  padding: 0.35rem 0;
+  transition: color 0.25s ease;
+  letter-spacing: 0.02em;
+}
+.nav-enlaces a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--c-oro);
+  box-shadow: 0 0 8px var(--c-oro);
+  transition: width 0.3s var(--curva-cinema);
+}
+.nav-enlaces a:hover {
+  color: var(--c-blanco);
+}
+.nav-enlaces a:hover::after,
+.nav-enlaces a.activo::after {
+  width: 100%;
+}
+.nav-enlaces a.activo {
+  color: var(--c-blanco);
+  font-weight: 600;
+}
+
+.hamburguesa {
+  display: none;
+  width: 32px;
+  height: 24px;
+  position: relative;
+  z-index: 1001;
+}
+.hamburguesa span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--c-blanco);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.2s ease;
+}
+.hamburguesa span:nth-child(1) { top: 3px; }
+.hamburguesa span:nth-child(2) { top: 11px; }
+.hamburguesa span:nth-child(3) { top: 19px; }
+.hamburguesa.abierta span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.hamburguesa.abierta span:nth-child(2) { opacity: 0; }
+.hamburguesa.abierta span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+@media (max-width: 768px) {
+  .hamburguesa { display: block; }
+  .nav-enlaces {
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: min(80vw, 320px);
+    background: rgba(9, 14, 26, 0.98);
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: calc(var(--nav-h) + 2rem) 2rem;
+    border-left: 1px solid rgba(229, 169, 60, 0.15);
+    transform: translateX(100%);
+    transition: transform 0.4s var(--curva-cinema);
+  }
+  .nav-enlaces.abierta { transform: translateX(0); }
+  .nav-enlaces a { font-size: 1.1rem; width: 100%; padding: 0.8rem 0; }
+}
+
+/* BOTONES Y COMPONENTES REUTILIZABLES */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+.btn:active { transform: scale(0.97); }
+
+.btn--fantasma {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(203, 213, 225, 0.2);
+  color: var(--c-plata);
+}
+.btn--fantasma:hover {
+  background: rgba(229, 169, 60, 0.08);
+  border-color: var(--c-oro);
+  color: var(--c-blanco);
+  box-shadow: 0 0 20px rgba(229, 169, 60, 0.15);
+}
+
+.glass {
+  background: rgba(19, 27, 46, 0.65);
+  border: 1px solid rgba(203, 213, 225, 0.1);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  border-radius: 20px;
+}
+
+/* ANIMACIONES DE REVELADO CON GSAP / OBSERVER */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s var(--curva-cinema), transform 0.8s var(--curva-cinema);
+}
+[data-reveal].revelado {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* PIE DE PÁGINA */
+.pie {
+  padding: 2.2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--c-plata-tenue);
+  border-top: 1px solid rgba(203, 213, 225, 0.06);
+  background: var(--c-espacio);
+}
+.pie .corazon {
+  color: var(--c-rojo-alerta);
+  display: inline-block;
+  animation: pulsoLatido 1.8s infinite;
+}
+@keyframes pulsoLatido {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

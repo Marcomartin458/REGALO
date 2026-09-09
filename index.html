@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Marta Airlines · Vuelo 23</title>
+  <meta name="description" content="Bienvenida a bordo del Vuelo 23. Una experiencia en cabina creada para Marta.">
+  <link rel="icon" href="data:,">
+
+  <!-- Tipografías de alta definición -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800;900&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Estilos principales -->
+  <link rel="stylesheet" href="assets/css/estilos.css">
+  <link rel="stylesheet" href="assets/css/home.css">
+
+  <!-- Three.js UMD vía CDN (sin problemas de CORS ni módulos en local o GitHub Pages) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body class="antes-vuelo">
+
+  <!-- MENÚ DE A BORDO (NAVBAR TRANSLÚCIDA) -->
+  <header class="navbar" aria-label="Menú de cabina">
+    <div class="navbar__inner">
+      <a href="index.html" class="marca">
+        <svg class="marca__icono" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M21 16v-2l-8-5V3.5C13 2.67 12.33 2 11.5 2S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z"/>
+        </svg>
+        <span class="marca__texto">MARTA <span>AIRLINES</span></span>
+        <span class="marca__vuelo">FLIGHT 23 · SEAT 23A</span>
+      </a>
+
+      <button class="hamburguesa" aria-label="Abrir menú de a bordo" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav-enlaces">
+        <a href="index.html" data-pagina="index.html" class="activo">Ventanilla</a>
+        <a href="amigos.html" data-pagina="amigos.html">Amigos</a>
+        <a href="musica.html" data-pagina="musica.html">Música</a>
+        <a href="secreto.html" data-pagina="secreto.html">Secreto</a>
+        <a href="raices.html" data-pagina="raices.html">Raíces</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ====================================================================
+         ESCENA INICIAL: PERSPECTIVA DESDE EL ASIENTO DENTRO DE LA CABINA (POV)
+         Pared curvada de fuselaje, techo con luz indirecta, ventanilla de avión,
+         respiradero bleed-hole, condensación con texto grabado a mano y manilla.
+         ==================================================================== -->
+    <section class="escena-vuelo" aria-label="Interior de cabina con ventanilla">
+      
+      <!-- Iluminación superior indirecta de techo (Boeing Sky Interior LED Wash) -->
+      <div class="cabina__cielo-luz"></div>
+
+      <!-- Silueta y panel de servicio superior (Gasper vents / PSU) -->
+      <div class="cabina__psu-panel">
+        <div class="psu-luz"></div>
+        <div class="psu-ventilador"></div>
+        <div class="psu-ventilador"></div>
+        <div class="psu-luz"></div>
+      </div>
+
+      <!-- Pared completa de cabina con textura de fuselaje compuesto -->
+      <div class="cabina-pared">
+        <div class="fuselaje-seam seam--left"></div>
+        <div class="fuselaje-seam seam--right"></div>
+        <div class="fuselaje-remache r1"></div>
+        <div class="fuselaje-remache r2"></div>
+        <div class="fuselaje-remache r3"></div>
+        <div class="fuselaje-remache r4"></div>
+
+        <!-- ENSAMBLAJE COMPLETO DE LA VENTANILLA AERONÁUTICA -->
+        <div class="ventanilla-ensamblaje">
+          <!-- Moldura exterior biselada integrada en la pared -->
+          <div class="ventanilla-moldura">
+            <!-- Bisel acústico interior con profundidad sombreada -->
+            <div class="ventanilla-bisel">
+              <!-- Junta hermética de goma vulcanizada -->
+              <div class="ventanilla-goma">
+                <!-- Marco del doble cristal acrílico -->
+                <div class="ventanilla-cristal">
+                  
+                  <!-- LIENZO 3D THREE.JS (Cielo diurno hiperrealista, sol, nubes y avión) -->
+                  <div id="escena-ventanilla" class="webgl-canvas-holder"></div>
+
+                  <!-- CAPA FÍSICA DE CONDENSACIÓN INTERACTIVA (VAHO CON GOTAS) -->
+                  <canvas class="canvas-vaho"></canvas>
+
+                  <!-- REFLEJO ESPECULAR CURVADO DEL CRISTAL ACRÍLICO -->
+                  <div class="cristal-reflejo"></div>
+
+                  <!-- ORIFICIO DE DESPRESURIZACIÓN REAL (BLEED HOLE) -->
+                  <div class="cristal-bleed-hole" title="Bleed Hole (Orificio de ventilación barométrica)"></div>
+
+                  <!-- TEXTO MANUSCRITO CON EL DEDO SOBRE EL VAHO -->
+                  <div class="ventanilla__texto-humedo">
+                    <p id="texto-vaho" aria-live="polite"></p>
+                  </div>
+
+                  <!-- COMPUERTAS 3D PARA LA TRANSICIÓN DE APERTURA -->
+                  <div class="puertas-obturador" aria-hidden="true">
+                    <div class="hoja-puerta hoja--izq"></div>
+                    <div class="hoja-puerta hoja--der"></div>
+                  </div>
+                  <div class="destello-apertura" aria-hidden="true"></div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONSOLA DE CABINA BAJO LA VENTANILLA -->
+        <div class="cabina-consola">
+          <!-- Controles de oscurecimiento electrocrómico Boeing 787 -->
+          <div class="control-dimmer-787">
+            <span class="dimmer-label">WINDOW TINT</span>
+            <div class="dimmer-botones">
+              <button class="dimmer-btn btn-up" type="button" aria-label="Aclarar ventanilla">▲</button>
+              <div class="dimmer-leds">
+                <span class="led active"></span>
+                <span class="led active"></span>
+                <span class="led"></span>
+                <span class="led"></span>
+                <span class="led"></span>
+              </div>
+              <button class="dimmer-btn btn-down" type="button" aria-label="Oscurecer ventanilla">▼</button>
+            </div>
+          </div>
+
+          <!-- Placa de homologación técnica del avión -->
+          <div class="placard-avion">
+            <strong>MARTA AIRLINES · FLEET 23</strong>
+            <span>BOEING 787-9 DREAMLINER // FLIGHT 23</span>
+          </div>
+        </div>
+
+        <!-- MANILLA MECÁNICA AERONÁUTICA DE APERTURA -->
+        <div class="consola-mecanismo">
+          <div class="mecanismo__placa">
+            <span class="mecanismo__etiqueta">CABIN ACCESS // ENTRY SYSTEM</span>
+            <button class="palanca-aeronautica js-abrir-puerta" type="button" aria-label="Tirar de la manilla para acceder a la cabina">
+              <span class="palanca__seguro"></span>
+              <span class="palanca__cuerpo">
+                <span class="palanca__icono">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                  </svg>
+                </span>
+                <span class="palanca__texto">LLAMAR A LA PUERTA</span>
+              </span>
+              <span class="palanca__indicador"></span>
+            </button>
+            <span class="mecanismo__subtexto">PULL LEVER DOWN TO BOARD</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Silueta lateral sutil del asiento 23A para dar perspectiva de pasajero -->
+      <div class="asiento-silueta"></div>
+    </section>
+
+
+    <!-- ====================================================================
+         VESTÍBULO DE BIENVENIDA A BORDO (REVELADO TRAS LA PUERTA)
+         ==================================================================== -->
+    <section class="vestibulo" aria-label="Vestíbulo de bienvenida">
+      <div class="contenedor">
+        
+        <header class="vestibulo__cabecera" data-reveal>
+          <div class="tag-vuelo">PASSENGER MANIFEST // PRIORITY PASS</div>
+          <h1 class="h-lg">Bienvenida a bordo, Marta.<br><span class="texto-oro">Este es tu Vuelo 23.</span></h1>
+          <p class="lead">Un recorrido creado a medida para celebrar tus 23 años. Elige tu puerta de embarque para comenzar el viaje.</p>
+        </header>
+
+        <!-- Cuatro tarjetas tipo Tarjeta de Embarque VIP -->
+        <div class="destinos-grid">
+          
+          <!-- Puerta 1: Amigos -->
+          <article class="tarjeta-pase glass" data-reveal data-retardo="100">
+            <div class="tarjeta-pase__top">
+              <span class="pase__clase">FIRST CLASS</span>
+              <span class="pase__gate">GATE A-01</span>
+            </div>
+            <div class="tarjeta-pase__body">
+              <div class="tarjeta-pase__icono">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </div>
+              <h2 class="h-sm">Terminal de Amigos</h2>
+              <p>Las personas que siempre te esperan en tierra firme y te acompañan en cada escala.</p>
+            </div>
+            <div class="tarjeta-pase__footer">
+              <div class="pase__meta"><span>ZONE</span><strong>1</strong></div>
+              <div class="pase__meta"><span>SEAT</span><strong>23A</strong></div>
+              <a href="amigos.html" class="btn-embarcar">Embarcar &rarr;</a>
+            </div>
+          </article>
+
+          <!-- Puerta 2: Música -->
+          <article class="tarjeta-pase glass" data-reveal data-retardo="200">
+            <div class="tarjeta-pase__top">
+              <span class="pase__clase">IN-FLIGHT SOUND</span>
+              <span class="pase__gate">GATE B-02</span>
+            </div>
+            <div class="tarjeta-pase__body">
+              <div class="tarjeta-pase__icono">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+                </svg>
+              </div>
+              <h2 class="h-sm">Música de a Bordo</h2>
+              <p>Canciones que aceleran el pulso, recuerdos en estéreo y tu playlist de altura.</p>
+            </div>
+            <div class="tarjeta-pase__footer">
+              <div class="pase__meta"><span>AUDIO</span><strong>STEREO</strong></div>
+              <div class="pase__meta"><span>FREQ</span><strong>23.0</strong></div>
+              <a href="musica.html" class="btn-embarcar">Sintonizar &rarr;</a>
+            </div>
+          </article>
+
+          <!-- Puerta 3: Sala VIP Secreto -->
+          <article class="tarjeta-pase glass pase--vip" data-reveal data-retardo="300">
+            <div class="tarjeta-pase__top">
+              <span class="pase__clase">CONFIDENTIAL</span>
+              <span class="pase__gate">GATE C-03</span>
+            </div>
+            <div class="tarjeta-pase__body">
+              <div class="tarjeta-pase__icono">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14v3"/>
+                </svg>
+              </div>
+              <h2 class="h-sm">Sala VIP · Secreto</h2>
+              <p>Acceso restringido con teclado de código. Reúne las pistas ocultas para ingresar.</p>
+            </div>
+            <div class="tarjeta-pase__footer">
+              <div class="pase__meta"><span>STATUS</span><strong class="texto-rojo">LOCKED</strong></div>
+              <a href="secreto.html" class="btn-embarcar">Desbloquear &rarr;</a>
+            </div>
+          </article>
+
+          <!-- Puerta 4: Raíces -->
+          <article class="tarjeta-pase glass" data-reveal data-retardo="400">
+            <div class="tarjeta-pase__top">
+              <span class="pase__clase">FLIGHT ORIGIN</span>
+              <span class="pase__gate">GATE D-04</span>
+            </div>
+            <div class="tarjeta-pase__body">
+              <div class="tarjeta-pase__icono">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>
+                </svg>
+              </div>
+              <h2 class="h-sm">Hangar de Recuerdos</h2>
+              <p>El punto de partida antes de despegar: tus raíces, los tuyos y el camino recorrido.</p>
+            </div>
+            <div class="tarjeta-pase__footer">
+              <div class="pase__meta"><span>ORIGIN</span><strong>HOME</strong></div>
+              <div class="pase__meta"><span>LOGS</span><strong>23 YRS</strong></div>
+              <a href="raices.html" class="btn-embarcar">Explorar &rarr;</a>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- Botón para regresar a la ventanilla -->
+        <div class="vestibulo__acciones centro" data-reveal>
+          <button class="btn btn--fantasma js-volver-entrar" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+            </svg>
+            Regresar a la ventanilla de cabina
+          </button>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      Hecho con <span class="corazon" aria-label="amor">❤</span> para Marta · Vuelo 23 · Azafata de Altos Vuelos
+    </div>
+  </footer>
+
+  <!-- Scripts de animación y lógica -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/three-scenes.js"></script>
+  <script src="assets/js/home.js"></script>
+</body>
+</html>
