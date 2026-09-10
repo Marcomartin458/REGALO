@@ -1,8 +1,11 @@
 /* ==========================================================================
-   HOME.JS — LÓGICA DE LA CABINA DE AVIÓN (ASIENTO 23A) Y APERTURA
+   HOME.JS — LÓGICA DE CABINA (23A), MOTOR SPLIT-FLAP Y E-GATES DE EMBARQUE
    - Control electrocrómico de tinte de ventanilla Boeing 787 (5 niveles reales).
    - Tipografiado nítido y elegante del mensaje a bordo en la ventanilla.
+   - Generador dinámico Solari Split-Flap con animación mecánica y sonido clack.
+   - Interactividad con las puertas de embarque (apertura de cristal y sonido escáner).
    - Secuencia cinematográfica de apertura con Web Audio API y GSAP.
+   - Acceso directo a terminal si se regresa desde una subpágina (#terminal).
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -12,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!escenaVuelo || !vestibulo) return;
 
   const botonAbrir = document.querySelector('.js-abrir-puerta');
-  const botonVolver = document.querySelector('.js-volver-entrar');
   const hojaIzq = document.querySelector('.hoja--izq');
   const hojaDer = document.querySelector('.hoja--der');
   const destello = document.querySelector('.destello-apertura');
@@ -24,10 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* --------------------------------------------------------------------------
      CONTROL ELECTROCRÓMICO DE TINTE DE VENTANILLA BOEING 787 DREAMLINER
-     5 niveles de opacidad de tinte azul cobalto profundo
      -------------------------------------------------------------------------- */
   const NIVELES_TINTE = [0.0, 0.24, 0.48, 0.72, 0.92];
-  let nivelActualTint = 0; // Inicia despejado para apreciar el cielo diurno
+  let nivelActualTint = 0;
 
   const btnTintUp = document.getElementById('btn-tint-up');
   const btnTintDown = document.getElementById('btn-tint-down');
@@ -37,12 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function actualizarTinte(nuevoNivel) {
     nivelActualTint = Math.max(0, Math.min(NIVELES_TINTE.length - 1, nuevoNivel));
 
-    // 1. Actualizar indicador visual de LEDs
     leds.forEach((led, idx) => {
       led.classList.toggle('active', idx <= nivelActualTint);
     });
 
-    // 2. Aplicar tinte al cristal acrílico con transición suave
     if (cristalTint) {
       cristalTint.style.opacity = String(NIVELES_TINTE[nivelActualTint]);
     }
@@ -69,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* --------------------------------------------------------------------------
-     TIPOGRAFÍA Y ESCRITURA NÍTIDA DEL MENSAJE DE A BORDO
+     TIPOGRAFÍA NÍTIDA EN LA VENTANILLA
      -------------------------------------------------------------------------- */
   async function escribirMensaje(elemento, texto) {
     if (!elemento) return;
@@ -102,18 +101,152 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* --------------------------------------------------------------------------
+     MOTOR SOLARI SPLIT-FLAP (LETREROS MECÁNICOS CON SONIDO CLACK)
+     -------------------------------------------------------------------------- */
+  const ALFABETO_FLAP = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:-.·/★";
+
+  function sintetizarClackFlap() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.018), ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < data.length; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.0035));
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(3200 + Math.random() * 600, ctx.currentTime);
+      filter.Q.value = 3.2;
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      noise.connect(filter).connect(gain).connect(ctx.destination);
+      noise.start();
+    } catch (e) {}
+  }
+
+  // Sonido óptico de confirmación al validar pasaje en los e-Gates
+  function sonidoEscanerGate() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1850, ctx.currentTime);
+      gain.gain.setValueAtTime(0.065, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.08);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.09);
+    } catch (e) {}
+  }
+
+  class SplitFlapFila {
+    constructor(contenedor) {
+      this.contenedor = contenedor;
+      this.textoFinal = (contenedor.dataset.flapText || contenedor.textContent || '').trim().toUpperCase();
+      this.esAmarillo = contenedor.dataset.flapColor === 'amber' || contenedor.classList.contains('flap--amber');
+      this.tiles = [];
+      this.construir();
+    }
+
+    construir() {
+      this.contenedor.innerHTML = '';
+      for (let i = 0; i < this.textoFinal.length; i++) {
+        const char = this.textoFinal[i];
+        const tile = document.createElement('div');
+        tile.className = 'flap-tile' + (char === ' ' ? ' flap-tile--space' : '');
+        if (this.esAmarillo) tile.classList.add('flap-tile--amber');
+
+        tile.innerHTML = `
+          <span class="flap-char">${char === ' ' ? '&nbsp;' : ' '}</span>
+          <span class="flap-split"></span>
+          <span class="flap-notch-l"></span>
+          <span class="flap-notch-r"></span>
+        `;
+        this.contenedor.appendChild(tile);
+        this.tiles.push({
+          el: tile,
+          charEl: tile.querySelector('.flap-char'),
+          destino: char
+        });
+      }
+    }
+
+    voltear(staggerBase = 40) {
+      this.tiles.forEach((t, idx) => {
+        if (t.destino === ' ') return;
+        const totalVueltas = 5 + (idx % 6);
+        let contador = 0;
+
+        setTimeout(() => {
+          const intervalo = setInterval(() => {
+            contador++;
+            if (contador >= totalVueltas) {
+              clearInterval(intervalo);
+              t.charEl.textContent = t.destino;
+              t.el.classList.remove('flipping');
+              if (idx % 3 === 0) sintetizarClackFlap();
+            } else {
+              const randChar = ALFABETO_FLAP[Math.floor(Math.random() * (ALFABETO_FLAP.length - 1)) + 1];
+              t.charEl.textContent = randChar;
+              t.el.classList.add('flipping');
+              if (Math.random() < 0.3) sintetizarClackFlap();
+            }
+          }, 45);
+        }, idx * staggerBase);
+      });
+    }
+  }
+
+  let filasFlapInstancias = [];
+
+  function inicializarTablonesSplitFlap() {
+    filasFlapInstancias = [];
+    document.querySelectorAll('.js-split-flap').forEach((filaEl) => {
+      const instancia = new SplitFlapFila(filaEl);
+      filasFlapInstancias.push(instancia);
+
+      filaEl.addEventListener('mouseenter', () => {
+        instancia.voltear(25);
+      });
+    });
+  }
+
+  function arrancarCascadaTablones() {
+    filasFlapInstancias.forEach((instancia, i) => {
+      setTimeout(() => {
+        instancia.voltear(35);
+      }, i * 160);
+    });
+  }
+
+  // Efecto auditivo y óptico al interactuar con las puertas de embarque
+  function configurarInteraccionGates() {
+    document.querySelectorAll('.btn-board-gate').forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        sonidoEscanerGate();
+      });
+    });
+  }
+
+  /* --------------------------------------------------------------------------
      SECUENCIA CINEMATOGRÁFICA DE APERTURA DE COMPUERTA (ACCESO AL VESTÍBULO)
      -------------------------------------------------------------------------- */
   function ejecutarAperturaPuerta() {
     if (botonAbrir) botonAbrir.classList.add('abriendo');
 
-    // Efectos de sonido aeronáuticos coordinados
     if (typeof AudioAeronautico !== 'undefined') {
       AudioAeronautico.tocarWhooshPuerta();
       AudioAeronautico.tocarDingDong();
     }
 
-    // Aceleración de vuelo 3D
     if (window.EscenaVentanilla && typeof window.EscenaVentanilla.acelerarVuelo === 'function') {
       window.EscenaVentanilla.acelerarVuelo();
     }
@@ -125,7 +258,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const tl = gsap.timeline({
       defaults: { ease: 'power3.inOut' },
-      onComplete: revelarVestibulo
+      onComplete: () => {
+        sessionStorage.setItem('martaAirlines:enTerminal', '1');
+        window.location.hash = 'terminal';
+        revelarVestibulo();
+      }
     });
 
     tl.to('.cabina-bahia-central', { scale: 0.94, duration: dur ?? 0.4 }, 0)
@@ -148,36 +285,31 @@ document.addEventListener('DOMContentLoaded', () => {
     body.classList.add('en-vuelo');
 
     if (typeof configurarRevelado === 'function') configurarRevelado();
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }
 
-  function volverAEntrar() {
-    vestibulo.classList.remove('entrando');
-    body.classList.remove('en-vuelo');
-    body.classList.add('antes-vuelo');
-    escenaVuelo.style.display = 'flex';
-    escenaVuelo.style.opacity = '1';
-    escenaVuelo.style.transform = 'none';
+    setTimeout(() => {
+      arrancarCascadaTablones();
+    }, 300);
 
-    if (hojaIzq) { hojaIzq.style.display = 'none'; gsap.set(hojaIzq, { rotateY: 0, x: 0 }); }
-    if (hojaDer) { hojaDer.style.display = 'none'; gsap.set(hojaDer, { rotateY: 0, x: 0 }); }
-    if (destello) destello.style.opacity = '0';
-    if (botonAbrir) botonAbrir.classList.remove('abriendo');
-    gsap.set('.cabina-bahia-central', { scale: 1 });
-
-    if (window.EscenaVentanilla) window.EscenaVentanilla.init();
-    if (textoElemento) textoElemento.innerHTML = '';
-    setTimeout(() => escribirMensaje(textoElemento, FRASE_VENTANILLA), 500);
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
   /* --------------------------------------------------------------------------
-     INICIALIZACIÓN INMEDIATA (SIEMPRE MUESTRA LA CABINA DE AVIÓN AL CARGAR)
+     INICIALIZACIÓN AL CARGAR LA PÁGINA
+     - Si la URL tiene #terminal o la sesión ya cruzó la puerta, muestra la terminal.
+     - Si es visita nueva sin hash, muestra la cabina frente a la ventanilla.
      -------------------------------------------------------------------------- */
-  if (window.EscenaVentanilla) window.EscenaVentanilla.init();
-  actualizarTinte(0);
-  setTimeout(() => escribirMensaje(textoElemento, FRASE_VENTANILLA), 650);
+  inicializarTablonesSplitFlap();
+  configurarInteraccionGates();
+
+  const estaEnTerminal = window.location.hash === '#terminal' || sessionStorage.getItem('martaAirlines:enTerminal') === '1';
+
+  if (estaEnTerminal) {
+    revelarVestibulo();
+  } else {
+    if (window.EscenaVentanilla) window.EscenaVentanilla.init();
+    actualizarTinte(0);
+    setTimeout(() => escribirMensaje(textoElemento, FRASE_VENTANILLA), 650);
+  }
 
   if (botonAbrir) botonAbrir.addEventListener('click', ejecutarAperturaPuerta);
-  if (botonVolver) botonVolver.addEventListener('click', volverAEntrar);
 });

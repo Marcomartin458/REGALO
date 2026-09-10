@@ -1,25 +1,42 @@
 /* ==========================================================================
-   HOME.CSS — INTERIOR DE CABINA DE AVIÓN COMPLETA (POV PASAJERO ASIENTO 23A)
-   Toda la pantalla es el interior del avión: techo con iluminación indirecta,
-   compartimentos superiores, pared de fuselaje de composite de lado a lado,
-   ventanilla con cristal 3D, regulador electrocrómico de tinte 787 y manilla.
+   HOME.CSS — PERSPECTIVA DE CABINA Y TERMINAL DE DÍA (ZERO SCROLL TOTAL)
+   1. Escena de cabina (Asiento 23A): 100% de la pantalla, sin barras de scroll.
+   2. Spacing simétrico y desahogado bajo la navbar.
+   3. Terminal de aeropuerto de DÍA: Ventanal con pista activa y aviones animados
+      (avión taxiando, avión despegando, tractor de maletas, radar giratorio).
+   4. Tablón Solari mecánico Split-Flap ("DEPARTURES" estilo aeropuerto).
+   5. 4 Puertas de embarque compactas en 1 fila (desktop) y 1 columna amplia (móvil)
+      con legibilidad absoluta y contraste perfecto (cero texto oscuro).
    ========================================================================== */
 
-/* CONTROL DE VISIBILIDAD DE ESTADOS */
+/* ==========================================================================
+   CONTROL DE VISIBILIDAD DE ESTADOS & BLOQUEO TOTAL DE SCROLL (DESKTOP)
+   ========================================================================== */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100svh !important;
+  max-height: 100vh !important;
+  max-height: 100svh !important;
+  overflow: hidden !important;
+}
+
 body.antes-vuelo {
-  background-color: #ded8cb !important;
   background: #ded8cb !important;
 }
 
 body.antes-vuelo .navbar {
-  opacity: 0;
-  transform: translateY(-24px);
-  pointer-events: none;
-  visibility: hidden;
+  display: none !important;
 }
 
 body.antes-vuelo .vestibulo {
   display: none !important;
+}
+
+body.en-vuelo {
+  background: #cce0f5 !important;
 }
 
 body.en-vuelo .escena-vuelo {
@@ -27,45 +44,49 @@ body.en-vuelo .escena-vuelo {
 }
 
 body.en-vuelo .navbar {
-  opacity: 1;
-  transform: translateY(0);
-  visibility: visible;
-  pointer-events: all;
+  display: flex !important;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  visibility: visible !important;
+  pointer-events: all !important;
 }
 
 body.en-vuelo .vestibulo {
-  display: block !important;
+  display: flex !important;
 }
 
 /* ==========================================================================
-   INTERIOR COMPLETO DE LA CABINA (PANTALLA COMPLETA 100VW / 100VH)
+   ESCENA 1: INTERIOR DE CABINA (AJUSTADO A 100% PANTALLA SIN SCROLL)
    ========================================================================== */
 .escena-vuelo {
-  position: relative;
+  position: fixed;
+  inset: 0;
   width: 100vw;
-  min-height: 100vh;
-  min-height: 100svh;
+  height: 100vh;
+  height: 100svh;
+  max-height: 100vh;
+  max-height: 100svh;
+  overflow: hidden !important;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  overflow: hidden;
-  /* Textura completa de cabina: tonos de composite aeronáutico cálido */
-  background:
-    radial-gradient(130% 85% at 50% 45%, #f4f0e6 0%, #e6dfd1 40%, #d4cbba 80%, #beaf9a 100%);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: radial-gradient(130% 85% at 50% 45%, #f7f4ec 0%, #e9e3d6 40%, #d8cfbe 80%, #beaf9a 100%);
   perspective: 1200px;
+  z-index: 50;
 }
 
-/* ==========================================================================
-   1. TECHO DE CABINA (OVERHEAD BINS, SKY LIGHTING Y PSU)
-   ========================================================================== */
+/* Techo compacto con maleteros e iluminación LED cálida */
 .cabina-techo {
   position: relative;
   width: 100%;
-  height: clamp(65px, 11vh, 95px);
+  height: clamp(38px, 6vh, 55px);
   background: linear-gradient(180deg, #c7bfad 0%, #dbd4c4 45%, #ece7dc 100%);
-  border-bottom: 2px solid rgba(0, 0, 0, 0.15);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -74,246 +95,219 @@ body.en-vuelo .vestibulo {
   flex-shrink: 0;
 }
 
-/* Iluminación indirecta LED de techo (Boeing Sky Interior Cove Wash cálido) */
 .techo-cove-luz {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 22px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 220, 150, 0.85) 0%,
-    rgba(255, 235, 185, 0.4) 60%,
-    transparent 100%
-  );
-  filter: blur(6px);
+  height: 14px;
+  background: linear-gradient(180deg, rgba(255, 220, 150, 0.85) 0%, rgba(255, 235, 185, 0.3) 60%, transparent 100%);
+  filter: blur(4px);
   pointer-events: none;
 }
 
-/* Maleteros superiores (Overhead Stowage Bins) */
 .techo-maleteros {
   width: 100%;
-  height: 60%;
+  height: 55%;
   display: flex;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .maletero-panel {
   flex: 1;
   height: 100%;
-  border-right: 1px solid rgba(0, 0, 0, 0.18);
+  border-right: 1px solid rgba(0, 0, 0, 0.15);
   border-left: 1px solid rgba(255, 255, 255, 0.6);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.04));
-  position: relative;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.03));
 }
 
 .maletero-pestillo {
   position: absolute;
-  bottom: 6px;
+  bottom: 4px;
   left: 50%;
   transform: translateX(-50%);
-  width: 44px;
-  height: 8px;
-  border-radius: 4px;
+  width: 36px;
+  height: 6px;
+  border-radius: 3px;
   background: #9d9482;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 1px 1px rgba(255,255,255,0.7);
 }
 
-/* Unidad de servicio al pasajero (PSU) */
 .cabina-psu {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(1rem, 3vw, 2.5rem);
-  padding: 0.35rem 1.8rem;
+  gap: clamp(0.8rem, 2.5vw, 1.8rem);
+  padding: 0.2rem 1.2rem;
   background: linear-gradient(180deg, #d3cbba, #b8af9d);
-  border-radius: 0 0 16px 16px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 0 0 12px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-top: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .psu-luz {
-  width: 11px;
-  height: 11px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: radial-gradient(circle, #fff7db 45%, #b3a992 90%);
-  box-shadow: 0 0 8px rgba(255, 235, 170, 0.7), inset 0 1px 2px rgba(0,0,0,0.4);
+  box-shadow: 0 0 6px rgba(255, 235, 170, 0.7);
 }
 
 .psu-gasper {
-  width: 13px;
-  height: 13px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  border: 2px solid #6b6354;
+  border: 1.5px solid #6b6354;
   background: radial-gradient(circle, #1f1e1c 30%, #47433c 90%);
 }
 
 .psu-sign {
   font-family: var(--f-titulos);
-  font-size: 0.65rem;
+  font-size: 0.58rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   color: #4a4539;
-  padding: 0.1rem 0.5rem;
-  background: rgba(255, 255, 255, 0.45);
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 0.05rem 0.4rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 3px;
 }
 
-/* ==========================================================================
-   2. PARED COMPLETA DE CABINA (FUSELAGE SIDEWALL FULL-BLEED)
-   ========================================================================== */
+/* Pared de fuselaje */
 .cabina-pared-completa {
   position: relative;
   width: 100%;
   flex: 1;
+  max-height: calc(100vh - clamp(38px, 6vh, 55px));
+  max-height: calc(100svh - clamp(38px, 6vh, 55px));
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: clamp(0.5rem, 1.5vh, 1.2rem) 0 clamp(0.5rem, 1vh, 1rem);
+  padding: 0.4rem 0.5rem;
+  box-sizing: border-box;
 }
 
-/* Línea de moldura horizontal del fuselaje (Beltline) */
 .fuselaje-beltline {
   position: absolute;
-  top: 50%;
+  top: 52%;
   left: 0;
   right: 0;
   height: 2px;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.08);
   border-bottom: 1px solid rgba(255, 255, 255, 0.55);
   pointer-events: none;
   z-index: 1;
 }
 
-/* Juntas estructurales verticales (Station frames entre cuadernas) */
 .fuselaje-frame {
   position: absolute;
   top: 0;
   bottom: 0;
   width: 2px;
-  background: rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.1);
   border-right: 1px solid rgba(255, 255, 255, 0.45);
   pointer-events: none;
   z-index: 1;
 }
-
 .frame--far-left { left: 8%; }
 .frame--mid-left { left: 24%; }
 .frame--mid-right { right: 24%; }
 .frame--far-right { right: 8%; }
 
-@media (max-width: 900px) {
+@media (max-width: 850px) {
   .frame--far-left, .frame--far-right { display: none; }
-  .frame--mid-left { left: 6%; }
-  .frame--mid-right { right: 6%; }
+  .frame--mid-left { left: 5%; }
+  .frame--mid-right { right: 5%; }
 }
 
-/* Ventanillas adyacentes a izquierda y derecha (para sensación de fila real de ventanillas) */
 .ventanilla-adyacente {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: min(35vw, 190px);
+  width: min(28vw, 150px);
   aspect-ratio: 1 / 1.45;
   border-radius: 46% 46% 42% 42% / 32% 32% 28% 28%;
-  padding: 10px;
+  padding: 8px;
   background: linear-gradient(160deg, #eae5db, #bcb3a2);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25), inset 0 2px 6px rgba(255, 255, 255, 0.8);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2), inset 0 2px 5px rgba(255, 255, 255, 0.8);
   pointer-events: none;
   opacity: 0.55;
-  filter: blur(1.5px);
+  filter: blur(1px);
   z-index: 2;
 }
-
-.ventanilla-adyacente--izq { left: -80px; }
-.ventanilla-adyacente--der { right: -80px; }
+.ventanilla-adyacente--izq { left: -60px; }
+.ventanilla-adyacente--der { right: -60px; }
 
 .adyacente-marco {
   width: 100%;
   height: 100%;
   border-radius: 44% 44% 40% 40% / 30% 30% 26% 26%;
-  padding: 8px;
+  padding: 6px;
   background: #252b36;
   overflow: hidden;
 }
-
 .adyacente-cielo {
   width: 100%;
   height: 100%;
   border-radius: 42% 42% 38% 38% / 28% 28% 24% 24%;
-  background: linear-gradient(180deg, #1b5299 0%, #68a5e8 50%, #dbeeff 100%);
+  background: linear-gradient(180deg, #2b6cb0 0%, #76a9e0 50%, #dbeeff 100%);
 }
 
-@media (max-width: 650px) {
+@media (max-width: 600px) {
   .ventanilla-adyacente { display: none; }
 }
 
-/* Bahía central donde se ubica el pasajero del asiento 23A */
 .cabina-bahia-central {
   position: relative;
-  width: min(94vw, 420px);
+  width: min(92vw, 350px);
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   z-index: 10;
+  max-height: 100%;
 }
 
-/* ==========================================================================
-   3. VENTANILLA DEL ASIENTO 23A (MOLDURA RECESADA BOEING 787)
-   ========================================================================== */
 .ventanilla-ensamblaje {
   position: relative;
-  width: min(84vw, 360px);
-  aspect-ratio: 1 / 1.42;
+  height: min(46vh, 350px);
+  width: calc(min(46vh, 350px) / 1.42);
+  max-width: 80vw;
   perspective: 1200px;
+  flex-shrink: 0;
 }
 
-/* Moldura exterior empotrada */
 .ventanilla-moldura {
   width: 100%;
   height: 100%;
   border-radius: 48% 48% 44% 44% / 34% 34% 30% 30%;
-  padding: clamp(10px, 2.4vw, 15px);
+  padding: clamp(8px, 1.8vh, 13px);
   background: linear-gradient(160deg, #fdfbf7 0%, #ded7c9 45%, #aba291 100%);
-  box-shadow:
-    0 30px 75px rgba(0, 0, 0, 0.35),
-    inset 0 4px 10px rgba(255, 255, 255, 0.95),
-    inset 0 -8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), inset 0 3px 8px rgba(255, 255, 255, 0.95), inset 0 -6px 18px rgba(0, 0, 0, 0.3);
   display: flex;
 }
 
-/* Bisel acústico interior con profundidad sombreada */
 .ventanilla-bisel {
   width: 100%;
   height: 100%;
   border-radius: 46% 46% 42% 42% / 32% 32% 28% 28%;
-  padding: clamp(12px, 2.8vw, 18px);
+  padding: clamp(10px, 2vh, 15px);
   background: linear-gradient(168deg, #323846 0%, #1a1e28 40%, #0d1017 100%);
-  box-shadow:
-    inset 0 20px 35px rgba(0, 0, 0, 0.98),
-    inset 0 -6px 16px rgba(255, 255, 255, 0.12),
-    0 2px 5px rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 16px 28px rgba(0, 0, 0, 0.98), inset 0 -4px 12px rgba(255, 255, 255, 0.12), 0 2px 4px rgba(255, 255, 255, 0.3);
   display: flex;
 }
 
-/* Junta hermética de goma vulcanizada negra */
 .ventanilla-goma {
   width: 100%;
   height: 100%;
   border-radius: 44% 44% 40% 40% / 30% 30% 26% 26%;
-  padding: 5px;
+  padding: 4px;
   background: #111419;
-  box-shadow:
-    inset 0 0 10px rgba(0,0,0,0.95),
-    0 0 0 1px rgba(0,0,0,0.8);
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.95), 0 0 0 1px rgba(0,0,0,0.8);
   display: flex;
 }
 
-/* Marco del cristal acrílico aeronáutico */
 .ventanilla-cristal {
   position: relative;
   width: 100%;
@@ -321,14 +315,10 @@ body.en-vuelo .vestibulo {
   border-radius: 42% 42% 38% 38% / 28% 28% 24% 24%;
   overflow: hidden;
   background: #020817;
-  box-shadow:
-    inset 0 0 45px rgba(0, 0, 0, 0.8),
-    inset 0 0 10px rgba(0, 0, 0, 0.95);
+  box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.8), inset 0 0 8px rgba(0, 0, 0, 0.95);
   isolation: isolate;
-  cursor: default;
 }
 
-/* Lienzo Three.js 3D */
 .webgl-canvas-holder {
   position: absolute;
   inset: 0;
@@ -343,7 +333,6 @@ body.en-vuelo .vestibulo {
   display: block;
 }
 
-/* Capa electrocrómica de tinte (Boeing 787 Smart Tint Glass) */
 .cristal-tint {
   position: absolute;
   inset: 0;
@@ -355,48 +344,36 @@ body.en-vuelo .vestibulo {
   mix-blend-mode: multiply;
 }
 
-/* Reflejo especular curvado del acrílico */
 .cristal-reflejo {
   position: absolute;
   inset: 0;
   z-index: 3;
   pointer-events: none;
-  background: linear-gradient(
-    132deg,
-    rgba(255, 255, 255, 0.28) 0%,
-    rgba(255, 255, 255, 0.08) 20%,
-    transparent 36%,
-    transparent 65%,
-    rgba(255, 255, 255, 0.14) 78%,
-    transparent 90%
-  );
-  box-shadow: inset 0 0 25px rgba(255, 255, 255, 0.1);
+  background: linear-gradient(132deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.08) 20%, transparent 36%, transparent 65%, rgba(255, 255, 255, 0.14) 78%, transparent 90%);
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
-/* Bleed hole (Orificio barométrico de despresurización) */
 .cristal-bleed-hole {
   position: absolute;
-  bottom: 20px;
+  bottom: 15px;
   left: 50%;
   transform: translateX(-50%);
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background: radial-gradient(circle, #020611 60%, rgba(255,255,255,0.4) 100%);
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.8), 0 0 8px rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.8), 0 0 6px rgba(255, 255, 255, 0.35);
   z-index: 4;
   pointer-events: none;
 }
-
 .cristal-bleed-hole::after {
   content: '';
   position: absolute;
-  inset: -6px;
+  inset: -5px;
   border-radius: 50%;
   border: 1px dashed rgba(255, 255, 255, 0.22);
 }
 
-/* Mensaje nítido y elegante proyectado en la ventanilla */
 .ventanilla__mensaje-cabina {
   position: absolute;
   inset: 0;
@@ -404,40 +381,34 @@ body.en-vuelo .vestibulo {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16% 10%;
+  padding: 10% 7%;
   text-align: center;
   pointer-events: none;
 }
 
 #texto-cabina {
   font-family: var(--f-manuscrita);
-  font-size: clamp(1.4rem, 2.5vw + 0.6rem, 2.1rem);
+  font-size: clamp(1.2rem, 2.2vh + 0.35rem, 1.75rem);
   font-weight: 700;
-  line-height: 1.28;
+  line-height: 1.25;
   color: #ffffff;
-  text-shadow:
-    0 0 14px rgba(255, 255, 255, 0.9),
-    0 2px 12px rgba(4, 9, 20, 0.95);
-  min-height: 4em;
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.9), 0 2px 10px rgba(4, 9, 20, 0.95);
+  min-height: 3.2em;
   transform: rotate(-1.5deg);
 }
 
 .cursor-trazo {
   display: inline-block;
-  width: 3px;
-  height: 1.15em;
+  width: 2.5px;
+  height: 1.1em;
   vertical-align: middle;
   background: rgba(255, 255, 255, 0.9);
-  margin-left: 3px;
+  margin-left: 2px;
   border-radius: 2px;
   animation: parpadeoDedo 0.85s infinite;
 }
+@keyframes parpadeoDedo { 50% { opacity: 0; } }
 
-@keyframes parpadeoDedo {
-  50% { opacity: 0; }
-}
-
-/* Compuertas 3D para la transición de apertura */
 .puertas-obturador {
   position: absolute;
   inset: 0;
@@ -469,431 +440,890 @@ body.en-vuelo .vestibulo {
   pointer-events: none;
 }
 
-/* ==========================================================================
-   4. CONSOLA DE CABINA BAJO LA VENTANILLA (DIMMER 787 + PLACARD)
-   ========================================================================== */
+/* Consola de cabina */
 .cabina-consola {
   width: 100%;
-  max-width: 360px;
+  max-width: 310px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: clamp(0.7rem, 1.6vh, 1.2rem);
-  padding: 0 0.5rem;
+  margin-top: clamp(0.3rem, 0.7vh, 0.6rem);
+  padding: 0 0.35rem;
   z-index: 2;
+  flex-shrink: 0;
 }
 
-/* Regulador electrocrómico de tinte */
 .control-dimmer-787 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
-  background: rgba(0, 0, 0, 0.1);
-  padding: 0.35rem 0.65rem;
-  border-radius: 12px;
+  gap: 0.12rem;
+  background: rgba(0, 0, 0, 0.08);
+  padding: 0.22rem 0.5rem;
+  border-radius: 9px;
   border: 1px solid rgba(255, 255, 255, 0.45);
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
 }
-
-.dimmer-label {
-  font-family: var(--f-titulos);
-  font-size: 0.58rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  color: #4a4539;
-}
-
-.dimmer-botones {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
+.dimmer-label { font-family: var(--f-titulos); font-size: 0.5rem; font-weight: 800; letter-spacing: 0.08em; color: #4a4539; }
+.dimmer-botones { display: flex; align-items: center; gap: 0.3rem; }
 .dimmer-btn {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
+  width: 17px; height: 17px; border-radius: 50%;
   background: linear-gradient(145deg, #ffffff, #d2ccc0);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.62rem;
-  color: #333;
-  cursor: pointer;
-  transition: transform 0.15s ease, background 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.52rem; color: #333; cursor: pointer;
 }
-
-.dimmer-btn:active {
-  transform: scale(0.92);
-}
-
-.dimmer-leds {
-  display: flex;
-  gap: 3px;
-}
-
+.dimmer-btn:active { transform: scale(0.92); }
+.dimmer-leds { display: flex; gap: 2px; }
 .dimmer-leds .led {
-  width: 4px;
-  height: 8px;
-  border-radius: 2px;
+  width: 3.2px; height: 6.5px; border-radius: 1.5px;
   background: rgba(46, 134, 222, 0.25);
-  transition: background 0.25s ease, box-shadow 0.25s ease;
 }
+.dimmer-leds .led.active { background: #2e86de; box-shadow: 0 0 5px #2e86de; }
 
-.dimmer-leds .led.active {
-  background: #2e86de;
-  box-shadow: 0 0 6px #2e86de;
-}
-
-/* Placard aeronáutico */
 .placard-avion {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  display: flex; flex-direction: column; align-items: flex-end;
   background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(215,210,200,0.8));
-  padding: 0.35rem 0.75rem;
-  border-radius: 6px;
-  border: 1px solid rgba(0, 0, 0, 0.14);
-  box-shadow: inset 0 1px 1px rgba(255,255,255,0.9), 0 2px 4px rgba(0,0,0,0.08);
+  padding: 0.22rem 0.6rem; border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.14);
 }
+.placard-avion strong { font-family: var(--f-titulos); font-size: 0.55rem; font-weight: 800; color: #8c261e; letter-spacing: 0.06em; }
+.placard-avion span { font-size: 0.5rem; font-weight: 700; color: #4a4539; letter-spacing: 0.04em; }
 
-.placard-avion strong {
-  font-family: var(--f-titulos);
-  font-size: 0.64rem;
-  font-weight: 800;
-  color: #8c261e;
-  letter-spacing: 0.08em;
-}
-
-.placard-avion span {
-  font-size: 0.58rem;
-  font-weight: 700;
-  color: #4a4539;
-  letter-spacing: 0.05em;
-}
-
-/* ==========================================================================
-   5. MANILLA MECÁNICA AERONÁUTICA (LLAMAR A LA PUERTA)
-   ========================================================================== */
+/* Manilla mecánica aeronáutica */
 .consola-mecanismo {
-  margin-top: clamp(0.7rem, 1.6vh, 1.2rem);
-  width: 100%;
-  max-width: 320px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 3;
+  margin-top: clamp(0.3rem, 0.7vh, 0.6rem);
+  width: 100%; max-width: 280px;
+  display: flex; flex-direction: column; align-items: center; z-index: 3;
+  flex-shrink: 0;
 }
-
 .mecanismo__placa {
-  width: 100%;
-  padding: 0.85rem 1.2rem;
+  width: 100%; padding: 0.55rem 0.85rem;
   background: linear-gradient(180deg, #272d3a, #151821);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 14px;
-  box-shadow:
-    0 10px 24px rgba(0, 0, 0, 0.4),
-    inset 0 1px 1px rgba(255, 255, 255, 0.28);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 11px;
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
 }
-
-.mecanismo__etiqueta {
-  font-family: var(--f-titulos);
-  font-size: 0.65rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  color: var(--c-oro-claro);
-  opacity: 0.95;
-}
-
-.mecanismo__subtexto {
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  color: #808b9c;
-}
+.mecanismo__etiqueta { font-family: var(--f-titulos); font-size: 0.55rem; font-weight: 800; letter-spacing: 0.12em; color: var(--c-oro-claro); opacity: 0.95; }
+.mecanismo__subtexto { font-size: 0.52rem; font-weight: 600; letter-spacing: 0.12em; color: #808b9c; }
 
 .palanca-aeronautica {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: 0.85rem 1.4rem;
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 0.6rem 1rem;
   background: linear-gradient(180deg, #f0a732 0%, #cb7f18 60%, #9e600c 100%);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 9px;
-  box-shadow:
-    0 8px 24px rgba(203, 127, 24, 0.45),
-    inset 0 2px 2px rgba(255, 255, 255, 0.55),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.35);
-  cursor: pointer;
-  transition: transform 0.25s var(--curva-cinema), box-shadow 0.25s ease, filter 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(203, 127, 24, 0.4), inset 0 2px 2px rgba(255, 255, 255, 0.55);
+  cursor: pointer; transition: transform 0.2s var(--curva-cinema), box-shadow 0.2s ease;
 }
-
 .palanca-aeronautica:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 12px 32px rgba(203, 127, 24, 0.65),
-    inset 0 2px 3px rgba(255, 255, 255, 0.7);
-  filter: brightness(1.08);
+  transform: translateY(-2px); box-shadow: 0 10px 22px rgba(203, 127, 24, 0.6); filter: brightness(1.06);
 }
-
-.palanca-aeronautica:active {
-  transform: translateY(2px) scale(0.98);
-}
-
-.palanca-aeronautica.abriendo {
-  pointer-events: none;
-  filter: grayscale(0.2) brightness(0.9);
-}
-
-.palanca__cuerpo {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.palanca__icono {
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.palanca__icono svg {
-  width: 100%;
-  height: 100%;
-}
-
-.palanca__texto {
-  font-family: var(--f-titulos);
-  font-weight: 800;
-  font-size: 0.88rem;
-  letter-spacing: 0.08em;
-  color: #0b0f18;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
-}
-
+.palanca-aeronautica:active { transform: translateY(1px) scale(0.98); }
+.palanca-aeronautica.abriendo { pointer-events: none; filter: grayscale(0.2) brightness(0.9); }
+.palanca__cuerpo { display: flex; align-items: center; gap: 0.45rem; }
+.palanca__icono { width: 15px; height: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.palanca__icono svg { width: 15px !important; height: 15px !important; }
+.palanca__texto { font-family: var(--f-titulos); font-weight: 800; font-size: 0.8rem; letter-spacing: 0.06em; color: #0b0f18; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4); }
 .palanca__indicador {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #22c55e;
-  box-shadow: 0 0 10px #22c55e;
-  animation: pulsoStatus 1.5s infinite;
+  width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: pulsoStatus 1.5s infinite; flex-shrink: 0;
 }
+@keyframes pulsoStatus { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.45; transform: scale(0.85); } }
 
-@keyframes pulsoStatus {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.45; transform: scale(0.85); }
-}
-
-/* Zócalo inferior continuo de cabina (Dado Panel & Carpet Kickplate) */
 .fuselaje-dado-kickplate {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: clamp(14px, 2.5vh, 26px);
+  position: absolute; bottom: 0; left: 0; right: 0; height: 12px;
   background: linear-gradient(180deg, #9b917f 0%, #6e6555 40%, #3e392f 100%);
-  border-top: 2px solid rgba(255, 255, 255, 0.4);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
-  pointer-events: none;
-  z-index: 2;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.4); pointer-events: none; z-index: 2;
 }
 
-/* Silueta lateral sutil del respaldo del asiento 23A */
 .asiento-silueta {
-  position: absolute;
-  bottom: -20px;
-  right: -15px;
-  width: clamp(130px, 18vw, 220px);
-  height: clamp(120px, 18vh, 190px);
-  background: radial-gradient(ellipse at 75% 85%, rgba(20, 28, 44, 0.45), transparent 70%);
-  border-radius: 50% 50% 0 0;
-  pointer-events: none;
-  z-index: 15;
-  filter: blur(10px);
+  position: absolute; bottom: -20px; right: -15px; width: clamp(90px, 14vw, 150px); height: clamp(80px, 14vh, 130px);
+  background: radial-gradient(ellipse at 75% 85%, rgba(20, 28, 44, 0.35), transparent 70%);
+  border-radius: 50% 50% 0 0; pointer-events: none; z-index: 15; filter: blur(8px);
 }
 
 /* ==========================================================================
-   VESTÍBULO DE BIENVENIDA A BORDO
+   ESCENA 2: VESTÍBULO TERMINAL DE AEROPUERTO DE DÍA (ZERO SCROLL DESKTOP)
    ========================================================================== */
 .vestibulo {
-  position: relative;
-  min-height: 100vh;
-  padding: clamp(5rem, 12vh, 8rem) 0 5rem;
-  background:
-    radial-gradient(55% 45% at 50% 0%, rgba(229, 169, 60, 0.12) 0%, transparent 80%),
-    radial-gradient(80% 60% at 50% 100%, rgba(10, 16, 30, 0.9) 0%, var(--c-espacio) 100%),
-    linear-gradient(180deg, #090e1a 0%, #060912 100%);
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100svh;
+  max-height: 100vh;
+  max-height: 100svh;
+  overflow: hidden !important;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: calc(var(--nav-h) + clamp(1.6rem, 3.2vh, 2.6rem)) !important;
+  padding-bottom: clamp(1rem, 2vh, 1.8rem) !important;
+  padding-left: clamp(1.2rem, 3vw, 2.8rem) !important;
+  padding-right: clamp(1.2rem, 3vw, 2.8rem) !important;
+  box-sizing: border-box;
+  background: #c7dcf2;
+  z-index: 40;
 }
 
 .vestibulo.entrando {
   animation: fundidoVestibulo 1.1s var(--curva-cinema) forwards;
 }
-
 @keyframes fundidoVestibulo {
-  from { opacity: 0; transform: translateY(30px); }
+  from { opacity: 0; transform: translateY(25px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.vestibulo__cabecera {
-  text-align: center;
-  max-width: 720px;
-  margin: 0 auto clamp(2.5rem, 6vh, 4.5rem);
-}
-
-.tag-vuelo {
-  display: inline-block;
-  font-family: var(--f-titulos);
-  font-weight: 800;
-  font-size: 0.72rem;
-  letter-spacing: 0.2em;
-  color: var(--c-oro);
-  margin-bottom: 0.8rem;
-  padding: 0.3rem 0.8rem;
-  border: 1px solid rgba(229, 169, 60, 0.25);
-  border-radius: 999px;
-  background: rgba(229, 169, 60, 0.05);
-}
-
-.destinos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.6rem;
-}
-
-/* TARJETA BOARDING PASS VIP */
-.tarjeta-pase {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 1.8rem 1.6rem;
-  transition: transform 0.4s var(--curva-cinema), border-color 0.3s ease, box-shadow 0.4s ease;
-  position: relative;
+/* Cristalera panorámica fija de aeropuerto de día */
+.aeropuerto-tarmac-panoramica {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
   overflow: hidden;
 }
 
-.tarjeta-pase::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, var(--c-oro), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+.tarmac-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.tarjeta-pase:hover {
-  transform: translateY(-8px);
-  border-color: rgba(229, 169, 60, 0.35);
-  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.7), 0 0 25px rgba(229, 169, 60, 0.15);
+/* Contenedor central del dashboard de la terminal */
+.terminal-dashboard-wrapper {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 1260px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(0.6rem, 1.6vh, 1.4rem);
 }
-.tarjeta-pase:hover::before { opacity: 1; }
 
-.tarjeta-pase__top {
+/* ==========================================================================
+   TABLÓN DE SALIDAS MECÁNICO COMPACTO (SOLARI DEPARTURES)
+   ========================================================================== */
+.tablon-salidas-compacto {
+  width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
+  background: #0d1117;
+  border-radius: 10px;
+  border: 3px solid #232a38;
+  padding: clamp(0.55rem, 1.2vh, 0.85rem) clamp(0.85rem, 2vw, 1.3rem);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.4), 0 0 0 1px #050608;
+  flex-shrink: 0;
+}
+
+.tablon-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1.5px solid #202736;
+}
+
+.tablon-header__simbolo {
+  width: 28px !important;
+  height: 20px !important;
+  color: #f1f5f9 !important;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0 !important;
+}
+
+.tablon-header__simbolo svg {
+  width: 28px !important;
+  height: 20px !important;
+}
+
+.tablon-header__titulo {
+  font-family: var(--f-titulos);
+  font-size: clamp(1.15rem, 2.2vw, 1.65rem);
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  color: #ffffff !important;
+  margin: 0;
+  line-height: 1;
+}
+
+.tablon-header__vuelo {
+  margin-left: auto;
+  font-family: monospace;
+  background: #182030;
+  border: 1px solid #334155;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  font-size: clamp(0.68rem, 1vw, 0.78rem);
+  font-weight: 700;
+  color: #cbd5e1 !important;
+  letter-spacing: 0.1em;
+}
+
+.tablon-cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.38rem;
+}
+
+.tablon-fila {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px dashed rgba(203, 213, 225, 0.15);
-  padding-bottom: 0.8rem;
-  margin-bottom: 1.2rem;
+  gap: 0.4rem;
+  background: #08090d;
+  padding: 0.22rem 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #191e2b;
 }
 
-.pase__clase {
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: var(--c-plata-tenue);
+.tablon-fila.fila--status {
+  border-color: rgba(229, 169, 60, 0.45);
+  background: #0b0d13;
 }
 
-.pase__gate {
-  font-family: var(--f-titulos);
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: var(--c-oro);
-  letter-spacing: 0.08em;
+/* ==========================================================================
+   LETRAS SPLIT-FLAP (SOLARI TILES)
+   ========================================================================== */
+.split-flap-row {
+  display: inline-flex;
+  gap: 2.5px;
+  perspective: 700px;
 }
 
-.tarjeta-pase__icono {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: rgba(229, 169, 60, 0.1);
-  display: flex;
+.flap-tile {
+  position: relative;
+  width: clamp(18px, 2.2vw, 26px);
+  height: clamp(26px, 3.2vw, 36px);
+  background: #14171f;
+  border-radius: 2.5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--c-oro);
-  margin-bottom: 1.2rem;
+  font-family: 'Montserrat', monospace, sans-serif;
+  font-size: clamp(0.95rem, 1.6vw, 1.4rem);
+  font-weight: 800;
+  overflow: hidden;
+  user-select: none;
+  color: #f8fafc !important;
 }
 
-.tarjeta-pase__icono svg {
-  width: 24px;
-  height: 24px;
+.flap-tile--space {
+  background: transparent;
+  box-shadow: none;
 }
 
-.tarjeta-pase__body h2 {
-  margin-bottom: 0.55rem;
+.flap-tile .flap-split {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #040507;
+  z-index: 5;
+  box-shadow: 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
-.tarjeta-pase__body p {
-  font-size: 0.88rem;
-  color: var(--c-plata-tenue);
-  line-height: 1.5;
-  margin-bottom: 1.8rem;
+.flap-tile .flap-notch-l,
+.flap-tile .flap-notch-r {
+  position: absolute;
+  top: calc(50% - 2px);
+  width: 2px;
+  height: 4px;
+  background: #06070a;
+  z-index: 6;
+}
+.flap-tile .flap-notch-l { left: 0; }
+.flap-tile .flap-notch-r { right: 0; }
+
+.flap--amber .flap-tile,
+.flap-tile--amber {
+  color: #ffd000 !important;
+  text-shadow: 0 0 6px rgba(255, 208, 0, 0.45);
 }
 
-.tarjeta-pase__footer {
+.flap-tile.flipping {
+  animation: solariFlip 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes solariFlip {
+  0% { transform: rotateX(0deg); filter: brightness(1); }
+  50% { transform: rotateX(-90deg); filter: brightness(0.65); }
+  100% { transform: rotateX(0deg); filter: brightness(1); }
+}
+
+/* ==========================================================================
+   PUERTAS DE EMBARQUE REALISTAS (E-GATES CON PÓRTICO, FIDS Y TORNOS AUTOMATIZADOS)
+   ========================================================================== */
+.puertas-compact-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.7rem, 1.4vw, 1.2rem);
+  width: 100%;
+  align-items: stretch;
+}
+
+/* Contenedor principal de la estación de embarque */
+.gate-boarding-station {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 14px;
+  background: #0e1422;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+  perspective: 1000px;
+}
+
+.gate-boarding-station:hover {
+  transform: translateY(-5px);
+  border-color: rgba(229, 169, 60, 0.7) !important;
+  box-shadow: 0 24px 50px rgba(15, 23, 42, 0.6), 0 0 25px rgba(229, 169, 60, 0.25);
+}
+
+.gate-boarding-station.gate--vip {
+  border-color: rgba(239, 68, 68, 0.4) !important;
+}
+.gate-boarding-station.gate--vip:hover {
+  border-color: rgba(239, 68, 68, 0.8) !important;
+  box-shadow: 0 24px 50px rgba(15, 23, 42, 0.6), 0 0 25px rgba(239, 68, 68, 0.3);
+}
+
+/* 1. PÓRTICO SUSPENDIDO SUPERIOR Y MONITOR FIDS */
+.gate-gantry {
+  background: #090d16;
+  border-bottom: 2px solid #1c2638;
+  padding: 0.6rem 0.8rem 0.75rem;
+}
+
+.gantry-masts {
+  display: flex;
+  justify-content: space-between;
+  width: 70%;
+  margin: 0 auto -4px;
+  height: 10px;
+}
+.gantry-masts span {
+  width: 2px;
+  height: 100%;
+  background: #64748b;
+}
+
+.gate-fids-monitor {
+  background: #131b29;
+  border: 1px solid #2d3b52;
+  border-radius: 8px;
+  padding: 0.45rem 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.gate-fids-monitor.fids--vip {
+  background: #241217;
+  border-color: #59242d;
+}
+
+.fids-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.25rem;
+}
+
+.fids-airline {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding-top: 1.1rem;
-  border-top: 1px solid rgba(203, 213, 225, 0.08);
+  gap: 0.3rem;
+  font-family: monospace;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+}
+.fids-airline .ico { color: var(--c-oro); font-size: 0.65rem; }
+
+.fids-gate-badge {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  background: #0a0e17;
+  border: 1px solid #334155;
+  border-radius: 4px;
+  padding: 0.1rem 0.45rem;
+}
+.badge--vip {
+  background: #19090d;
+  border-color: #7f1d1d;
 }
 
-.pase__meta {
+.gate-lbl {
+  font-size: 0.52rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #e5a93c;
+}
+.gate-id {
+  font-family: var(--f-titulos);
+  font-size: clamp(0.78rem, 1vw, 0.95rem);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  color: #ffffff !important;
+}
+
+.fids-beacon {
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+  font-family: monospace;
+  font-size: 0.55rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+.fids-beacon .led {
+  width: 6.5px;
+  height: 6.5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.beacon--boarding .led {
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+}
+.beacon--boarding .txt { color: #86efac; }
+.beacon--restricted .led {
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+}
+.beacon--restricted .txt { color: #fca5a5; }
+
+/* Datos de vuelo FIDS */
+.fids-flight-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #090d16;
+  border-radius: 5px;
+  padding: 0.25rem 0.5rem;
+}
+
+.flight-tag {
   display: flex;
   flex-direction: column;
 }
-
-.pase__meta span {
-  font-size: 0.6rem;
-  color: var(--c-plata-tenue);
-  letter-spacing: 0.08em;
+.flight-tag .tag-title {
+  font-size: 0.48rem;
+  font-family: monospace;
+  color: #64748b;
 }
-
-.pase__meta strong {
+.flight-tag .tag-val {
   font-family: var(--f-titulos);
-  font-size: 0.85rem;
-  color: var(--c-blanco);
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #ffffff;
 }
 
-.btn-embarcar {
-  font-size: 0.82rem;
+.flight-route {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: monospace;
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #e5a93c;
+}
+.flight-route .route-plane { font-size: 0.65rem; color: #ffffff; }
+
+.fids-dest-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding-top: 0.2rem;
+}
+.fids-dest-banner .dest-label {
+  font-size: 0.52rem;
+  font-family: monospace;
+  color: #64748b;
   font-weight: 700;
-  color: var(--c-oro);
-  padding: 0.45rem 0.9rem;
+}
+.fids-dest-banner .dest-name {
+  font-family: var(--f-titulos);
+  font-size: clamp(0.72rem, 0.9vw, 0.86rem);
+  font-weight: 800;
+  color: #ffffff !important;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.banner--vip .dest-name { color: #fca5a5 !important; }
+
+/* 2. PORTAL DE ACCESO A PASARELA Y TORNOS AUTOMÁTICOS */
+.gate-portal-frame {
+  position: relative;
+  padding: clamp(0.7rem, 1.3vh, 1rem) clamp(0.65rem, 1vw, 0.9rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.7rem;
+  flex: 1;
+}
+
+/* Vista en perspectiva del túnel de la pasarela telescópica de embarque */
+.jetway-tunnel-preview {
+  position: relative;
+  width: 100%;
+  height: clamp(38px, 5.5vh, 52px);
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
   border-radius: 6px;
-  background: rgba(229, 169, 60, 0.08);
-  border: 1px solid rgba(229, 169, 60, 0.25);
-  transition: background 0.2s ease, transform 0.2s ease;
+  border: 1px solid #334155;
+  overflow: hidden;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.6);
+}
+.preview--vip {
+  background: linear-gradient(180deg, #2b1419 0%, #17090d 100%);
+  border-color: #5e242d;
 }
 
-.btn-embarcar:hover {
-  background: var(--c-oro);
-  color: #0d121c;
+.tunnel-perspective {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: 
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 15px, transparent 15px, transparent 30px),
+    radial-gradient(ellipse at 50% 50%, rgba(56, 189, 248, 0.15) 0%, transparent 80%);
+}
+.tunnel-sign {
+  font-family: monospace;
+  font-size: clamp(0.55rem, 0.72vw, 0.65rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #94a3b8;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+}
+
+/* Alas de cristal templado que se abren automáticamente al hacer hover */
+.egate-glass-doors {
+  position: relative;
+  width: 100%;
+  height: clamp(28px, 4vh, 36px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 600px;
+}
+
+.glass-barrier {
+  position: relative;
+  width: 48%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(56, 189, 248, 0.1) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: left center;
+}
+.barrier--left {
+  border-radius: 4px 0 0 4px;
+  transform-origin: left center;
+}
+.barrier--right {
+  border-radius: 0 4px 4px 0;
+  transform-origin: right center;
+}
+
+.barrier-stripe {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, #f59e0b 0, #f59e0b 6px, #ffffff 6px, #ffffff 12px);
+  transform: translateY(-50%);
+  opacity: 0.85;
+}
+.stripe--red {
+  background: repeating-linear-gradient(90deg, #ef4444 0, #ef4444 6px, #ffffff 6px, #ffffff 12px);
+}
+
+.gate-boarding-station:hover .barrier--left {
+  transform: rotateY(-65deg);
+}
+.gate-boarding-station:hover .barrier--right {
+  transform: rotateY(65deg);
+}
+.doors--locked .barrier--left,
+.doors--locked .barrier--right {
+  transform: rotateY(0deg) !important;
+}
+
+/* Columnas de los tornos con lector de pasajes / LCD */
+.egate-turnstiles {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.turnstile-podium {
+  flex: 1;
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+}
+
+.scanner-housing {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.scanner-platen {
+  position: relative;
+  width: 100%;
+  height: 18px;
+  background: #020617;
+  border: 1px solid #0284c7;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: inset 0 0 6px rgba(56, 189, 248, 0.4);
+}
+.platen--red {
+  border-color: #dc2626;
+  box-shadow: inset 0 0 6px rgba(239, 68, 68, 0.4);
+}
+
+.laser-beam {
+  position: absolute;
+  top: 0; bottom: 0; left: 0; width: 35%;
+  background: #38bdf8;
+  box-shadow: 0 0 10px #38bdf8;
+  animation: sweepLaser 1.8s ease-in-out infinite alternate;
+}
+.beam--red {
+  background: #ef4444;
+  box-shadow: 0 0 10px #ef4444;
+}
+@keyframes sweepLaser { 0% { left: 0%; } 100% { left: 65%; } }
+
+.podium-instruction {
+  font-family: monospace;
+  font-size: 0.54rem;
+  font-weight: 700;
+  color: #38bdf8;
+  text-align: center;
+  letter-spacing: 0.06em;
+}
+
+.passage-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  background: #064e3b;
+  border: 1px solid #059669;
+  border-radius: 3px;
+  height: 18px;
+}
+.display--locked {
+  background: #450a0a;
+  border-color: #991b1b;
+}
+
+.dir-arrow {
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #34d399;
+}
+.dir-text {
+  font-family: monospace;
+  font-size: 0.52rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #34d399;
+}
+
+/* Botón de acceso a pasarela */
+.gate-action-console {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto;
+}
+
+.boarding-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: monospace;
+  font-size: 0.58rem;
+}
+.boarding-meta span { color: #64748b; font-weight: 600; }
+.boarding-meta strong { color: #cbd5e1; }
+
+.btn-board-gate {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.45rem 0.85rem;
+  background: linear-gradient(135deg, rgba(229, 169, 60, 0.28), rgba(229, 169, 60, 0.12));
+  border: 1px solid rgba(229, 169, 60, 0.55);
+  border-radius: 6px;
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: clamp(0.68rem, 0.85vw, 0.78rem);
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+.btn-board-gate .btn-arrow {
+  font-size: 0.85rem;
+  transition: transform 0.2s ease;
+}
+.btn-board-gate:hover {
+  background: var(--c-oro) !important;
+  color: #0b0e17 !important;
+  box-shadow: 0 0 16px rgba(229, 169, 60, 0.5);
+}
+.btn-board-gate:hover .btn-arrow {
   transform: translateX(3px);
+  color: #0b0e17 !important;
 }
 
-.vestibulo__acciones {
-  margin-top: 4.5rem;
+.btn-board-gate.btn--vip {
+  background: rgba(239, 68, 68, 0.22) !important;
+  border-color: rgba(239, 68, 68, 0.55) !important;
+}
+.btn-board-gate.btn--vip:hover {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.5);
+}
+
+/* Clases de soporte para textos en rojo */
+.text-red { color: #f87171 !important; }
+
+/* Barra inferior centrada */
+.terminal-bottom-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0.25rem 0 0;
+  flex-shrink: 0;
+}
+
+.terminal-badge-seat {
+  font-family: monospace;
+  font-size: clamp(0.58rem, 0.8vw, 0.72rem);
+  font-weight: 700;
+  color: #1e293b;
+  background: rgba(255, 255, 255, 0.88);
+  padding: 0.25rem 0.85rem;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+/* ==========================================================================
+   RESPONSIVE MÓVIL (IPHONE & TABLETS): PERMITE SCROLL VERTICAL Y 1 COLUMNA
+   ========================================================================== */
+@media (max-width: 900px) {
+
+  /* ------------------------------------------------------------------
+     FIX CLAVE: romper el bloqueo de scroll del html y del body.
+     Sin esto, aunque el .vestibulo sea position:relative con altura
+     automática, su padre (body) sigue con height:100svh + overflow:hidden
+     y recorta todo lo que sobresale. El scroll queda imposible.
+     ------------------------------------------------------------------ */
+
+  /* html: deja que se expanda y scrollee cuando haya contenido alto */
+  html {
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  /* body.en-vuelo (vestíbulo visible): crece con el contenido */
+  body.en-vuelo {
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+    position: relative !important;
+  }
+
+  /* body.antes-vuelo (escena de cabina): sigue SIN scroll — la ventanilla
+     está pensada como una experiencia a pantalla completa, sin scroll. */
+  body.antes-vuelo {
+    height: 100vh !important;
+    height: 100svh !important;
+    max-height: 100vh !important;
+    max-height: 100svh !important;
+    overflow: hidden !important;
+  }
+
+  /* ------------------------------------------------------------------
+     VESTÍBULO: relativo, altura automática, sin recortes
+     ------------------------------------------------------------------ */
+  body.en-vuelo .vestibulo {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    min-height: 100svh !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding-top: calc(var(--nav-h) + 1.8rem) !important;
+    padding-bottom: 3rem !important;
+    padding-left: clamp(1rem, 4vw, 1.6rem) !important;
+    padding-right: clamp(1rem, 4vw, 1.6rem) !important;
+    justify-content: flex-start !important;
+  }
+
+  /* La cristalera animada con los aviones se mantiene fija en el fondo */
+  body.en-vuelo .aeropuerto-tarmac-panoramica {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 0 !important;
+  }
+
+  .terminal-dashboard-wrapper {
+    height: auto !important;
+    gap: 1.4rem !important;
+  }
+
+  /* Las puertas de embarque se despliegan en 1 columna cómoda y espaciosa */
+  .puertas-compact-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  .gate-boarding-station {
+    padding: 0.2rem 0 !important;
+  }
+
+  .btn-board-gate {
+    padding: 0.6rem 1rem !important;
+    font-size: 0.86rem !important;
+  }
+
+  .terminal-bottom-bar {
+    padding: 1.2rem 0 0.8rem !important;
+  }
 }

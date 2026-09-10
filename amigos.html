@@ -7,15 +7,16 @@
   <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
 <body>
+  <!-- NAVBAR COMÚN -->
   <header class="navbar">
     <div class="navbar__inner">
-      <a href="index.html" class="marca">
-        <svg class="marca__icono" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5C13 2.67 12.33 2 11.5 2S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+      <a href="index.html#terminal" class="marca">
+        <svg class="marca__icono" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5C13 2.67 12.33 2 11.5 2S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
         <span class="marca__texto">MARTA <span>AIRLINES</span></span>
         <span class="marca__vuelo">GATE A-01</span>
       </a>
       <nav class="nav-enlaces">
-        <a href="index.html" data-pagina="index.html">Ventanilla</a>
+        <a href="index.html#terminal" data-pagina="index.html">Puertas de Embarque</a>
         <a href="amigos.html" data-pagina="amigos.html" class="activo">Amigos</a>
         <a href="musica.html" data-pagina="musica.html">Música</a>
         <a href="secreto.html" data-pagina="secreto.html">Secreto</a>
@@ -24,9 +25,19 @@
     </div>
   </header>
 
-  <main style="padding-top: calc(var(--nav-h) + 3rem); min-height: 80vh;">
+  <main style="padding-top: calc(var(--nav-h) + 2.5rem); min-height: 80vh;">
     <div class="contenedor">
       <!-- contenido pendiente -->
+
+      <!-- Botón para regresar a la página de las puertas de embarque -->
+      <div class="centro" style="margin-top: 3.5rem; margin-bottom: 3.5rem;">
+        <a href="index.html#terminal" class="btn btn--fantasma">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="display:inline-block; vertical-align:middle; margin-right:6px;">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Volver a las Puertas de Embarque
+        </a>
+      </div>
     </div>
   </main>
 

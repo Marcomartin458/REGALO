@@ -10,9 +10,9 @@
   <!-- Tipografías de alta definición -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800;900&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800;900&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Estilos del sistema de diseño -->
+  <!-- Estilos principales -->
   <link rel="stylesheet" href="assets/css/estilos.css">
   <link rel="stylesheet" href="assets/css/home.css">
 
@@ -24,8 +24,8 @@
   <!-- MENÚ DE A BORDO (NAVBAR TRANSLÚCIDA) -->
   <header class="navbar" aria-label="Menú de cabina">
     <div class="navbar__inner">
-      <a href="index.html" class="marca">
-        <svg class="marca__icono" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <a href="index.html#terminal" class="marca">
+        <svg class="marca__icono" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M21 16v-2l-8-5V3.5C13 2.67 12.33 2 11.5 2S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z"/>
         </svg>
         <span class="marca__texto">MARTA <span>AIRLINES</span></span>
@@ -37,7 +37,7 @@
       </button>
 
       <nav class="nav-enlaces">
-        <a href="index.html" data-pagina="index.html" class="activo">Ventanilla</a>
+        <a href="index.html#terminal" data-pagina="index.html" class="activo">Puertas de Embarque</a>
         <a href="amigos.html" data-pagina="amigos.html">Amigos</a>
         <a href="musica.html" data-pagina="musica.html">Música</a>
         <a href="secreto.html" data-pagina="secreto.html">Secreto</a>
@@ -48,14 +48,13 @@
 
   <main>
     <!-- ====================================================================
-         ESCENA COMPLETA: INTERIOR DE CABINA DE AVIÓN (PANTALLA COMPLETA POV)
-         Toda la pantalla es el interior del avión: techo con iluminación indirecta,
-         compartimentos superiores (bins), pared de fuselaje de composite champagne,
-         ventanilla con cristal 3D, regulador electrocrómico de tinte 787 y manilla.
+         ESCENA 1: INTERIOR DE CABINA DE AVIÓN (POV ASIENTO 23A - CERO SCROLL)
+         Pared de fuselaje de composite champagne, techo con maleteros y luz indirecta,
+         ventanilla con cielo 3D, regulador electrocrómico de tinte 787 y manilla.
          ==================================================================== -->
     <section class="escena-vuelo" aria-label="Interior de cabina con ventanilla">
       
-      <!-- Techo de cabina con maleteros superiores e iluminación LED cálida -->
+      <!-- Techo de cabina compacto -->
       <div class="cabina-techo">
         <div class="techo-cove-luz"></div>
         <div class="techo-maleteros">
@@ -65,7 +64,6 @@
           </div>
           <div class="maletero-panel p3"></div>
         </div>
-        <!-- Módulo PSU (Passenger Service Unit): Luces de lectura y ventilación -->
         <div class="cabina-psu">
           <div class="psu-luz"></div>
           <div class="psu-gasper"></div>
@@ -75,18 +73,15 @@
         </div>
       </div>
 
-      <!-- Pared completa de fuselaje (Sidewall de composite aeronáutico) -->
+      <!-- Pared completa de fuselaje -->
       <div class="cabina-pared-completa">
-        <!-- Línea horizontal de moldura del fuselaje (Beltline) -->
         <div class="fuselaje-beltline"></div>
-
-        <!-- Juntas verticales entre cuadernas del fuselaje (Station frames) -->
         <div class="fuselaje-frame frame--far-left"></div>
         <div class="fuselaje-frame frame--mid-left"></div>
         <div class="fuselaje-frame frame--mid-right"></div>
         <div class="fuselaje-frame frame--far-right"></div>
 
-        <!-- Ventanilla adyacente izquierda en perspectiva -->
+        <!-- Ventanilla adyacente izquierda -->
         <div class="ventanilla-adyacente ventanilla-adyacente--izq" aria-hidden="true">
           <div class="adyacente-marco">
             <div class="adyacente-cielo"></div>
@@ -96,33 +91,29 @@
         <!-- BAHÍA CENTRAL: VENTANILLA PRINCIPAL DEL ASIENTO 23A -->
         <div class="cabina-bahia-central">
           <div class="ventanilla-ensamblaje">
-            <!-- Moldura exterior empotrada en el revestimiento del fuselaje -->
             <div class="ventanilla-moldura">
-              <!-- Bisel acústico interior con profundidad sombreada -->
               <div class="ventanilla-bisel">
-                <!-- Junta hermética de goma vulcanizada -->
                 <div class="ventanilla-goma">
-                  <!-- Ensamblaje del doble cristal acrílico -->
                   <div class="ventanilla-cristal">
                     
-                    <!-- LIENZO 3D THREE.JS (Cielo diurno a 35.000 pies, sol, nubes y avión) -->
+                    <!-- LIENZO 3D THREE.JS -->
                     <div id="escena-ventanilla" class="webgl-canvas-holder"></div>
 
-                    <!-- CAPA ELECTROCRÓMICA DE TINTE BOEING 787 (Regulable con botones) -->
+                    <!-- CAPA ELECTROCRÓMICA DE TINTE BOEING 787 -->
                     <div class="cristal-tint" id="cristal-tint" aria-hidden="true"></div>
 
-                    <!-- REFLEJO ESPECULAR CURVADO DEL ACRÍLICO -->
+                    <!-- REFLEJO ESPECULAR CURVADO -->
                     <div class="cristal-reflejo"></div>
 
-                    <!-- ORIFICIO DE DESPRESURIZACIÓN BAROMÉTRICA (BLEED HOLE) -->
-                    <div class="cristal-bleed-hole" title="Bleed Hole (Orificio de compensación barométrica)"></div>
+                    <!-- BLEED HOLE (Orificio de ventilación barométrica) -->
+                    <div class="cristal-bleed-hole" title="Bleed Hole"></div>
 
-                    <!-- MENSAJE EMOTIVO DE A BORDO (Tipografía nítida y elegante) -->
+                    <!-- MENSAJE EN CABINA -->
                     <div class="ventanilla__mensaje-cabina">
                       <p id="texto-cabina" aria-live="polite"></p>
                     </div>
 
-                    <!-- OBTURADORES 3D PARA LA TRANSICIÓN DE APERTURA -->
+                    <!-- OBTURADORES DE APERTURA 3D -->
                     <div class="puertas-obturador" aria-hidden="true">
                       <div class="hoja-puerta hoja--izq"></div>
                       <div class="hoja-puerta hoja--der"></div>
@@ -135,9 +126,8 @@
             </div>
           </div>
 
-          <!-- MÓDULO DE CONTROL BAJO LA VENTANILLA (BOEING 787 DIMMER + PLACARD) -->
+          <!-- MÓDULO DE CONTROL BOEING 787 DIMMER + PLACARD -->
           <div class="cabina-consola">
-            <!-- Botones electrocrómicos de tinte de la ventanilla -->
             <div class="control-dimmer-787">
               <span class="dimmer-label">WINDOW TINT</span>
               <div class="dimmer-botones">
@@ -153,14 +143,13 @@
               </div>
             </div>
 
-            <!-- Placa técnica de homologación aeronáutica -->
             <div class="placard-avion">
               <strong>MARTA AIRLINES · FLEET 23</strong>
-              <span>BOEING 787-9 DREAMLINER // FLIGHT 23</span>
+              <span>BOEING 787-9 DREAMLINER // PASSENGER FLIGHT</span>
             </div>
           </div>
 
-          <!-- MANILLA MECÁNICA AERONÁUTICA (LLAMAR A LA PUERTA / ENTRAR AL VESTÍBULO) -->
+          <!-- MANILLA MECÁNICA AERONÁUTICA -->
           <div class="consola-mecanismo">
             <div class="mecanismo__placa">
               <span class="mecanismo__etiqueta">CABIN ACCESS // ENTRY SYSTEM</span>
@@ -168,7 +157,7 @@
                 <span class="palanca__seguro"></span>
                 <span class="palanca__cuerpo">
                   <span class="palanca__icono">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                       <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
                     </svg>
                   </span>
@@ -181,133 +170,635 @@
           </div>
         </div>
 
-        <!-- Ventanilla adyacente derecha en perspectiva -->
+        <!-- Ventanilla adyacente derecha -->
         <div class="ventanilla-adyacente ventanilla-adyacente--der" aria-hidden="true">
           <div class="adyacente-marco">
             <div class="adyacente-cielo"></div>
           </div>
         </div>
 
-        <!-- Zócalo inferior continuo de cabina (Dado panel + guardapiés) -->
         <div class="fuselaje-dado-kickplate"></div>
       </div>
 
-      <!-- Silueta lateral sutil del respaldo del asiento 23A en primer plano -->
       <div class="asiento-silueta" aria-hidden="true"></div>
     </section>
 
     <!-- ====================================================================
-         VESTÍBULO DE BIENVENIDA A BORDO (REVELADO TRAS LA PUERTA)
+         ESCENA 2: VESTÍBULO TERMINAL DE AEROPUERTO DE DÍA
+         Cristalera panorámica de día con pista activa y aviones animados
+         (avión rodando, avión despegando, tractor de maletas, radar giratorio),
+         gran tablón Solari Split-Flap ("DEPARTURES") y 4 puertas de embarque e-Gates.
          ==================================================================== -->
-    <section class="vestibulo" aria-label="Vestíbulo de bienvenida">
-      <div class="contenedor">
+    <section class="vestibulo" aria-label="Terminal de aeropuerto y puertas de embarque">
+      
+      <!-- CRISTALERA PANORÁMICA DE AEROPUERTO DE DÍA (PISTA Y AVIONES EN VIVO) -->
+      <div class="aeropuerto-tarmac-panoramica" aria-hidden="true">
+        <svg class="tarmac-svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="tSkyDay" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#2563eb"/>
+              <stop offset="25%" stop-color="#3b82f6"/>
+              <stop offset="55%" stop-color="#93c5fd"/>
+              <stop offset="85%" stop-color="#dbeafe"/>
+              <stop offset="100%" stop-color="#f1f5f9"/>
+            </linearGradient>
+
+            <linearGradient id="tApronDay" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#64748b"/>
+              <stop offset="25%" stop-color="#94a3b8"/>
+              <stop offset="65%" stop-color="#cbd5e1"/>
+              <stop offset="100%" stop-color="#e2e8f0"/>
+            </linearGradient>
+
+            <linearGradient id="planeWhite" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="60%" stop-color="#f1f5f9"/>
+              <stop offset="100%" stop-color="#cbd5e1"/>
+            </linearGradient>
+
+            <linearGradient id="martaRed" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#dc2626"/>
+              <stop offset="100%" stop-color="#991b1b"/>
+            </linearGradient>
+
+            <linearGradient id="turbineDark" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#334155"/>
+              <stop offset="60%" stop-color="#0f172a"/>
+              <stop offset="100%" stop-color="#020617"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Cielo diurno con sol radiante -->
+          <rect width="1920" height="580" fill="url(#tSkyDay)"/>
+          <circle cx="1500" cy="140" r="120" fill="#ffffff" opacity="0.3" filter="blur(16px)"/>
+          <circle cx="1500" cy="140" r="32" fill="#fffdfa" opacity="0.9"/>
+
+          <!-- Nubes suaves en el horizonte -->
+          <path d="M0 420 Q 380 380 850 410 T 1920 400 L 1920 500 L 0 500 Z" fill="#e0f2fe" opacity="0.45"/>
+
+          <!-- AVIÓN DESPEGANDO EN EL HORIZONTE (ANIMADO) -->
+          <g class="anim-departing-jet">
+            <path d="M0 0 L 22 -4 L 18 -12 L 20 -12 L 25 -4 L 32 -4 L 33 0 L 25 2 L 18 10 L 16 10 L 19 2 Z" fill="#ffffff" opacity="0.85"/>
+          </g>
+
+          <!-- ESTRUCTURAS DE HANGAR LEJANAS -->
+          <rect x="160" y="415" width="160" height="45" rx="3" fill="#64748b" opacity="0.6"/>
+          <rect x="1560" y="418" width="220" height="42" rx="3" fill="#64748b" opacity="0.6"/>
+
+          <!-- TORRE DE CONTROL CON RADAR GIRATORIO (ANIMADO) -->
+          <g transform="translate(520, 270)">
+            <rect x="12" y="55" width="16" height="135" fill="#475569"/>
+            <polygon points="4,55 36,55 32,32 8,32" fill="#1e293b"/>
+            <circle cx="20" cy="22" r="8" fill="#ffffff" opacity="0.85"/>
+            <line x1="20" y1="14" x2="20" y2="4" stroke="#dc2626" stroke-width="2"/>
+            <g class="anim-radar-spin" transform="translate(20, 4)">
+              <line x1="-12" y1="0" x2="12" y2="0" stroke="#f59e0b" stroke-width="2.5"/>
+              <circle cx="0" cy="0" r="3" fill="#f59e0b"/>
+            </g>
+            <circle cx="20" cy="4" r="3" fill="#ef4444" class="anim-beacon-red"/>
+          </g>
+
+          <!-- PLATAFORMA DE HORMIGÓN (TARMAC APRON) -->
+          <rect y="460" width="1920" height="620" fill="url(#tApronDay)"/>
+
+          <!-- JUNTAS DE LOSAS DE HORMIGÓN -->
+          <line x1="0" y1="560" x2="1920" y2="560" stroke="#64748b" stroke-width="2" stroke-dasharray="16,8"/>
+          <line x1="0" y1="700" x2="1920" y2="700" stroke="#64748b" stroke-width="2.5"/>
+          <line x1="0" y1="900" x2="1920" y2="900" stroke="#475569" stroke-width="3"/>
+
+          <!-- LÍNEAS DE TAXIWAY AMARILLAS Y MARCAS DE PARADA -->
+          <path d="M360 460 Q 410 650 460 1080" stroke="#f59e0b" stroke-width="6" fill="none"/>
+          <path d="M1300 460 Q 1260 670 1220 1080" stroke="#f59e0b" stroke-width="6" fill="none"/>
+          <rect x="420" y="740" width="80" height="8" fill="#f59e0b" rx="2"/>
+          <text x="460" y="733" fill="#f59e0b" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">STOP B787</text>
+          <rect x="1210" y="755" width="80" height="8" fill="#f59e0b" rx="2"/>
+          <text x="1250" y="748" fill="#f59e0b" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">STOP A350</text>
+
+          <!-- AVIÓN TAXIANDO POR LA PISTA DE FONDO (ANIMADO) -->
+          <g class="anim-taxiing-plane">
+            <ellipse cx="60" cy="20" rx="45" ry="5" fill="#334155" opacity="0.3"/>
+            <path d="M10 12 L 80 12 L 95 16 L 80 18 L 10 18 Z" fill="#ffffff"/>
+            <polygon points="12,12 2,0 12,0 24,12" fill="#dc2626"/>
+            <polygon points="35,14 55,2 50,2 30,14" fill="#94a3b8"/>
+            <polygon points="40,16 65,24 60,24 35,16" fill="#cbd5e1"/>
+            <circle cx="45" cy="11" r="2.5" fill="#ef4444" class="anim-beacon-red"/>
+          </g>
+
+          <!-- AVIÓN COMERCIAL APARCADO 1 (IZQUIERDA, CON FINGER DE EMBARQUE CONECTADO) -->
+          <g transform="translate(190, 450)">
+            <ellipse cx="280" cy="230" rx="320" ry="34" fill="#334155" opacity="0.38"/>
+            <polygon points="180,105 80,55 120,50 240,100" fill="#94a3b8"/>
+            <rect x="130" y="95" width="65" height="30" rx="9" fill="url(#turbineDark)"/>
+            <path d="M 60,110 C 100,75 320,74 480,78 C 540,80 580,100 595,115 C 580,130 530,144 460,144 C 300,144 100,142 60,110 Z" fill="url(#planeWhite)"/>
+            <polygon points="545,94 565,99 562,107 542,103" fill="#0f172a"/>
+            <polygon points="530,92 542,94 540,103 528,101" fill="#0f172a"/>
+            <path d="M 120,116 L 530,116 L 528,122 L 120,122 Z" fill="url(#martaRed)"/>
+            <path d="M 140,122 L 510,122 L 508,125 L 140,125 Z" fill="#f59e0b"/>
+            <polygon points="60,110 20,5 58,5 140,105" fill="url(#martaRed)"/>
+            <circle cx="50" cy="45" r="14" fill="#f59e0b" opacity="0.95"/>
+            <polygon points="46,36 54,45 46,54 48,45" fill="#ffffff"/>
+            <polygon points="260,115 410,205 380,212 200,126" fill="url(#planeWhite)"/>
+            <polygon points="405,202 422,170 416,170 398,207" fill="url(#martaRed)"/>
+            <rect x="275" y="140" width="95" height="46" rx="14" fill="url(#turbineDark)"/>
+            <ellipse cx="366" cy="163" rx="6" ry="20" fill="#94a3b8"/>
+            <ellipse cx="367" cy="163" rx="4" ry="16" fill="#020617"/>
+            <rect x="245" y="135" width="8" height="68" fill="#475569"/>
+            <ellipse cx="242" cy="205" rx="10" ry="14" fill="#0f172a"/>
+            <ellipse cx="256" cy="205" rx="10" ry="14" fill="#0f172a"/>
+            <rect x="525" y="128" width="6" height="70" fill="#475569"/>
+            <ellipse cx="524" cy="200" rx="7" ry="10" fill="#0f172a"/>
+            <ellipse cx="532" cy="200" rx="7" ry="10" fill="#0f172a"/>
+            <!-- Pasarela de embarque (Finger) conectada -->
+            <rect x="470" y="65" width="85" height="40" rx="4" fill="#475569"/>
+            <polygon points="495,105 525,105 522,122 498,122" fill="#334155"/>
+            <rect x="400" y="50" width="95" height="32" fill="#64748b"/>
+            <line x1="430" y1="82" x2="430" y2="180" stroke="#334155" stroke-width="6"/>
+          </g>
+
+          <!-- AVIÓN COMERCIAL APARCADO 2 (DERECHA) -->
+          <g transform="translate(1120, 420)">
+            <ellipse cx="230" cy="170" rx="240" ry="26" fill="#334155" opacity="0.32"/>
+            <polygon points="110,75 35,35 65,30 160,70" fill="#94a3b8"/>
+            <path d="M 35,80 C 75,50 230,50 360,55 C 410,57 440,72 450,84 C 440,96 400,106 340,106 C 210,106 65,104 35,80 Z" fill="url(#fuselageWhite)"/>
+            <polygon points="35,80 8,2 36,2 100,75" fill="url(#martaRed)"/>
+            <path d="M 75,85 L 410,85 L 408,89 L 75,89 Z" fill="url(#martaRed)"/>
+            <polygon points="175,85 295,152 270,158 135,92" fill="url(#fuselageWhite)"/>
+            <rect x="195" y="105" width="65" height="34" rx="9" fill="url(#turbineDark)"/>
+            <rect x="350" y="45" width="75" height="30" fill="#475569"/>
+            <line x1="380" y1="75" x2="380" y2="148" stroke="#334155" stroke-width="5"/>
+          </g>
+
+          <!-- VEHÍCULO DE EQUIPAJE ANIMADO CRUZANDO LA PISTA -->
+          <g class="anim-baggage-tug">
+            <rect x="0" y="8" width="30" height="18" rx="3" fill="#f59e0b"/>
+            <rect x="18" y="0" width="12" height="13" rx="2" fill="#cbd5e1"/>
+            <circle cx="7" cy="26" r="5" fill="#0f172a"/>
+            <circle cx="23" cy="26" r="5" fill="#0f172a"/>
+            <line x1="30" y1="20" x2="38" y2="20" stroke="#334155" stroke-width="2"/>
+            <rect x="38" y="11" width="28" height="14" rx="2" fill="#64748b"/>
+            <circle cx="44" cy="25" r="4" fill="#0f172a"/>
+            <circle cx="61" cy="25" r="4" fill="#0f172a"/>
+            <line x1="66" y1="20" x2="72" y2="20" stroke="#334155" stroke-width="2"/>
+            <rect x="72" y="11" width="28" height="14" rx="2" fill="#64748b"/>
+            <circle cx="78" cy="25" r="4" fill="#0f172a"/>
+            <circle cx="95" cy="25" r="4" fill="#0f172a"/>
+          </g>
+
+          <!-- LUCES DE BALIZAMIENTO DE PISTA -->
+          <g class="anim-runway-lights">
+            <circle cx="300" cy="560" r="3.5" fill="#38bdf8"/>
+            <circle cx="600" cy="560" r="3.5" fill="#38bdf8"/>
+            <circle cx="900" cy="560" r="3.5" fill="#38bdf8"/>
+            <circle cx="1200" cy="560" r="3.5" fill="#38bdf8"/>
+            <circle cx="1500" cy="560" r="3.5" fill="#38bdf8"/>
+          </g>
+
+          <!-- POSTES DE ILUMINACIÓN DE PLATAFORMA -->
+          <g transform="translate(900, 220)">
+            <line x1="0" y1="0" x2="0" y2="280" stroke="#475569" stroke-width="4"/>
+            <rect x="-20" y="-8" width="40" height="10" rx="2" fill="#334155"/>
+            <circle cx="-12" cy="-3" r="2.5" fill="#fff9c4"/>
+            <circle cx="0" cy="-3" r="2.5" fill="#fff9c4"/>
+            <circle cx="12" cy="-3" r="2.5" fill="#fff9c4"/>
+          </g>
+
+          <!-- ESTRUCTURA DE MONTANTES BLANCOS DE LA CRISTALERA -->
+          <line x1="320" y1="0" x2="320" y2="1080" stroke="#ffffff" stroke-width="6" opacity="0.85"/>
+          <line x1="720" y1="0" x2="720" y2="1080" stroke="#ffffff" stroke-width="6" opacity="0.85"/>
+          <line x1="1200" y1="0" x2="1200" y2="1080" stroke="#ffffff" stroke-width="6" opacity="0.85"/>
+          <line x1="1600" y1="0" x2="1600" y2="1080" stroke="#ffffff" stroke-width="6" opacity="0.85"/>
+          <line x1="0" y1="360" x2="1920" y2="360" stroke="#ffffff" stroke-width="5" opacity="0.65"/>
+          <line x1="0" y1="720" x2="1920" y2="720" stroke="#ffffff" stroke-width="5" opacity="0.65"/>
+
+          <!-- Reflejos diagonales -->
+          <polygon points="0,0 260,0 120,1080 0,1080" fill="#ffffff" opacity="0.06"/>
+          <polygon points="520,0 800,0 520,1080 300,1080" fill="#ffffff" opacity="0.04"/>
+          <polygon points="1260,0 1560,0 1360,1080 1120,1080" fill="#ffffff" opacity="0.05"/>
+        </svg>
+      </div>
+
+      <!-- CONTENIDO DEL DASHBOARD DE LA TERMINAL (DESAHOGADO Y SIMÉTRICO) -->
+      <div class="terminal-dashboard-wrapper">
         
-        <header class="vestibulo__cabecera" data-reveal>
-          <div class="tag-vuelo">PASSENGER MANIFEST // PRIORITY PASS</div>
-          <h1 class="h-lg">Bienvenida a bordo, Marta.<br><span class="texto-oro">Este es tu Vuelo 23.</span></h1>
-          <p class="lead">Un recorrido creado a medida para celebrar tus 23 años. Elige tu puerta de embarque para comenzar el viaje.</p>
+        <!-- GRAN TABLÓN DE SALIDAS MECÁNICO (SPLIT-FLAP SOLARI DEPARTURES) -->
+        <header class="tablon-salidas-compacto" data-reveal>
+          <div class="tablon-header">
+            <div class="tablon-header__simbolo">
+              <svg width="28" height="20" viewBox="0 0 34 22" fill="currentColor">
+                <path d="M3 15L15 10.5V2C15 1.17 15.67 0.5 16.5 0.5S18 1.17 18 2V9.5L28 6.5V9.5L18 13V18L21 20V21.5L16.5 20.2L12 21.5V20L15 18V13.8L3 17.5V15Z" transform="rotate(-12 16 11)"/>
+                <rect x="2" y="19" width="30" height="2.2" rx="1.1" fill="currentColor"/>
+              </svg>
+            </div>
+            <h1 class="tablon-header__titulo">DEPARTURES</h1>
+            <div class="tablon-header__vuelo">FLIGHT 23 · MADRID</div>
+          </div>
+
+          <div class="tablon-cuerpo">
+            <div class="tablon-fila">
+              <div class="split-flap-row js-split-flap" data-flap-text="MARTA AIRLINES"></div>
+              <div class="split-flap-row js-split-flap flap--code" data-flap-text="V23"></div>
+            </div>
+            <div class="tablon-fila">
+              <div class="split-flap-row js-split-flap" data-flap-text="MADRID - 23 ANOS"></div>
+              <div class="split-flap-row js-split-flap flap--code" data-flap-text="MAD"></div>
+            </div>
+            <div class="tablon-fila fila--status">
+              <div class="split-flap-row js-split-flap flap--amber" data-flap-text="NOW BOARDING" data-flap-color="amber"></div>
+              <div class="split-flap-row js-split-flap flap--code flap--amber" data-flap-text="GATE 23" data-flap-color="amber"></div>
+            </div>
+          </div>
         </header>
 
-        <!-- Cuatro tarjetas tipo Tarjeta de Embarque VIP -->
-        <div class="destinos-grid">
+        <!-- 4 PUERTAS DE EMBARQUE ARQUITECTÓNICAS (E-GATES CON PÓRTICO, FIDS Y TORNOS AUTOMATIZADOS) -->
+        <div class="puertas-compact-grid">
           
-          <!-- Puerta 1: Amigos -->
-          <article class="tarjeta-pase glass" data-reveal data-retardo="100">
-            <div class="tarjeta-pase__top">
-              <span class="pase__clase">FIRST CLASS</span>
-              <span class="pase__gate">GATE A-01</span>
-            </div>
-            <div class="tarjeta-pase__body">
-              <div class="tarjeta-pase__icono">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
+          <!-- PUERTA 1: AMIGOS -->
+          <article class="gate-boarding-station" data-reveal data-retardo="80">
+            <!-- Pórtico suspendido superior y monitor FIDS -->
+            <div class="gate-gantry">
+              <div class="gantry-masts">
+                <span></span><span></span>
               </div>
-              <h2 class="h-sm">Terminal de Amigos</h2>
-              <p>Las personas que siempre te esperan en tierra firme y te acompañan en cada escala.</p>
+              <div class="gate-fids-monitor">
+                <div class="fids-topbar">
+                  <div class="fids-airline">
+                    <span class="ico">✈</span>
+                    <span>MARTA AIR</span>
+                  </div>
+                  <div class="fids-gate-badge">
+                    <span class="gate-lbl">GATE</span>
+                    <strong class="gate-id">A-01</strong>
+                  </div>
+                  <div class="fids-beacon beacon--boarding">
+                    <span class="led"></span>
+                    <span class="txt">BOARDING</span>
+                  </div>
+                </div>
+
+                <div class="fids-flight-info">
+                  <div class="flight-tag">
+                    <span class="tag-title">FLIGHT</span>
+                    <strong class="tag-val">M23</strong>
+                  </div>
+                  <div class="flight-route">
+                    <span class="route-point">MAD</span>
+                    <span class="route-plane">✈</span>
+                    <span class="route-point">AMI</span>
+                  </div>
+                  <div class="flight-tag tag--right">
+                    <span class="tag-title">ZONE</span>
+                    <strong class="tag-val">1-2</strong>
+                  </div>
+                </div>
+
+                <div class="fids-dest-banner">
+                  <span class="dest-label">DESTINO:</span>
+                  <strong class="dest-name">TERMINAL DE AMIGOS</strong>
+                </div>
+              </div>
             </div>
-            <div class="tarjeta-pase__footer">
-              <div class="pase__meta"><span>ZONE</span><strong>1</strong></div>
-              <div class="pase__meta"><span>SEAT</span><strong>23A</strong></div>
-              <a href="amigos.html" class="btn-embarcar">Embarcar &rarr;</a>
+
+            <!-- Portal de acceso con tornos y escáner óptico -->
+            <div class="gate-portal-frame">
+              <div class="jetway-tunnel-preview">
+                <div class="tunnel-perspective">
+                  <span class="tunnel-sign">JETWAY ACCESS &bull; TUNNEL A1</span>
+                </div>
+              </div>
+
+              <div class="egate-glass-doors">
+                <div class="glass-barrier barrier--left">
+                  <div class="barrier-stripe"></div>
+                </div>
+                <div class="glass-barrier barrier--right">
+                  <div class="barrier-stripe"></div>
+                </div>
+              </div>
+
+              <div class="egate-turnstiles">
+                <div class="turnstile-podium podium--left">
+                  <div class="scanner-housing">
+                    <div class="scanner-platen">
+                      <div class="laser-beam"></div>
+                    </div>
+                    <span class="podium-instruction">SCAN TICKET</span>
+                  </div>
+                </div>
+
+                <div class="turnstile-podium podium--right">
+                  <div class="passage-display display--pass">
+                    <span class="dir-arrow">&darr;</span>
+                    <span class="dir-text">PROCEED</span>
+                  </div>
+                  <div class="tensabarrier-bracket">
+                    <span class="belt-socket"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="gate-action-console">
+                <div class="boarding-meta">
+                  <span>ALL PASSENGERS</span>
+                  <strong>SEAT 23A &bull; GROUP 1</strong>
+                </div>
+                <a href="amigos.html" class="btn-board-gate">
+                  <span class="btn-label">ACCEDER A LA PASARELA</span>
+                  <span class="btn-arrow">&rarr;</span>
+                </a>
+              </div>
             </div>
           </article>
 
-          <!-- Puerta 2: Música -->
-          <article class="tarjeta-pase glass" data-reveal data-retardo="200">
-            <div class="tarjeta-pase__top">
-              <span class="pase__clase">IN-FLIGHT SOUND</span>
-              <span class="pase__gate">GATE B-02</span>
-            </div>
-            <div class="tarjeta-pase__body">
-              <div class="tarjeta-pase__icono">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
-                </svg>
+          <!-- PUERTA 2: MÚSICA -->
+          <article class="gate-boarding-station" data-reveal data-retardo="160">
+            <div class="gate-gantry">
+              <div class="gantry-masts">
+                <span></span><span></span>
               </div>
-              <h2 class="h-sm">Música de a Bordo</h2>
-              <p>Canciones que aceleran el pulso, recuerdos en estéreo y tu playlist de altura.</p>
+              <div class="gate-fids-monitor">
+                <div class="fids-topbar">
+                  <div class="fids-airline">
+                    <span class="ico">✈</span>
+                    <span>MARTA AIR</span>
+                  </div>
+                  <div class="fids-gate-badge">
+                    <span class="gate-lbl">GATE</span>
+                    <strong class="gate-id">B-02</strong>
+                  </div>
+                  <div class="fids-beacon beacon--boarding">
+                    <span class="led"></span>
+                    <span class="txt">ON TIME</span>
+                  </div>
+                </div>
+
+                <div class="fids-flight-info">
+                  <div class="flight-tag">
+                    <span class="tag-title">FLIGHT</span>
+                    <strong class="tag-val">M23</strong>
+                  </div>
+                  <div class="flight-route">
+                    <span class="route-point">MAD</span>
+                    <span class="route-plane">✈</span>
+                    <span class="route-point">MUS</span>
+                  </div>
+                  <div class="flight-tag tag--right">
+                    <span class="tag-title">AUDIO</span>
+                    <strong class="tag-val">23.0</strong>
+                  </div>
+                </div>
+
+                <div class="fids-dest-banner">
+                  <span class="dest-label">DESTINO:</span>
+                  <strong class="dest-name">MÚSICA DE A BORDO</strong>
+                </div>
+              </div>
             </div>
-            <div class="tarjeta-pase__footer">
-              <div class="pase__meta"><span>AUDIO</span><strong>STEREO</strong></div>
-              <div class="pase__meta"><span>FREQ</span><strong>23.0</strong></div>
-              <a href="musica.html" class="btn-embarcar">Sintonizar &rarr;</a>
+
+            <div class="gate-portal-frame">
+              <div class="jetway-tunnel-preview">
+                <div class="tunnel-perspective">
+                  <span class="tunnel-sign">IN-FLIGHT SOUND &bull; TUNNEL B2</span>
+                </div>
+              </div>
+
+              <div class="egate-glass-doors">
+                <div class="glass-barrier barrier--left">
+                  <div class="barrier-stripe"></div>
+                </div>
+                <div class="glass-barrier barrier--right">
+                  <div class="barrier-stripe"></div>
+                </div>
+              </div>
+
+              <div class="egate-turnstiles">
+                <div class="turnstile-podium podium--left">
+                  <div class="scanner-housing">
+                    <div class="scanner-platen">
+                      <div class="laser-beam"></div>
+                    </div>
+                    <span class="podium-instruction">SCAN TICKET</span>
+                  </div>
+                </div>
+
+                <div class="turnstile-podium podium--right">
+                  <div class="passage-display display--pass">
+                    <span class="dir-arrow">&darr;</span>
+                    <span class="dir-text">PROCEED</span>
+                  </div>
+                  <div class="tensabarrier-bracket">
+                    <span class="belt-socket"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="gate-action-console">
+                <div class="boarding-meta">
+                  <span>HEADPHONES READY</span>
+                  <strong>SEAT 23A &bull; STEREO</strong>
+                </div>
+                <a href="musica.html" class="btn-board-gate">
+                  <span class="btn-label">ACCEDER A LA PASARELA</span>
+                  <span class="btn-arrow">&rarr;</span>
+                </a>
+              </div>
             </div>
           </article>
 
-          <!-- Puerta 3: Sala VIP Secreto -->
-          <article class="tarjeta-pase glass pase--vip" data-reveal data-retardo="300">
-            <div class="tarjeta-pase__top">
-              <span class="pase__clase">CONFIDENTIAL</span>
-              <span class="pase__gate">GATE C-03</span>
-            </div>
-            <div class="tarjeta-pase__body">
-              <div class="tarjeta-pase__icono">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14v3"/>
-                </svg>
+          <!-- PUERTA 3: SALA VIP SECRETO -->
+          <article class="gate-boarding-station gate--vip" data-reveal data-retardo="240">
+            <div class="gate-gantry">
+              <div class="gantry-masts">
+                <span></span><span></span>
               </div>
-              <h2 class="h-sm">Sala VIP · Secreto</h2>
-              <p>Acceso restringido con teclado de código. Reúne las pistas ocultas para ingresar.</p>
+              <div class="gate-fids-monitor fids--vip">
+                <div class="fids-topbar">
+                  <div class="fids-airline">
+                    <span class="ico">🔒</span>
+                    <span>SECURITY</span>
+                  </div>
+                  <div class="fids-gate-badge badge--vip">
+                    <span class="gate-lbl">GATE</span>
+                    <strong class="gate-id">C-03</strong>
+                  </div>
+                  <div class="fids-beacon beacon--restricted">
+                    <span class="led"></span>
+                    <span class="txt">LOCKED</span>
+                  </div>
+                </div>
+
+                <div class="fids-flight-info">
+                  <div class="flight-tag">
+                    <span class="tag-title">ACCESS</span>
+                    <strong class="tag-val text-red">CODE</strong>
+                  </div>
+                  <div class="flight-route">
+                    <span class="route-point text-red">SEC</span>
+                    <span class="route-plane text-red">🔒</span>
+                    <span class="route-point text-red">VIP</span>
+                  </div>
+                  <div class="flight-tag tag--right">
+                    <span class="tag-title">LEVEL</span>
+                    <strong class="tag-val text-red">MAX</strong>
+                  </div>
+                </div>
+
+                <div class="fids-dest-banner banner--vip">
+                  <span class="dest-label">DESTINO:</span>
+                  <strong class="dest-name">SALA VIP · SECRETO</strong>
+                </div>
+              </div>
             </div>
-            <div class="tarjeta-pase__footer">
-              <div class="pase__meta"><span>STATUS</span><strong class="texto-rojo">LOCKED</strong></div>
-              <a href="secreto.html" class="btn-embarcar">Desbloquear &rarr;</a>
+
+            <div class="gate-portal-frame frame--vip">
+              <div class="jetway-tunnel-preview preview--vip">
+                <div class="tunnel-perspective">
+                  <span class="tunnel-sign text-red">RESTRICTED AREA &bull; TUNNEL C3</span>
+                </div>
+              </div>
+
+              <div class="egate-glass-doors doors--locked">
+                <div class="glass-barrier barrier--left">
+                  <div class="barrier-stripe stripe--red"></div>
+                </div>
+                <div class="glass-barrier barrier--right">
+                  <div class="barrier-stripe stripe--red"></div>
+                </div>
+              </div>
+
+              <div class="egate-turnstiles">
+                <div class="turnstile-podium podium--left">
+                  <div class="scanner-housing">
+                    <div class="scanner-platen platen--red">
+                      <div class="laser-beam beam--red"></div>
+                    </div>
+                    <span class="podium-instruction text-red">KEYPAD REQUIRED</span>
+                  </div>
+                </div>
+
+                <div class="turnstile-podium podium--right">
+                  <div class="passage-display display--locked">
+                    <span class="dir-arrow text-red">&times;</span>
+                    <span class="dir-text text-red">DENIED</span>
+                  </div>
+                  <div class="tensabarrier-bracket">
+                    <span class="belt-socket socket--red"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="gate-action-console console--vip">
+                <div class="boarding-meta">
+                  <span class="text-red">ACCESO CLASIFICADO</span>
+                  <strong class="text-red">PUERTA BLOQUEADA</strong>
+                </div>
+                <a href="secreto.html" class="btn-board-gate btn--vip">
+                  <span class="btn-label">DESBLOQUEAR ACCESO</span>
+                  <span class="btn-arrow">&rarr;</span>
+                </a>
+              </div>
             </div>
           </article>
 
-          <!-- Puerta 4: Raíces -->
-          <article class="tarjeta-pase glass" data-reveal data-retardo="400">
-            <div class="tarjeta-pase__top">
-              <span class="pase__clase">FLIGHT ORIGIN</span>
-              <span class="pase__gate">GATE D-04</span>
-            </div>
-            <div class="tarjeta-pase__body">
-              <div class="tarjeta-pase__icono">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>
-                </svg>
+          <!-- PUERTA 4: HANGAR DE RECUERDOS -->
+          <article class="gate-boarding-station" data-reveal data-retardo="320">
+            <div class="gate-gantry">
+              <div class="gantry-masts">
+                <span></span><span></span>
               </div>
-              <h2 class="h-sm">Hangar de Recuerdos</h2>
-              <p>El punto de partida antes de despegar: tus raíces, los tuyos y el camino recorrido.</p>
+              <div class="gate-fids-monitor">
+                <div class="fids-topbar">
+                  <div class="fids-airline">
+                    <span class="ico">✈</span>
+                    <span>MARTA AIR</span>
+                  </div>
+                  <div class="fids-gate-badge">
+                    <span class="gate-lbl">GATE</span>
+                    <strong class="gate-id">D-04</strong>
+                  </div>
+                  <div class="fids-beacon beacon--boarding">
+                    <span class="led"></span>
+                    <span class="txt">READY</span>
+                  </div>
+                </div>
+
+                <div class="fids-flight-info">
+                  <div class="flight-tag">
+                    <span class="tag-title">FLIGHT</span>
+                    <strong class="tag-val">M23</strong>
+                  </div>
+                  <div class="flight-route">
+                    <span class="route-point">MAD</span>
+                    <span class="route-plane">✈</span>
+                    <span class="route-point">REC</span>
+                  </div>
+                  <div class="flight-tag tag--right">
+                    <span class="tag-title">LOGS</span>
+                    <strong class="tag-val">23 YRS</strong>
+                  </div>
+                </div>
+
+                <div class="fids-dest-banner">
+                  <span class="dest-label">DESTINO:</span>
+                  <strong class="dest-name">HANGAR DE RECUERDOS</strong>
+                </div>
+              </div>
             </div>
-            <div class="tarjeta-pase__footer">
-              <div class="pase__meta"><span>ORIGIN</span><strong>HOME</strong></div>
-              <div class="pase__meta"><span>LOGS</span><strong>23 YRS</strong></div>
-              <a href="raices.html" class="btn-embarcar">Explorar &rarr;</a>
+
+            <div class="gate-portal-frame">
+              <div class="jetway-tunnel-preview">
+                <div class="tunnel-perspective">
+                  <span class="tunnel-sign">ORIGIN LOGS &bull; TUNNEL D4</span>
+                </div>
+              </div>
+
+              <div class="egate-glass-doors">
+                <div class="glass-barrier barrier--left">
+                  <div class="barrier-stripe"></div>
+                </div>
+                <div class="glass-barrier barrier--right">
+                  <div class="barrier-stripe"></div>
+                </div>
+              </div>
+
+              <div class="egate-turnstiles">
+                <div class="turnstile-podium podium--left">
+                  <div class="scanner-housing">
+                    <div class="scanner-platen">
+                      <div class="laser-beam"></div>
+                    </div>
+                    <span class="podium-instruction">SCAN TICKET</span>
+                  </div>
+                </div>
+
+                <div class="turnstile-podium podium--right">
+                  <div class="passage-display display--pass">
+                    <span class="dir-arrow">&darr;</span>
+                    <span class="dir-text">PROCEED</span>
+                  </div>
+                  <div class="tensabarrier-bracket">
+                    <span class="belt-socket"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="gate-action-console">
+                <div class="boarding-meta">
+                  <span>HISTORIAL 23 AÑOS</span>
+                  <strong>SEAT 23A &bull; ROOTS</strong>
+                </div>
+                <a href="raices.html" class="btn-board-gate">
+                  <span class="btn-label">ACCEDER A LA PASARELA</span>
+                  <span class="btn-arrow">&rarr;</span>
+                </a>
+              </div>
             </div>
           </article>
 
         </div>
 
-        <!-- Botón para regresar a la ventanilla -->
-        <div class="vestibulo__acciones centro" data-reveal>
-          <button class="btn btn--fantasma js-volver-entrar" type="button">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
-            </svg>
-            Regresar a la ventanilla de cabina
-          </button>
+        <!-- BARRA INFERIOR DE EMBARQUE CENTRADA -->
+        <div class="terminal-bottom-bar centro" data-reveal>
+          <span class="terminal-badge-seat">MARTA AIRLINES &bull; VUELO 23 // PUERTAS DE EMBARQUE VIP</span>
         </div>
 
       </div>
