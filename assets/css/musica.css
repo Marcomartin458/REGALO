@@ -1,23 +1,74 @@
 /* ==========================================================================
-   MUSICA.CSS — Interfaz neumórfica dinámica (versión limpia y compatible)
-   Sin @property. Colores dinámicos por canción con transiciones normales.
+   MUSICA.CSS — Interfaz neumórfica dinámica (v2 — sombras corregidas)
+   - Neumorfismo real con superficies y fondo del mismo color, pero con
+     sombras suficientemente intensas para que el relieve se vea.
+   - Color dinámico por canción aplicado como acento.
+   - Lista sin crossfade. Hover = elevación. Activo = hundido con acento.
+   - Dock no tapa contenido en móvil.
    ========================================================================== */
 
+@property --color-de {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #a855f7;
+}
+@property --color-a {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ec4899;
+}
+@property --color-brillo {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(168, 85, 247, 0.45);
+}
+
 :root {
+  /* --- COLORES DINÁMICOS (acento) --- */
   --color-de: #a855f7;
   --color-a: #ec4899;
   --color-brillo: rgba(168, 85, 247, 0.45);
   --track-a: #a855f7;
   --track-b: #ec4899;
 
+  /* --- BASE NEUMÓRFICA --- */
+  /* Superficie y fondo comparten color (obligatorio para neumorfismo real).
+     El relieve se consigue SOLO con las sombras dobles. */
   --nm-base: #1a1d27;
   --nm-surface: #1a1d27;
   --nm-surface-sunk: #15171f;
+
+  /* Sombras: clara arriba-izquierda, oscura abajo-derecha.
+     Valores más intensos que antes para que el relieve se vea. */
   --nm-light: rgba(255, 255, 255, 0.075);
   --nm-light-strong: rgba(255, 255, 255, 0.12);
   --nm-dark: rgba(0, 0, 0, 0.8);
   --nm-dark-strong: rgba(0, 0, 0, 1);
 
+  /* Presets de sombra neumórfica */
+  --nm-raised-sm:
+    -3px -3px 8px var(--nm-light),
+    3px 3px 8px var(--nm-dark);
+  --nm-raised:
+    -5px -5px 14px var(--nm-light),
+    5px 5px 14px var(--nm-dark);
+  --nm-raised-lg:
+    -8px -8px 22px var(--nm-light),
+    8px 8px 22px var(--nm-dark);
+  --nm-raised-xl:
+    -12px -12px 30px var(--nm-light),
+    12px 12px 30px var(--nm-dark);
+  --nm-inset:
+    inset -4px -4px 12px var(--nm-light),
+    inset 4px 4px 12px var(--nm-dark);
+  --nm-inset-sm:
+    inset -2px -2px 6px var(--nm-light),
+    inset 2px 2px 6px var(--nm-dark);
+  --nm-inset-lg:
+    inset -6px -6px 16px var(--nm-light),
+    inset 6px 6px 16px var(--nm-dark);
+
+  /* --- TEXTO --- */
   --text-white: #eef1f7;
   --text-soft: #cbd2e0;
   --text-muted: #8f99ad;
@@ -30,9 +81,15 @@
   --radius-lg: 26px;
   --radius-md: 20px;
   --radius-sm: 14px;
+  --radius-xs: 12px;
 
   --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-snappy: cubic-bezier(0.34, 1.3, 0.5, 1);
+
+  transition:
+    --color-de 0.9s var(--ease-out-soft),
+    --color-a 0.9s var(--ease-out-soft),
+    --color-brillo 0.9s var(--ease-out-soft);
 }
 
 html {
@@ -54,7 +111,7 @@ body.musica-body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Auras tenues */
+/* Auras muy tenues: solo matiz de color de la canción activa */
 .aura-fondo {
   position: fixed;
   inset: 0;
@@ -68,7 +125,7 @@ body.musica-body {
   border-radius: 50%;
   filter: blur(160px);
   opacity: 0.1;
-  transition: background 1.2s var(--ease-out-soft);
+  transition: background 1.5s var(--ease-out-soft);
 }
 
 .aura-luz--1 {
@@ -96,7 +153,7 @@ body.musica-body {
 }
 
 /* ==========================================================================
-   HERO
+   HERO PLAYER — tarjeta neumórfica elevada
    ========================================================================== */
 .hero-player {
   position: relative;
@@ -106,10 +163,9 @@ body.musica-body {
   padding: clamp(1.8rem, 3.4vw, 2.8rem);
   border-radius: var(--radius-lg);
   background: var(--nm-surface);
-  box-shadow:
-    -12px -12px 30px var(--nm-light),
-    12px 12px 30px var(--nm-dark);
+  box-shadow: var(--nm-raised-xl);
   margin-bottom: 2.5rem;
+  transition: box-shadow 0.6s var(--ease-out-soft);
   overflow: hidden;
 }
 
@@ -124,7 +180,7 @@ body.musica-body {
   opacity: 0.1;
   pointer-events: none;
   filter: blur(40px);
-  transition: background 1.2s var(--ease-out-soft);
+  transition: background 1.5s var(--ease-out-soft);
 }
 
 .hero-player__cover-wrap {
@@ -145,7 +201,9 @@ body.musica-body {
     0 18px 40px -12px var(--color-brillo),
     -6px -6px 18px rgba(255, 255, 255, 0.08),
     6px 6px 18px rgba(0, 0, 0, 0.85);
-  transition: transform 0.5s var(--ease-snappy), background 1.2s var(--ease-out-soft), box-shadow 1.2s var(--ease-out-soft);
+  transition:
+    transform 0.6s var(--ease-snappy),
+    box-shadow 1s var(--ease-out-soft);
   position: relative;
   overflow: hidden;
 }
@@ -208,7 +266,9 @@ body.musica-body {
   box-shadow:
     0 6px 16px -4px var(--color-brillo),
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  transition: background 1.2s var(--ease-out-soft), box-shadow 1.2s var(--ease-out-soft);
+  transition:
+    background 1s var(--ease-out-soft),
+    box-shadow 1s var(--ease-out-soft);
 }
 
 .hero-player__title {
@@ -228,6 +288,7 @@ body.musica-body {
   font-weight: 500;
   color: var(--text-muted);
   margin: 0 0 0.6rem 0;
+  letter-spacing: -0.01em;
 }
 
 .hero-player__note {
@@ -257,10 +318,12 @@ body.musica-body {
   align-items: center;
   justify-content: center;
   box-shadow:
-    -5px -5px 14px var(--nm-light),
-    5px 5px 14px var(--nm-dark),
+    var(--nm-raised),
     0 0 26px -8px var(--color-brillo);
-  transition: transform 0.25s var(--ease-snappy), box-shadow 0.35s var(--ease-out-soft), color 0.3s ease;
+  transition:
+    transform 0.25s var(--ease-snappy),
+    box-shadow 0.35s var(--ease-out-soft),
+    color 0.35s ease;
   flex-shrink: 0;
 }
 
@@ -276,8 +339,8 @@ body.musica-body {
 .btn-play-hero:active {
   transform: scale(0.97);
   box-shadow:
-    inset -4px -4px 12px var(--nm-light),
-    inset 4px 4px 12px var(--nm-dark);
+    var(--nm-inset),
+    0 0 20px -8px var(--color-brillo);
 }
 
 .btn-play-hero svg {
@@ -291,9 +354,7 @@ body.musica-body {
   height: 46px;
   border-radius: 12px;
   background: var(--nm-surface-sunk);
-  box-shadow:
-    inset -2px -2px 6px var(--nm-light),
-    inset 2px 2px 6px var(--nm-dark);
+  box-shadow: var(--nm-inset-sm);
   padding: 4px;
 }
 
@@ -321,17 +382,16 @@ body.musica-body {
   border-radius: var(--radius-md);
   padding: 0.9rem 1.2rem;
   color: var(--text-muted);
-  box-shadow:
-    inset -4px -4px 12px var(--nm-light),
-    inset 4px 4px 12px var(--nm-dark);
-  transition: color 0.25s ease, box-shadow 0.4s var(--ease-out-soft);
+  box-shadow: var(--nm-inset);
+  transition:
+    color 0.25s ease,
+    box-shadow 0.4s var(--ease-out-soft);
 }
 
 .toolbar__search:focus-within {
   color: var(--color-de);
   box-shadow:
-    inset -6px -6px 16px var(--nm-light),
-    inset 6px 6px 16px var(--nm-dark),
+    var(--nm-inset-lg),
     0 0 22px -10px var(--color-brillo);
 }
 
@@ -367,30 +427,33 @@ body.musica-body {
   color: var(--text-soft);
   font-weight: 600;
   font-size: 0.88rem;
+  letter-spacing: -0.005em;
   cursor: pointer;
-  box-shadow:
-    -5px -5px 14px var(--nm-light),
-    5px 5px 14px var(--nm-dark);
-  transition: color 0.25s ease, box-shadow 0.35s var(--ease-out-soft), transform 0.2s var(--ease-snappy);
+  box-shadow: var(--nm-raised);
+  transition:
+    color 0.25s ease,
+    box-shadow 0.35s var(--ease-out-soft),
+    transform 0.2s var(--ease-snappy);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-tool:hover {
   color: #ffffff;
   transform: translateY(-1px);
+  box-shadow:
+    -6px -6px 14px var(--nm-light-strong),
+    6px 6px 14px var(--nm-dark-strong);
 }
 
 .btn-tool:active {
   transform: translateY(0);
-  box-shadow:
-    inset -4px -4px 12px var(--nm-light),
-    inset 4px 4px 12px var(--nm-dark);
+  box-shadow: var(--nm-inset);
 }
 
 .btn-tool.activo {
   color: #ffffff;
   box-shadow:
-    inset -4px -4px 12px var(--nm-light),
-    inset 4px 4px 12px var(--nm-dark),
+    var(--nm-inset),
     0 0 24px -8px var(--color-brillo);
 }
 
@@ -402,9 +465,9 @@ body.musica-body {
   background: var(--nm-surface-sunk);
   padding: 0.85rem 1.1rem;
   border-radius: 999px;
-  box-shadow:
-    inset -2px -2px 6px var(--nm-light),
-    inset 2px 2px 6px var(--nm-dark);
+  border: none;
+  box-shadow: var(--nm-inset-sm);
+  letter-spacing: 0.02em;
 }
 
 /* ==========================================================================
@@ -412,11 +475,12 @@ body.musica-body {
    ========================================================================== */
 .musica-lista-wrap {
   background: var(--nm-surface-sunk);
+  border: none;
   border-radius: var(--radius-lg);
   padding: 1.6rem 1.2rem 1.2rem;
   box-shadow:
-    inset -4px -4px 12px var(--nm-light),
-    inset 4px 4px 12px var(--nm-dark);
+    var(--nm-inset),
+    0 0 60px -30px rgba(0, 0, 0, 0.9);
 }
 
 .lista-cabecera {
@@ -439,6 +503,7 @@ body.musica-body {
   margin-top: 1rem;
 }
 
+/* Fila elevada */
 .pista-card {
   position: relative;
   display: grid;
@@ -451,10 +516,11 @@ body.musica-body {
   background: var(--nm-surface);
   border: none;
   cursor: pointer;
-  box-shadow:
-    -5px -5px 14px var(--nm-light),
-    5px 5px 14px var(--nm-dark);
-  transition: box-shadow 0.4s var(--ease-out-soft), transform 0.3s var(--ease-out-soft);
+  isolation: isolate;
+  box-shadow: var(--nm-raised);
+  transition:
+    box-shadow 0.4s var(--ease-out-soft),
+    transform 0.3s var(--ease-out-soft);
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -469,10 +535,12 @@ body.musica-body {
 .pista-card.activa {
   transform: translateY(0);
   box-shadow:
-    inset -4px -4px 12px var(--nm-light),
-    inset 4px 4px 12px var(--nm-dark),
+    var(--nm-inset),
     inset 3px 0 0 0 var(--color-de),
     0 0 30px -14px var(--color-brillo);
+  transition:
+    box-shadow 1s var(--ease-out-soft),
+    transform 0.3s var(--ease-out-soft);
 }
 
 .pista-card__index {
@@ -500,6 +568,10 @@ body.musica-body {
   color: var(--color-de);
 }
 
+.pista-card__hover-play {
+  display: none !important;
+}
+
 .eq-bars {
   display: flex;
   gap: 2.5px;
@@ -512,7 +584,7 @@ body.musica-body {
   background: var(--color-de);
   border-radius: 2px;
   animation: eqPulse 0.9s ease-in-out infinite alternate;
-  transition: background 1.2s var(--ease-out-soft);
+  transition: background 1s var(--ease-out-soft);
 }
 .eq-bars span:nth-child(1) { height: 40%; animation-delay: 0.1s; }
 .eq-bars span:nth-child(2) { height: 100%; animation-delay: 0.25s; }
@@ -559,7 +631,7 @@ body.musica-body {
   overflow: hidden;
   text-overflow: ellipsis;
   margin-bottom: 0.2rem;
-  transition: color 1.2s var(--ease-out-soft);
+  transition: color 0.5s var(--ease-out-soft);
 }
 
 .pista-card.activa .pista-card__name {
@@ -583,9 +655,8 @@ body.musica-body {
   line-height: 1;
   color: var(--color-a);
   background: var(--nm-surface-sunk);
-  box-shadow:
-    inset -2px -2px 6px var(--nm-light),
-    inset 2px 2px 6px var(--nm-dark);
+  border: none;
+  box-shadow: var(--nm-inset-sm);
   border-radius: 999px;
   padding: 0.3rem 0.7rem;
   margin-left: 0.4rem;
@@ -594,7 +665,7 @@ body.musica-body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color 1.2s var(--ease-out-soft);
+  transition: color 1s var(--ease-out-soft);
 }
 
 .pista-card__time {
@@ -604,6 +675,7 @@ body.musica-body {
   font-weight: 500;
   color: var(--text-muted);
   white-space: nowrap;
+  letter-spacing: -0.01em;
 }
 
 .chip-external {
@@ -616,9 +688,7 @@ body.musica-body {
   color: var(--text-soft);
   margin-right: 0.5rem;
   vertical-align: middle;
-  box-shadow:
-    inset -2px -2px 6px var(--nm-light),
-    inset 2px 2px 6px var(--nm-dark);
+  box-shadow: var(--nm-inset-sm);
 }
 
 .musica-vacio {
@@ -636,7 +706,7 @@ body.musica-body {
 }
 
 /* ==========================================================================
-   BOTÓN RETORNO
+   BOTÓN RETORNO A LA TERMINAL
    ========================================================================== */
 .musica-volver-wrap {
   text-align: center;
@@ -649,6 +719,7 @@ body.musica-body {
   gap: 0.75rem;
   padding: 1rem 2rem;
   background: var(--nm-surface);
+  border: none;
   border-radius: 999px;
   color: var(--text-soft);
   font-family: var(--font-mono);
@@ -656,26 +727,29 @@ body.musica-body {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-decoration: none;
-  box-shadow:
-    -5px -5px 14px var(--nm-light),
-    5px 5px 14px var(--nm-dark);
-  transition: color 0.25s ease, transform 0.25s var(--ease-snappy), box-shadow 0.35s var(--ease-out-soft);
+  box-shadow: var(--nm-raised);
+  transition:
+    color 0.25s ease,
+    transform 0.25s var(--ease-snappy),
+    box-shadow 0.35s var(--ease-out-soft);
 }
 
 .btn-volver-terminal:hover {
   color: #ffffff;
   transform: translateY(-2px);
+  box-shadow:
+    -7px -7px 18px var(--nm-light-strong),
+    7px 7px 18px var(--nm-dark-strong),
+    0 0 30px -12px var(--color-brillo);
 }
 
 .btn-volver-terminal:active {
   transform: translateY(0);
-  box-shadow:
-    inset -4px -4px 12px var(--nm-light),
-    inset 4px 4px 12px var(--nm-dark);
+  box-shadow: var(--nm-inset);
 }
 
 /* ==========================================================================
-   DOCK PLAYER
+   DOCK PLAYER INFERIOR
    ========================================================================== */
 .dock-player {
   position: fixed;
@@ -684,6 +758,7 @@ body.musica-body {
   transform: translateX(-50%);
   width: min(1080px, calc(100% - 2rem));
   background: var(--nm-surface);
+  border: none;
   border-radius: var(--radius-lg);
   padding: 1rem 1.7rem;
   display: grid;
@@ -695,6 +770,7 @@ body.musica-body {
     12px 12px 30px var(--nm-dark-strong),
     0 0 60px -20px var(--color-brillo);
   z-index: 100;
+  transition: box-shadow 1s var(--ease-out-soft);
 }
 
 .dock-track {
@@ -723,6 +799,7 @@ body.musica-body {
   font-weight: 700;
   font-size: 0.92rem;
   color: #ffffff;
+  letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -759,36 +836,38 @@ body.musica-body {
   color: var(--text-muted);
   cursor: pointer;
   border-radius: 50%;
-  box-shadow:
-    -3px -3px 8px var(--nm-light),
-    3px 3px 8px var(--nm-dark);
+  box-shadow: var(--nm-raised-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.25s ease, transform 0.2s var(--ease-snappy), box-shadow 0.3s var(--ease-out-soft);
+  transition:
+    color 0.25s ease,
+    transform 0.2s var(--ease-snappy),
+    box-shadow 0.3s var(--ease-out-soft);
 }
 
 .btn-dock-ctrl:hover {
   color: #ffffff;
   transform: translateY(-1px);
+  box-shadow:
+    -4px -4px 10px var(--nm-light-strong),
+    4px 4px 10px var(--nm-dark-strong);
 }
 
 .btn-dock-ctrl:active {
   transform: translateY(0);
-  box-shadow:
-    inset -2px -2px 6px var(--nm-light),
-    inset 2px 2px 6px var(--nm-dark);
+  box-shadow: var(--nm-inset-sm);
 }
 
 .btn-dock-ctrl.activo {
   color: var(--color-de);
   box-shadow:
-    inset -2px -2px 6px var(--nm-light),
-    inset 2px 2px 6px var(--nm-dark),
+    var(--nm-inset-sm),
     0 0 18px -8px var(--color-brillo);
 }
 
 .btn-dock-play {
+  position: relative;
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -800,22 +879,28 @@ body.musica-body {
   align-items: center;
   justify-content: center;
   box-shadow:
-    -5px -5px 14px var(--nm-light),
-    5px 5px 14px var(--nm-dark),
+    var(--nm-raised),
     0 0 24px -8px var(--color-brillo);
-  transition: transform 0.2s var(--ease-snappy), box-shadow 0.3s var(--ease-out-soft), color 0.3s ease;
+  transition:
+    transform 0.2s var(--ease-snappy),
+    box-shadow 0.3s var(--ease-out-soft),
+    color 0.3s ease;
 }
 
 .btn-dock-play:hover {
   transform: scale(1.06);
   color: #ffffff;
+  box-shadow:
+    -6px -6px 16px var(--nm-light-strong),
+    6px 6px 16px var(--nm-dark-strong),
+    0 0 36px -6px var(--color-brillo);
 }
 
 .btn-dock-play:active {
   transform: scale(0.96);
   box-shadow:
-    inset -4px -4px 12px var(--nm-light),
-    inset 4px 4px 12px var(--nm-dark);
+    var(--nm-inset),
+    0 0 20px -8px var(--color-brillo);
 }
 
 .btn-dock-play svg {
@@ -843,9 +928,7 @@ body.musica-body {
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  box-shadow:
-    inset -2px -2px 6px var(--nm-light),
-    inset 2px 2px 6px var(--nm-dark);
+  box-shadow: var(--nm-inset-sm);
 }
 
 .dock-seek__fill {
@@ -854,7 +937,10 @@ body.musica-body {
   border-radius: 999px;
   width: 0%;
   box-shadow: 0 0 12px -2px var(--color-brillo);
-  transition: width 0.1s linear, background 1.2s var(--ease-out-soft);
+  transition:
+    width 0.1s linear,
+    background 1s var(--ease-out-soft),
+    box-shadow 1s var(--ease-out-soft);
 }
 
 .dock-volume {
@@ -869,10 +955,11 @@ body.musica-body {
   accent-color: var(--color-de);
   cursor: pointer;
   width: 90px;
+  transition: accent-color 1s var(--ease-out-soft);
 }
 
 /* ==========================================================================
-   RESPONSIVE
+   RESPONSIVE — MÓVIL / TABLET
    ========================================================================== */
 @media (max-width: 860px) {
   body.musica-body {
