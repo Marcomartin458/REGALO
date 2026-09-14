@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Marta Airlines · Vuelo 23</title>
-  <meta name="description" content="Bienvenida a bordo del Vuelo 23. Una experiencia en cabina creada para Marta.">
+  <meta name="description" content="Bienvenida a bordo del Vuelo 23. Una experiencia en cabina creada para ti.">
   <link rel="icon" href="data:,">
 
   <!-- Tipografías de alta definición -->
@@ -605,7 +605,9 @@
             </div>
           </article>
 
-          <!-- PUERTA 3: SALA VIP SECRETO -->
+          <!-- ============================================================
+               PUERTA 3: ZONA DE CUARENTENA (BIOSECURITY LEVEL 4)
+               ============================================================ -->
           <article class="gate-boarding-station gate--vip" data-reveal data-retardo="240">
             <div class="gate-gantry">
               <div class="gantry-masts">
@@ -614,38 +616,38 @@
               <div class="gate-fids-monitor fids--vip">
                 <div class="fids-topbar">
                   <div class="fids-airline">
-                    <span class="ico">🔒</span>
-                    <span>SECURITY</span>
+                    <span class="ico">☣</span>
+                    <span>BIOSAFETY</span>
                   </div>
                   <div class="fids-gate-badge badge--vip">
-                    <span class="gate-lbl">GATE</span>
+                    <span class="gate-lbl">AREA</span>
                     <strong class="gate-id">C-03</strong>
                   </div>
                   <div class="fids-beacon beacon--restricted">
                     <span class="led"></span>
-                    <span class="txt">LOCKED</span>
+                    <span class="txt">CONTAINED</span>
                   </div>
                 </div>
 
                 <div class="fids-flight-info">
                   <div class="flight-tag">
-                    <span class="tag-title">ACCESS</span>
-                    <strong class="tag-val text-red">CODE</strong>
+                    <span class="tag-title">THREAT</span>
+                    <strong class="tag-val text-red">LEVEL 4</strong>
                   </div>
                   <div class="flight-route">
-                    <span class="route-point text-red">SEC</span>
-                    <span class="route-plane text-red">🔒</span>
-                    <span class="route-point text-red">VIP</span>
+                    <span class="route-point text-red">BIO</span>
+                    <span class="route-plane text-red">☣</span>
+                    <span class="route-point text-red">HAZ</span>
                   </div>
                   <div class="flight-tag tag--right">
-                    <span class="tag-title">LEVEL</span>
-                    <strong class="tag-val text-red">MAX</strong>
+                    <span class="tag-title">SPECIMENS</span>
+                    <strong class="tag-val text-red">—</strong>
                   </div>
                 </div>
 
                 <div class="fids-dest-banner banner--vip">
-                  <span class="dest-label">DESTINO:</span>
-                  <strong class="dest-name">SALA VIP · SECRETO</strong>
+                  <span class="dest-label">ZONA:</span>
+                  <strong class="dest-name">CUARENTENA · C-03</strong>
                 </div>
               </div>
             </div>
@@ -653,7 +655,7 @@
             <div class="gate-portal-frame frame--vip">
               <div class="jetway-tunnel-preview preview--vip">
                 <div class="tunnel-perspective">
-                  <span class="tunnel-sign text-red">RESTRICTED AREA &bull; TUNNEL C3</span>
+                  <span class="tunnel-sign text-red">BIOSECURITY LVL 4 &bull; BAY C3</span>
                 </div>
               </div>
 
@@ -672,14 +674,14 @@
                     <div class="scanner-platen platen--red">
                       <div class="laser-beam beam--red"></div>
                     </div>
-                    <span class="podium-instruction text-red">KEYPAD REQUIRED</span>
+                    <span class="podium-instruction text-red">CONTAINMENT LOCKED</span>
                   </div>
                 </div>
 
                 <div class="turnstile-podium podium--right">
                   <div class="passage-display display--locked">
                     <span class="dir-arrow text-red">&times;</span>
-                    <span class="dir-text text-red">DENIED</span>
+                    <span class="dir-text text-red">SEALED</span>
                   </div>
                   <div class="tensabarrier-bracket">
                     <span class="belt-socket socket--red"></span>
@@ -689,11 +691,11 @@
 
               <div class="gate-action-console console--vip">
                 <div class="boarding-meta">
-                  <span class="text-red">ACCESO CLASIFICADO</span>
-                  <strong class="text-red">PUERTA BLOQUEADA</strong>
+                  <span class="text-red">ACCESO BIOLÓGICO</span>
+                  <strong class="text-red">PRECINTO ACTIVO</strong>
                 </div>
                 <button type="button" class="btn-board-gate btn--vip js-abrir-candado">
-                  <span class="btn-label">DESBLOQUEAR ACCESO</span>
+                  <span class="btn-label">ROMPER PRECINTO</span>
                   <span class="btn-arrow">&rarr;</span>
                 </button>
               </div>
@@ -813,7 +815,7 @@
   </footer>
 
   <!-- ====================================================================
-       MODAL DE CANDADO VIP — se abre desde la Puerta C-03
+       MODAL DE PRECINTO BIOLÓGICO — se abre desde la Puerta C-03
        ==================================================================== -->
   <div class="candado-overlay" id="candado-overlay" aria-hidden="true">
     <div class="candado-panel" role="dialog" aria-modal="true" aria-labelledby="candado-titulo">
@@ -821,9 +823,9 @@
       <button class="candado-cerrar" type="button" aria-label="Cerrar">×</button>
 
       <div class="candado-led" id="candado-led"></div>
-      <div class="candado-badge">RESTRICTED AREA</div>
-      <h2 id="candado-titulo" class="candado-titulo">SALA VIP · PUERTA C-03</h2>
-      <p class="candado-subtitulo">Introduce el código de 4 dígitos para desbloquear el acceso.</p>
+      <div class="candado-badge">BIOSECURITY · LEVEL 4</div>
+      <h2 id="candado-titulo" class="candado-titulo">ZONA DE CUARENTENA · C-03</h2>
+      <p class="candado-subtitulo">Introduce el código de contención para romper el precinto biológico.</p>
 
       <div class="candado-display" id="candado-display">
         <span class="digito"></span>
@@ -850,12 +852,11 @@
       <p class="candado-error" id="candado-error" role="alert"></p>
 
       <div class="candado-pistas">
-        <h3 class="candado-pistas__titulo">Pistas</h3>
+        <h3 class="candado-pistas__titulo">Registro de incidencias</h3>
         <ul>
-          <li><strong>Cifra 1 y 2</strong> La edad que tenías en tu primera vez.</li>
-          <li><strong>Cifra 3 y 4</strong> La edad que tenías en tu último.</li>
+          <li><strong>Dígitos 1 y 2</strong> La edad que tenías en tu primera vez.</li>
+          <li><strong>Dígitos 3 y 4</strong> La edad que tenías en tu último.</li>
         </ul>
-        <p class="candado-pistas__nota">Ponlas en orden: primero la primera cifra, después la segunda.</p>
       </div>
 
     </div>
