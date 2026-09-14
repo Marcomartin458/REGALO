@@ -1,14 +1,16 @@
 /* ==========================================================================
-   MUSICA.CSS — Interfaz de Estudio Dinámica, Vibrante y Optimizada
-   Fixes aplicados:
-   - Tema dinámico (los colores cambian según la canción)
-   - Hover de la lista sin solapamientos
-   - Reproductor inferior no tapa contenido en móvil
+   MUSICA.CSS — Interfaz neumórfica dinámica
+   - Neumorfismo real: superficies del mismo color que el fondo, separadas
+     solo por sombras dobles (clara arriba-izq, oscura abajo-der).
+   - Estados hundidos para inputs, presionados para botones.
+   - Color dinámico por canción aplicado solo como acento (glow, línea activa,
+     barra de progreso, badges) para no romper el neumorfismo.
+   - Lista sin crossfade. Hover = elevación. Activo = hundido con acento.
+   - Dock no tapa contenido en móvil.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   PROPIEDADES CSS REGISTRADAS — permiten transicionar colores
-   de variables CSS suavemente (Safari 16.4+ / iOS 16.4+)
+   PROPIEDADES CSS REGISTRADAS — permiten transicionar colores suavemente
    -------------------------------------------------------------------------- */
 @property --color-de {
   syntax: '<color>';
@@ -27,25 +29,70 @@
 }
 
 :root {
+  /* --- COLORES DINÁMICOS (acento) --- */
   --color-de: #a855f7;
   --color-a: #ec4899;
   --color-brillo: rgba(168, 85, 247, 0.45);
   --track-a: #a855f7;
   --track-b: #ec4899;
-  --bg-deep: #07090e;
-  --card-glass: rgba(255, 255, 255, 0.05);
-  --border-glass: rgba(255, 255, 255, 0.12);
-  --text-white: #ffffff;
-  --text-muted: #94a3b8;
+
+  /* --- BASE NEUMÓRFICA --- */
+  /* La superficie y el fondo comparten color. Todo se distingue por sombras. */
+  --nm-base: #101219;
+  --nm-surface: #101219;         /* misma que base, obligatorio para neumorfismo */
+  --nm-surface-sunk: #0d0f15;    /* un pelín más oscuro para elementos hundidos */
+
+  /* Sombras: clara arriba-izquierda, oscura abajo-derecha */
+  --nm-light: rgba(255, 255, 255, 0.045);
+  --nm-light-strong: rgba(255, 255, 255, 0.075);
+  --nm-dark: rgba(0, 0, 0, 0.65);
+  --nm-dark-strong: rgba(0, 0, 0, 0.9);
+
+  /* Presets de sombra neumórfica */
+  --nm-raised-sm:
+    -3px -3px 8px var(--nm-light),
+    3px 3px 8px var(--nm-dark);
+  --nm-raised:
+    -5px -5px 12px var(--nm-light),
+    5px 5px 12px var(--nm-dark);
+  --nm-raised-lg:
+    -8px -8px 20px var(--nm-light),
+    8px 8px 20px var(--nm-dark);
+  --nm-raised-xl:
+    -12px -12px 28px var(--nm-light),
+    12px 12px 28px var(--nm-dark);
+  --nm-inset:
+    inset -4px -4px 10px var(--nm-light),
+    inset 4px 4px 10px var(--nm-dark);
+  --nm-inset-sm:
+    inset -2px -2px 6px var(--nm-light),
+    inset 2px 2px 6px var(--nm-dark);
+  --nm-inset-lg:
+    inset -6px -6px 14px var(--nm-light),
+    inset 6px 6px 14px var(--nm-dark);
+
+  /* --- TEXTO --- */
+  --text-white: #e8ecf5;
+  --text-soft: #cbd5e1;
+  --text-muted: #8b96ab;
+  --text-dim: #5c6479;
+
   --font-music: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-mono: 'Space Grotesk', monospace;
   --nav-h: 70px;
 
-  /* Transición de tema al cambiar de canción */
+  --radius-lg: 26px;
+  --radius-md: 20px;
+  --radius-sm: 14px;
+  --radius-xs: 12px;
+
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-snappy: cubic-bezier(0.34, 1.3, 0.5, 1);
+
   transition:
-    --color-de 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    --color-a 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    --color-brillo 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    --color-de 0.9s var(--ease-out-soft),
+    --color-a 0.9s var(--ease-out-soft),
+    --color-brillo 0.9s var(--ease-out-soft);
 }
 
 html {
@@ -53,18 +100,23 @@ html {
 }
 
 body.musica-body {
-  background: var(--bg-deep) !important;
+  background: var(--nm-base) !important;
   color: var(--text-white) !important;
   font-family: var(--font-music);
+  font-weight: 400;
   min-height: 100vh;
   min-height: 100svh;
   overflow-x: hidden;
   padding-bottom: calc(190px + env(safe-area-inset-bottom, 20px));
   position: relative;
   margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Auras vivas reactivas — siguen el color de la canción activa */
+/* Auras: en neumorfismo puro sobran, así que las hacemos muy tenues
+   y las mantenemos solo como matiz del fondo. Sin ellas el efecto
+   se ve más limpio, pero un toque sutil ayuda a la calidez. */
 .aura-fondo {
   position: fixed;
   inset: 0;
@@ -76,16 +128,16 @@ body.musica-body {
 .aura-luz {
   position: absolute;
   border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.35;
-  transition: background 1s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: blur(160px);
+  opacity: 0.06;
+  transition: background 1.5s var(--ease-out-soft);
 }
 
 .aura-luz--1 {
   width: min(580px, 90vw);
   height: min(580px, 90vw);
-  top: -100px;
-  right: -60px;
+  top: -140px;
+  right: -120px;
   background: var(--color-de);
 }
 
@@ -93,7 +145,7 @@ body.musica-body {
   width: min(650px, 95vw);
   height: min(650px, 95vw);
   bottom: 80px;
-  left: -120px;
+  left: -160px;
   background: var(--color-a);
 }
 
@@ -103,41 +155,64 @@ body.musica-body {
   z-index: 2;
   width: min(1140px, 92%);
   margin: 0 auto;
-  padding-top: calc(var(--nav-h) + 1.5rem);
+  padding-top: calc(var(--nav-h) + 2rem);
 }
 
 /* ==========================================================================
-   HERO PLAYER
+   HERO PLAYER — tarjeta neumórfica elevada
    ========================================================================== */
 .hero-player {
+  position: relative;
   display: flex;
   align-items: center;
   gap: clamp(1.5rem, 4vw, 3rem);
-  padding: clamp(1.6rem, 3vw, 2.5rem);
-  border-radius: 24px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-  border: 1px solid var(--border-glass);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  box-shadow: 0 25px 50px -15px rgba(0, 0, 0, 0.6), 0 0 40px var(--color-brillo);
-  margin-bottom: 2rem;
-  transition: box-shadow 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: clamp(1.8rem, 3.4vw, 2.8rem);
+  border-radius: var(--radius-lg);
+  background: var(--nm-surface);
+  box-shadow: var(--nm-raised-xl);
+  margin-bottom: 2.5rem;
+  transition: box-shadow 0.6s var(--ease-out-soft);
+  overflow: hidden;
+}
+
+/* Halo de color sutilísimo */
+.hero-player::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 55%;
+  height: 200%;
+  background: radial-gradient(circle, var(--color-de), transparent 65%);
+  opacity: 0.08;
+  pointer-events: none;
+  filter: blur(40px);
+  transition: background 1.5s var(--ease-out-soft);
 }
 
 .hero-player__cover-wrap {
   flex-shrink: 0;
+  position: relative;
+  z-index: 1;
 }
 
+/* La portada mantiene su gradiente de color: es el único elemento
+   "plano" del hero, y sirve como contrapunto al neumorfismo. */
 .hero-player__cover {
   width: clamp(130px, 18vw, 190px);
   height: clamp(130px, 18vw, 190px);
-  border-radius: 20px;
+  border-radius: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, var(--color-de), var(--color-a));
-  box-shadow: 0 16px 36px var(--color-brillo);
-  transition: transform 0.5s ease, box-shadow 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow:
+    0 18px 40px -12px var(--color-brillo),
+    -6px -6px 18px rgba(255, 255, 255, 0.06),
+    6px 6px 18px rgba(0, 0, 0, 0.7);
+  transition:
+    transform 0.6s var(--ease-snappy),
+    box-shadow 1s var(--ease-out-soft);
   position: relative;
   overflow: hidden;
 }
@@ -150,11 +225,11 @@ body.musica-body {
   width: 80%;
   height: 80%;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 
-    0 0 0 8px rgba(0, 0, 0, 0.25),
-    0 0 0 16px rgba(255, 255, 255, 0.15),
-    0 0 0 24px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 0 0 8px rgba(0, 0, 0, 0.28),
+    0 0 0 16px rgba(255, 255, 255, 0.13),
+    0 0 0 24px rgba(0, 0, 0, 0.22);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -181,29 +256,38 @@ body.musica-body {
 .hero-player__content {
   flex: 1;
   min-width: 0;
+  position: relative;
+  z-index: 1;
 }
 
+/* Badge: única pieza con color pleno, funciona como acento de tema */
 .hero-player__badge {
   display: inline-block;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   color: #ffffff;
-  background: var(--color-de);
-  padding: 0.25rem 0.75rem;
+  background: linear-gradient(135deg, var(--color-de), var(--color-a));
+  padding: 0.35rem 0.9rem;
   border-radius: 999px;
-  margin-bottom: 0.65rem;
-  transition: background 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: 0.9rem;
+  box-shadow:
+    0 6px 16px -4px var(--color-brillo),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition:
+    background 1s var(--ease-out-soft),
+    box-shadow 1s var(--ease-out-soft);
 }
 
 .hero-player__title {
   font-size: clamp(1.4rem, 2.8vw, 2.3rem);
   font-weight: 800;
-  margin: 0 0 0.35rem 0;
+  margin: 0 0 0.4rem 0;
   line-height: 1.15;
   color: #ffffff;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -211,17 +295,18 @@ body.musica-body {
 
 .hero-player__artist {
   font-size: clamp(1rem, 1.4vw, 1.25rem);
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-muted);
   margin: 0 0 0.6rem 0;
+  letter-spacing: -0.01em;
 }
 
 .hero-player__note {
   font-size: 0.92rem;
-  color: #e2e8f0;
+  color: var(--text-soft);
   font-style: italic;
-  margin: 0 0 1.2rem 0;
-  line-height: 1.4;
+  margin: 0 0 1.4rem 0;
+  line-height: 1.5;
 }
 
 .hero-player__controls {
@@ -230,40 +315,62 @@ body.musica-body {
   gap: 1.5rem;
 }
 
+/* Botón play hero: neumórfico elevado con glow tintado sutil */
 .btn-play-hero {
-  width: 56px;
-  height: 56px;
+  position: relative;
+  width: 62px;
+  height: 62px;
   border-radius: 50%;
   border: none;
-  background: #ffffff;
-  color: #0b0f19;
+  background: var(--nm-surface);
+  color: var(--text-white);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow:
+    var(--nm-raised),
+    0 0 26px -8px var(--color-brillo);
+  transition:
+    transform 0.25s var(--ease-snappy),
+    box-shadow 0.35s var(--ease-out-soft),
+    color 0.35s ease;
   flex-shrink: 0;
 }
 
 .btn-play-hero:hover {
-  transform: scale(1.08);
-  box-shadow: 0 14px 30px rgba(255, 255, 255, 0.45);
+  transform: scale(1.05);
+  color: #ffffff;
+  box-shadow:
+    -6px -6px 16px var(--nm-light-strong),
+    6px 6px 16px var(--nm-dark-strong),
+    0 0 40px -6px var(--color-brillo);
+}
+
+.btn-play-hero:active {
+  transform: scale(0.97);
+  box-shadow:
+    var(--nm-inset),
+    0 0 20px -8px var(--color-brillo);
 }
 
 .btn-play-hero svg {
   width: 22px;
   height: 22px;
+  fill: currentColor;
 }
 
 .hero-visualizer {
   width: min(240px, 45vw);
   height: 46px;
-  border-radius: 8px;
+  border-radius: 12px;
+  background: var(--nm-surface-sunk);
+  box-shadow: var(--nm-inset-sm);
+  padding: 4px;
 }
 
 /* ==========================================================================
-   TOOLBAR
+   TOOLBAR — búsqueda hundida + botones elevados
    ========================================================================== */
 .musica-toolbar {
   display: flex;
@@ -274,25 +381,30 @@ body.musica-body {
   flex-wrap: wrap;
 }
 
+/* Buscador: estado hundido (inset) */
 .toolbar__search {
   flex: 1;
   min-width: 260px;
-  max-width: 420px;
+  max-width: 440px;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: var(--card-glass);
-  border: 1px solid var(--border-glass);
-  border-radius: 12px;
-  padding: 0.75rem 1.1rem;
+  background: var(--nm-surface-sunk);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1.2rem;
   color: var(--text-muted);
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+  box-shadow: var(--nm-inset);
+  transition:
+    color 0.25s ease,
+    box-shadow 0.4s var(--ease-out-soft);
 }
 
 .toolbar__search:focus-within {
-  border-color: var(--color-de);
-  box-shadow: 0 0 15px var(--color-brillo);
-  color: #ffffff;
+  color: var(--color-de);
+  box-shadow:
+    var(--nm-inset-lg),
+    0 0 22px -10px var(--color-brillo);
 }
 
 .toolbar__search input {
@@ -303,109 +415,150 @@ body.musica-body {
   width: 100%;
   font-size: 0.92rem;
   font-family: inherit;
+  font-weight: 500;
+}
+
+.toolbar__search input::placeholder {
+  color: var(--text-dim);
 }
 
 .toolbar__actions {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.9rem;
 }
 
+/* Botón pill elevado */
 .btn-tool {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.7rem 1.1rem;
-  border-radius: 10px;
-  border: 1px solid var(--border-glass);
-  background: var(--card-glass);
-  color: #ffffff;
+  padding: 0.85rem 1.3rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--nm-surface);
+  color: var(--text-soft);
   font-weight: 600;
   font-size: 0.88rem;
+  letter-spacing: -0.005em;
   cursor: pointer;
-  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+  box-shadow: var(--nm-raised);
+  transition:
+    color 0.25s ease,
+    box-shadow 0.35s var(--ease-out-soft),
+    transform 0.2s var(--ease-snappy);
+  -webkit-tap-highlight-color: transparent;
 }
 
-.btn-tool:hover,
+.btn-tool:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow:
+    -6px -6px 14px var(--nm-light-strong),
+    6px 6px 14px var(--nm-dark-strong);
+}
+
+.btn-tool:active {
+  transform: translateY(0);
+  box-shadow: var(--nm-inset);
+}
+
+/* Estado activo: se hunde y toma color de acento */
 .btn-tool.activo {
-  background: var(--color-de);
-  border-color: var(--color-de);
-  box-shadow: 0 0 20px var(--color-brillo);
+  color: #ffffff;
+  box-shadow:
+    var(--nm-inset),
+    0 0 24px -8px var(--color-brillo);
 }
 
 .counter-badge {
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
+  font-weight: 600;
   color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.04);
-  padding: 0.7rem 0.95rem;
-  border-radius: 10px;
-  border: 1px solid var(--border-glass);
+  background: var(--nm-surface-sunk);
+  padding: 0.85rem 1.1rem;
+  border-radius: 999px;
+  border: none;
+  box-shadow: var(--nm-inset-sm);
+  letter-spacing: 0.02em;
 }
 
 /* ==========================================================================
-   LISTA DE CANCIONES
+   LISTA DE CANCIONES — cada fila es una superficie neumórfica
    ========================================================================== */
 .musica-lista-wrap {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border-glass);
-  border-radius: 20px;
-  padding: 1.2rem;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 1.6rem 1.2rem 1.2rem;
+  box-shadow: var(--nm-inset);
 }
 
 .lista-cabecera {
   display: grid;
   grid-template-columns: 44px 1fr 90px;
-  padding: 0.6rem 1rem 0.8rem;
+  padding: 0.5rem 1.1rem 1rem;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  color: var(--text-muted);
-  letter-spacing: 0.1em;
-  border-bottom: 1px solid var(--border-glass);
+  color: var(--text-dim);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .canciones-grid {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  margin-top: 0.6rem;
+  gap: 0.85rem;
+  margin-top: 0.9rem;
 }
 
+/* Fila elevada */
 .pista-card {
+  position: relative;
   display: grid;
-  grid-template-columns: 44px 48px 1fr 90px;
+  grid-template-columns: 44px 52px minmax(0, 1fr) 90px;
   align-items: center;
   gap: 1rem;
-  padding: 0.75rem 1rem;
-  border-radius: 14px;
-  background: transparent;
-  border: 1px solid transparent;
+  min-height: 78px;
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--radius-md);
+  background: var(--nm-surface);
+  border: none;
   cursor: pointer;
-  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
-  opacity: 1 !important;
+  isolation: isolate;
+  box-shadow: var(--nm-raised-sm);
+  transition:
+    box-shadow 0.4s var(--ease-out-soft),
+    transform 0.3s var(--ease-out-soft);
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
+/* Hover: se eleva más (más separación de la "superficie") */
 .pista-card:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateX(4px);
+  transform: translateY(-2px);
+  box-shadow:
+    -6px -6px 16px var(--nm-light-strong),
+    6px 6px 16px var(--nm-dark-strong);
 }
 
+/* Activa: hundida + acento lateral del color del tema */
 .pista-card.activa {
-  background: rgba(255, 255, 255, 0.09);
-  border-color: var(--color-de);
-  box-shadow: 0 4px 20px var(--color-brillo);
-  transition: background 0.25s ease, border-color 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s ease;
+  transform: translateY(0);
+  box-shadow:
+    var(--nm-inset),
+    inset 3px 0 0 0 var(--color-de),
+    0 0 24px -12px var(--color-brillo);
+  transition:
+    box-shadow 1s var(--ease-out-soft),
+    transform 0.3s var(--ease-out-soft);
 }
 
-/* --- Columna índice: número ↔ icono play ↔ ecualizador --- */
+/* Columna índice */
 .pista-card__index {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -414,33 +567,27 @@ body.musica-body {
   flex-shrink: 0;
 }
 
-.pista-card__num,
-.pista-card__hover-play {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-
 .pista-card__num {
   font-family: var(--font-mono);
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--text-muted);
-  opacity: 1;
+  transition: color 0.25s ease;
+}
+
+.pista-card:hover .pista-card__num {
+  color: #ffffff;
+}
+
+.pista-card.activa .pista-card__num {
+  color: var(--color-de);
 }
 
 .pista-card__hover-play {
-  color: #ffffff;
-  opacity: 0;
+  display: none !important;
 }
 
-.pista-card:hover .pista-card__num { opacity: 0; }
-.pista-card:hover .pista-card__hover-play { opacity: 1; }
-
+/* Ecualizador */
 .eq-bars {
   display: flex;
   gap: 2.5px;
@@ -453,7 +600,7 @@ body.musica-body {
   background: var(--color-de);
   border-radius: 2px;
   animation: eqPulse 0.9s ease-in-out infinite alternate;
-  transition: background 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background 1s var(--ease-out-soft);
 }
 .eq-bars span:nth-child(1) { height: 40%; animation-delay: 0.1s; }
 .eq-bars span:nth-child(2) { height: 100%; animation-delay: 0.25s; }
@@ -463,33 +610,47 @@ body.musica-body {
   to { height: 15%; }
 }
 
+/* Miniatura: mantiene su gradiente (rompe el neumorfismo a propósito,
+   es el "objeto" que vive dentro de la superficie) */
 .pista-card__thumb {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
   color: #ffffff;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+  box-shadow:
+    0 8px 18px -6px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   flex-shrink: 0;
   background-size: cover;
+  overflow: hidden;
+  transition: transform 0.3s var(--ease-snappy);
 }
 
+.pista-card:hover .pista-card__thumb {
+  transform: scale(1.04);
+}
+
+/* Info */
 .pista-card__info {
   min-width: 0;
+  overflow: hidden;
 }
 
 .pista-card__name {
   font-size: 1rem;
   font-weight: 700;
+  line-height: 1.3;
   color: #ffffff;
+  letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 0.15rem;
-  transition: color 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: 0.2rem;
+  transition: color 0.5s var(--ease-out-soft);
 }
 
 .pista-card.activa .pista-card__name {
@@ -498,6 +659,7 @@ body.musica-body {
 
 .pista-card__artist {
   font-size: 0.85rem;
+  line-height: 1.25;
   color: var(--text-muted);
   font-weight: 500;
   white-space: nowrap;
@@ -507,47 +669,59 @@ body.musica-body {
 
 .pista-card__tag {
   display: inline-block;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1;
   color: var(--color-a);
-  background: rgba(236, 72, 153, 0.12);
-  border: 1px solid rgba(236, 72, 153, 0.3);
-  border-radius: 4px;
-  padding: 0.1rem 0.45rem;
-  margin-top: 0.25rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: none;
+  box-shadow:
+    inset -1px -1px 3px rgba(255, 255, 255, 0.03),
+    inset 1px 1px 3px rgba(0, 0, 0, 0.5);
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  max-width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 100%;
-  transition: color 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color 1s var(--ease-out-soft);
 }
 
 .pista-card__time {
   text-align: right;
   font-family: var(--font-mono);
   font-size: 0.85rem;
+  font-weight: 500;
   color: var(--text-muted);
+  white-space: nowrap;
+  letter-spacing: -0.01em;
 }
 
 .chip-external {
+  display: inline-block;
   font-size: 0.68rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: var(--nm-surface-sunk);
+  color: var(--text-soft);
   margin-right: 0.5rem;
+  vertical-align: middle;
+  box-shadow: var(--nm-inset-sm);
 }
 
 .musica-vacio {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 3.5rem 1rem;
   color: var(--text-muted);
   font-size: 0.95rem;
 }
 
 .musica-estado-msg {
   font-size: 0.82rem;
-  color: var(--text-muted);
+  color: var(--text-dim);
   text-align: center;
   margin-bottom: 1rem;
 }
@@ -564,65 +738,77 @@ body.musica-body {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.9rem 1.8rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-glass);
+  padding: 1rem 2rem;
+  background: var(--nm-surface);
+  border: none;
   border-radius: 999px;
-  color: #ffffff;
+  color: var(--text-soft);
   font-family: var(--font-mono);
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-decoration: none;
-  transition: all 0.25s ease;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--nm-raised);
+  transition:
+    color 0.25s ease,
+    transform 0.25s var(--ease-snappy),
+    box-shadow 0.35s var(--ease-out-soft);
 }
 
 .btn-volver-terminal:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: var(--color-de);
+  color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--color-brillo);
+  box-shadow:
+    -7px -7px 18px var(--nm-light-strong),
+    7px 7px 18px var(--nm-dark-strong),
+    0 0 30px -12px var(--color-brillo);
+}
+
+.btn-volver-terminal:active {
+  transform: translateY(0);
+  box-shadow: var(--nm-inset);
 }
 
 /* ==========================================================================
-   DOCK PLAYER INFERIOR
+   DOCK PLAYER INFERIOR — panel neumórfico flotante
    ========================================================================== */
 .dock-player {
   position: fixed;
-  bottom: calc(1.2rem + env(safe-area-inset-bottom, 0px));
+  bottom: calc(1.4rem + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%);
   width: min(1080px, calc(100% - 2rem));
-  background: rgba(13, 16, 26, 0.88);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border: 1px solid var(--border-glass);
-  border-radius: 20px;
-  padding: 0.85rem 1.6rem;
+  background: var(--nm-surface);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.7rem;
   display: grid;
   grid-template-columns: 260px 1fr 180px;
   align-items: center;
   gap: 1.5rem;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  box-shadow:
+    -10px -10px 24px var(--nm-light),
+    10px 10px 26px var(--nm-dark-strong),
+    0 0 50px -20px var(--color-brillo);
   z-index: 100;
-  transition: border-color 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: box-shadow 1s var(--ease-out-soft);
 }
 
 .dock-track {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.9rem;
   min-width: 0;
 }
 
 .dock-track__thumb {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
   flex-shrink: 0;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  box-shadow:
+    0 8px 18px -6px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .dock-track__meta {
@@ -634,6 +820,7 @@ body.musica-body {
   font-weight: 700;
   font-size: 0.92rem;
   color: #ffffff;
+  letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -641,7 +828,8 @@ body.musica-body {
 
 .dock-track__artist {
   display: block;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 500;
   color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
@@ -652,7 +840,7 @@ body.musica-body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.5rem;
 }
 
 .dock-controls__buttons {
@@ -661,113 +849,157 @@ body.musica-body {
   gap: 1.1rem;
 }
 
+/* Controles secundarios: botón circular neumórfico pequeño */
 .btn-dock-ctrl {
-  background: transparent;
+  width: 36px;
+  height: 36px;
+  background: var(--nm-surface);
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 0.25s ease, transform 0.2s ease;
+  border-radius: 50%;
+  box-shadow: var(--nm-raised-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  transition:
+    color 0.25s ease,
+    transform 0.2s var(--ease-snappy),
+    box-shadow 0.3s var(--ease-out-soft);
 }
 
-.btn-dock-ctrl:hover,
-.btn-dock-ctrl.activo {
+.btn-dock-ctrl:hover {
   color: #ffffff;
-  transform: scale(1.1);
+  transform: translateY(-1px);
+  box-shadow:
+    -4px -4px 10px var(--nm-light-strong),
+    4px 4px 10px var(--nm-dark-strong);
+}
+
+.btn-dock-ctrl:active {
+  transform: translateY(0);
+  box-shadow: var(--nm-inset-sm);
 }
 
 .btn-dock-ctrl.activo {
   color: var(--color-de);
+  box-shadow:
+    var(--nm-inset-sm),
+    0 0 18px -8px var(--color-brillo);
 }
 
+/* Botón play del dock */
 .btn-dock-play {
-  width: 42px;
-  height: 42px;
+  position: relative;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: #ffffff;
-  color: #07090e;
+  background: var(--nm-surface);
+  color: var(--text-white);
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.3);
+  box-shadow:
+    var(--nm-raised),
+    0 0 24px -8px var(--color-brillo);
+  transition:
+    transform 0.2s var(--ease-snappy),
+    box-shadow 0.3s var(--ease-out-soft),
+    color 0.3s ease;
 }
 
 .btn-dock-play:hover {
-  transform: scale(1.08);
-  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.45);
+  transform: scale(1.06);
+  color: #ffffff;
+  box-shadow:
+    -6px -6px 16px var(--nm-light-strong),
+    6px 6px 16px var(--nm-dark-strong),
+    0 0 36px -6px var(--color-brillo);
+}
+
+.btn-dock-play:active {
+  transform: scale(0.96);
+  box-shadow:
+    var(--nm-inset),
+    0 0 20px -8px var(--color-brillo);
 }
 
 .btn-dock-play svg {
   width: 18px;
   height: 18px;
+  fill: currentColor;
 }
 
+/* Barra de progreso: hundida, con fill tintado */
 .dock-seek {
   width: 100%;
   display: flex;
   align-items: center;
   gap: 0.75rem;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-dim);
 }
 
 .dock-seek__bar {
   flex: 1;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 6px;
+  height: 8px;
+  background: var(--nm-surface-sunk);
+  border-radius: 999px;
   cursor: pointer;
   position: relative;
+  overflow: hidden;
+  box-shadow: var(--nm-inset-sm);
 }
 
 .dock-seek__fill {
   height: 100%;
-  background: var(--color-de);
-  border-radius: 6px;
+  background: linear-gradient(90deg, var(--color-de), var(--color-a));
+  border-radius: 999px;
   width: 0%;
-  box-shadow: 0 0 10px var(--color-de);
-  transition: width 0.1s linear, background 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 12px -2px var(--color-brillo);
+  transition:
+    width 0.1s linear,
+    background 1s var(--ease-out-soft),
+    box-shadow 1s var(--ease-out-soft);
 }
 
 .dock-volume {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.65rem;
-  color: var(--text-muted);
+  gap: 0.75rem;
+  color: var(--text-dim);
 }
 
 .dock-volume input[type="range"] {
   accent-color: var(--color-de);
   cursor: pointer;
   width: 90px;
-  transition: accent-color 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: accent-color 1s var(--ease-out-soft);
 }
 
 /* ==========================================================================
    RESPONSIVE — MÓVIL / TABLET
    ========================================================================== */
 @media (max-width: 860px) {
-  /* Padding inferior generoso para que el dock fijo nunca tape contenido */
   body.musica-body {
-    padding-bottom: calc(220px + env(safe-area-inset-bottom, 20px));
+    padding-bottom: calc(230px + env(safe-area-inset-bottom, 20px));
   }
 
   .musica-layout {
     padding-bottom: 1rem;
+    padding-top: calc(var(--nav-h) + 1.4rem);
   }
 
   .hero-player {
     flex-direction: column;
     text-align: center;
+    gap: 1.4rem;
+    padding: 1.8rem 1.4rem;
   }
 
   .hero-player__controls {
@@ -775,16 +1007,16 @@ body.musica-body {
   }
 
   .hero-visualizer {
-    width: min(200px, 55vw);
+    width: min(220px, 60vw);
   }
 
   .dock-player {
     grid-template-columns: 1fr;
-    gap: 0.65rem;
-    padding: 0.75rem 1rem;
-    bottom: calc(0.6rem + env(safe-area-inset-bottom, 0px));
-    width: calc(100% - 1.2rem);
-    border-radius: 16px;
+    gap: 0.75rem;
+    padding: 0.9rem 1.1rem;
+    bottom: calc(0.7rem + env(safe-area-inset-bottom, 0px));
+    width: calc(100% - 1.4rem);
+    border-radius: 22px;
   }
 
   .dock-volume {
@@ -792,23 +1024,26 @@ body.musica-body {
   }
 
   .dock-track__thumb {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
   }
 
   .lista-cabecera {
     grid-template-columns: 34px 1fr 60px;
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
   }
 
   .pista-card {
-    grid-template-columns: 28px 42px 1fr 60px;
-    gap: 0.65rem;
-    padding: 0.65rem 0.75rem;
+    grid-template-columns: 28px 46px minmax(0, 1fr) 60px;
+    gap: 0.7rem;
+    padding: 0.75rem 0.85rem;
+    min-height: 72px;
   }
 
   .pista-card__thumb {
-    width: 42px;
-    height: 42px;
+    width: 46px;
+    height: 46px;
   }
 
   .musica-toolbar {
@@ -827,8 +1062,13 @@ body.musica-body {
 
 @media (max-width: 420px) {
   .pista-card {
-    grid-template-columns: 24px 40px 1fr 52px;
+    grid-template-columns: 24px 42px minmax(0, 1fr) 52px;
     gap: 0.55rem;
+  }
+
+  .pista-card__thumb {
+    width: 42px;
+    height: 42px;
   }
 
   .pista-card__name {
@@ -837,5 +1077,14 @@ body.musica-body {
 
   .pista-card__artist {
     font-size: 0.78rem;
+  }
+
+  .hero-player__title {
+    font-size: 1.3rem;
+  }
+
+  .hero-player__cover {
+    width: 140px;
+    height: 140px;
   }
 }

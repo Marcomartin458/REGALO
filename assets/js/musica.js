@@ -1,8 +1,7 @@
 /* ==========================================================================
    MUSICA.JS — Reproductor de la mixtape con tema dinámico
-   - Cada canción tiene su propio color (hash del nombre) y ahora TODO
-     el tema (auras, hero, botones, ecualizador, dock) cambia con ella.
-   - La transición de color la hace CSS vía @property + transition.
+   - Cada canción tiene su propio color y TODO el tema cambia con ella.
+   - Ya NO se genera el span de hover-play (se eliminó el crossfade).
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', async () => {
   const listaEl = document.getElementById('musica-lista');
@@ -39,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const estado = { indiceActual: 0, sonando: false, aleatorio: false, repetir: 'apagado', cola: [], filtro: '' };
 
   /* ---------------------------------------------------------------
-     COLOR ÚNICO POR CANCIÓN — hash simple del nombre de archivo
+     COLOR ÚNICO POR CANCIÓN
      --------------------------------------------------------------- */
   function hashTexto(texto){
     let h = 0;
@@ -63,7 +62,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
   }
 
-  /* Convierte un hex (#rrggbb) a rgba con la opacidad indicada. */
   function hexARgba(hex, alpha){
     const limpio = hex.replace('#', '');
     const bigint = parseInt(limpio.length === 3
@@ -183,24 +181,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   function iconoPlay(){ return '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'; }
   function iconoPausa(){ return '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>'; }
   function iconoNota(){ return '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>'; }
-  function iconoPlayMini(){ return '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'; }
 
   /* ---------------------------------------------------------------
-     TEMA DINÁMICO — actualiza las variables CSS de color según la
-     canción activa. El CSS (@property + transition) hace el resto:
-     toda la página cambia de color suavemente.
+     TEMA DINÁMICO
      --------------------------------------------------------------- */
   function aplicarColorAmbiente(portada){
     const de = portada?.de || '#a855f7';
     const a = portada?.a || '#ec4899';
     const raiz = document.documentElement.style;
 
-    // Tema general (hero, botones, ecualizador, dock, auras...)
     raiz.setProperty('--color-de', de);
     raiz.setProperty('--color-a', a);
     raiz.setProperty('--color-brillo', hexARgba(de, 0.45));
-
-    // Colores del visualizador (usa --track-a/b)
     raiz.setProperty('--track-a', de);
     raiz.setProperty('--track-b', a);
   }
@@ -225,12 +217,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       listaEl.innerHTML = '<div class="musica-vacio"><span class="musica-vacio__icono">🔍</span>Ninguna canción coincide con esa búsqueda.</div>';
       return;
     }
+
+    // Sin crossfade: el índice siempre muestra el número o el ecualizador.
     listaEl.innerHTML = items.map((c) => {
       const activa = c.indiceOriginal === estado.indiceActual;
       const sonandoAqui = activa && estado.sonando;
       const celdaIndice = sonandoAqui
         ? '<div class="eq-bars"><span></span><span></span><span></span></div>'
-        : `<span class="pista-card__num">${c.indiceOriginal + 1}</span>${iconoPlayMini().replace('<svg', '<svg class="pista-card__hover-play"')}`;
+        : `<span class="pista-card__num">${c.indiceOriginal + 1}</span>`;
       return `
       <article class="pista-card ${activa ? 'activa' : ''}" data-reveal data-indice="${c.indiceOriginal}" tabindex="0" role="button"
         aria-label="Reproducir ${c.titulo}">
@@ -343,7 +337,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   /* ---------------------------------------------------------------
-     VISUALIZADOR DE AUDIO EN VIVO (Web Audio API)
+     VISUALIZADOR DE AUDIO EN VIVO
      --------------------------------------------------------------- */
   let contextoAudio, nodoAnalizador, nodoFuente, datosFrecuencia, vizActivo = false;
   function iniciarVisualizador(){
@@ -377,8 +371,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       nodoAnalizador.getByteFrequencyData(datosFrecuencia);
       const n = datosFrecuencia.length;
       const anchoBarra = ancho / n * .68;
-      // Lee la variable CSS en cada frame para que el visualizador
-      // también siga el color de la canción activa.
       ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--track-a') || '#a855f7';
       for(let i = 0; i < n; i++){
         const h = Math.max(3, (datosFrecuencia[i] / 255) * alto);
