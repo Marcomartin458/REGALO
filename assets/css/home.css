@@ -1,16 +1,14 @@
 /* ==========================================================================
-   HOME.CSS — PERSPECTIVA DE CABINA Y TERMINAL DE DÍA (ZERO SCROLL TOTAL)
-   1. Escena de cabina (Asiento 23A): 100% de la pantalla, sin barras de scroll.
-   2. Spacing simétrico y desahogado bajo la navbar.
-   3. Terminal de aeropuerto de DÍA: Ventanal con pista activa y aviones animados
-      (avión taxiando, avión despegando, tractor de maletas, radar giratorio).
-   4. Tablón Solari mecánico Split-Flap ("DEPARTURES" estilo aeropuerto).
-   5. 4 Puertas de embarque compactas en 1 fila (desktop) y 1 columna amplia (móvil)
-      con legibilidad absoluta y contraste perfecto (cero texto oscuro).
+   HOME.CSS — PERSPECTIVA DE CABINA Y TERMINAL DE DÍA
+   Fixes aplicados:
+   - Ventanilla: el canvas de Three.js ya no sobresale del marco redondeado
+     en Safari iOS (mask hack + border-radius en el propio canvas).
+   - Tablón Split-Flap: no se desborda en móvil, tiles redimensionados.
+   - Vestíbulo: scroll intacto en móvil.
    ========================================================================== */
 
 /* ==========================================================================
-   CONTROL DE VISIBILIDAD DE ESTADOS & BLOQUEO TOTAL DE SCROLL (DESKTOP)
+   CONTROL DE VISIBILIDAD DE ESTADOS & BLOQUEO DE SCROLL (DESKTOP)
    ========================================================================== */
 html, body {
   margin: 0 !important;
@@ -56,7 +54,7 @@ body.en-vuelo .vestibulo {
 }
 
 /* ==========================================================================
-   ESCENA 1: INTERIOR DE CABINA (AJUSTADO A 100% PANTALLA SIN SCROLL)
+   ESCENA 1: INTERIOR DE CABINA
    ========================================================================== */
 .escena-vuelo {
   position: fixed;
@@ -308,6 +306,11 @@ body.en-vuelo .vestibulo {
   display: flex;
 }
 
+/* --------------------------------------------------------------------------
+   FIX SAFARI iOS: el canvas de Three.js no se recorta con border-radius
+   del padre. Hay que (a) forzar compositing con translateZ(0) y mask hack,
+   y (b) aplicar el propio border-radius también al canvas.
+   -------------------------------------------------------------------------- */
 .ventanilla-cristal {
   position: relative;
   width: 100%;
@@ -317,6 +320,11 @@ body.en-vuelo .vestibulo {
   background: #020817;
   box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.8), inset 0 0 8px rgba(0, 0, 0, 0.95);
   isolation: isolate;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
 }
 
 .webgl-canvas-holder {
@@ -325,12 +333,17 @@ body.en-vuelo .vestibulo {
   width: 100%;
   height: 100%;
   z-index: 1;
+  border-radius: inherit;
+  overflow: hidden;
+  transform: translateZ(0);
 }
 
 .webgl-canvas-holder canvas {
   width: 100% !important;
   height: 100% !important;
   display: block;
+  /* Doble seguridad: el canvas también lleva el border-radius */
+  border-radius: 42% 42% 38% 38% / 28% 28% 24% 24%;
 }
 
 .cristal-tint {
@@ -539,7 +552,7 @@ body.en-vuelo .vestibulo {
 }
 
 /* ==========================================================================
-   ESCENA 2: VESTÍBULO TERMINAL DE AEROPUERTO DE DÍA (ZERO SCROLL DESKTOP)
+   ESCENA 2: VESTÍBULO TERMINAL DE AEROPUERTO DE DÍA
    ========================================================================== */
 .vestibulo {
   position: fixed;
@@ -570,7 +583,6 @@ body.en-vuelo .vestibulo {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Cristalera panorámica fija de aeropuerto de día */
 .aeropuerto-tarmac-panoramica {
   position: absolute;
   inset: 0;
@@ -586,7 +598,6 @@ body.en-vuelo .vestibulo {
   display: block;
 }
 
-/* Contenedor central del dashboard de la terminal */
 .terminal-dashboard-wrapper {
   position: relative;
   z-index: 5;
@@ -613,6 +624,7 @@ body.en-vuelo .vestibulo {
   padding: clamp(0.55rem, 1.2vh, 0.85rem) clamp(0.85rem, 2vw, 1.3rem);
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.4), 0 0 0 1px #050608;
   flex-shrink: 0;
+  overflow: hidden; /* nada se sale del marco */
 }
 
 .tablon-header {
@@ -659,6 +671,7 @@ body.en-vuelo .vestibulo {
   font-weight: 700;
   color: #cbd5e1 !important;
   letter-spacing: 0.1em;
+  white-space: nowrap;
 }
 
 .tablon-cuerpo {
@@ -667,6 +680,7 @@ body.en-vuelo .vestibulo {
   gap: 0.38rem;
 }
 
+/* FIX: overflow oculto y flex-wrap no permitido, forzamos encogimiento */
 .tablon-fila {
   display: flex;
   justify-content: space-between;
@@ -676,6 +690,8 @@ body.en-vuelo .vestibulo {
   padding: 0.22rem 0.5rem;
   border-radius: 5px;
   border: 1px solid #191e2b;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .tablon-fila.fila--status {
@@ -688,14 +704,17 @@ body.en-vuelo .vestibulo {
    ========================================================================== */
 .split-flap-row {
   display: inline-flex;
-  gap: 2.5px;
+  gap: 2px;
   perspective: 700px;
+  min-width: 0;
+  flex-shrink: 1;
+  overflow: hidden;
 }
 
 .flap-tile {
   position: relative;
-  width: clamp(18px, 2.2vw, 26px);
-  height: clamp(26px, 3.2vw, 36px);
+  width: clamp(11px, 1.4vw, 22px);
+  height: clamp(18px, 2.4vw, 32px);
   background: #14171f;
   border-radius: 2.5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -703,11 +722,12 @@ body.en-vuelo .vestibulo {
   align-items: center;
   justify-content: center;
   font-family: 'Montserrat', monospace, sans-serif;
-  font-size: clamp(0.95rem, 1.6vw, 1.4rem);
+  font-size: clamp(0.6rem, 1.1vw, 1.15rem);
   font-weight: 800;
   overflow: hidden;
   user-select: none;
   color: #f8fafc !important;
+  flex-shrink: 0;
 }
 
 .flap-tile--space {
@@ -753,8 +773,33 @@ body.en-vuelo .vestibulo {
   100% { transform: rotateX(0deg); filter: brightness(1); }
 }
 
+/* En móvil, reducir aún más los tiles para que quepan todos */
+@media (max-width: 600px) {
+  .flap-tile {
+    width: 12px !important;
+    height: 20px !important;
+    font-size: 0.68rem !important;
+    border-radius: 2px !important;
+  }
+  .split-flap-row {
+    gap: 1px !important;
+  }
+  .tablon-fila {
+    gap: 0.25rem !important;
+    padding: 0.22rem 0.35rem !important;
+  }
+  .tablon-header__titulo {
+    font-size: 1rem !important;
+    letter-spacing: 0.16em !important;
+  }
+  .tablon-header__vuelo {
+    font-size: 0.6rem !important;
+    padding: 0.15rem 0.4rem !important;
+  }
+}
+
 /* ==========================================================================
-   PUERTAS DE EMBARQUE REALISTAS (E-GATES CON PÓRTICO, FIDS Y TORNOS AUTOMATIZADOS)
+   PUERTAS DE EMBARQUE
    ========================================================================== */
 .puertas-compact-grid {
   display: grid;
@@ -764,7 +809,6 @@ body.en-vuelo .vestibulo {
   align-items: stretch;
 }
 
-/* Contenedor principal de la estación de embarque */
 .gate-boarding-station {
   position: relative;
   display: flex;
@@ -793,7 +837,6 @@ body.en-vuelo .vestibulo {
   box-shadow: 0 24px 50px rgba(15, 23, 42, 0.6), 0 0 25px rgba(239, 68, 68, 0.3);
 }
 
-/* 1. PÓRTICO SUSPENDIDO SUPERIOR Y MONITOR FIDS */
 .gate-gantry {
   background: #090d16;
   border-bottom: 2px solid #1c2638;
@@ -903,7 +946,6 @@ body.en-vuelo .vestibulo {
 }
 .beacon--restricted .txt { color: #fca5a5; }
 
-/* Datos de vuelo FIDS */
 .fids-flight-info {
   display: flex;
   justify-content: space-between;
@@ -964,7 +1006,6 @@ body.en-vuelo .vestibulo {
 }
 .banner--vip .dest-name { color: #fca5a5 !important; }
 
-/* 2. PORTAL DE ACCESO A PASARELA Y TORNOS AUTOMÁTICOS */
 .gate-portal-frame {
   position: relative;
   padding: clamp(0.7rem, 1.3vh, 1rem) clamp(0.65rem, 1vw, 0.9rem);
@@ -975,7 +1016,6 @@ body.en-vuelo .vestibulo {
   flex: 1;
 }
 
-/* Vista en perspectiva del túnel de la pasarela telescópica de embarque */
 .jetway-tunnel-preview {
   position: relative;
   width: 100%;
@@ -1012,7 +1052,6 @@ body.en-vuelo .vestibulo {
   border-radius: 3px;
 }
 
-/* Alas de cristal templado que se abren automáticamente al hacer hover */
 .egate-glass-doors {
   position: relative;
   width: 100%;
@@ -1067,7 +1106,6 @@ body.en-vuelo .vestibulo {
   transform: rotateY(0deg) !important;
 }
 
-/* Columnas de los tornos con lector de pasajes / LCD */
 .egate-turnstiles {
   display: flex;
   justify-content: space-between;
@@ -1152,7 +1190,6 @@ body.en-vuelo .vestibulo {
   color: #34d399;
 }
 
-/* Botón de acceso a pasarela */
 .gate-action-console {
   display: flex;
   flex-direction: column;
@@ -1212,10 +1249,8 @@ body.en-vuelo .vestibulo {
   box-shadow: 0 0 16px rgba(239, 68, 68, 0.5);
 }
 
-/* Clases de soporte para textos en rojo */
 .text-red { color: #f87171 !important; }
 
-/* Barra inferior centrada */
 .terminal-bottom-bar {
   display: flex;
   justify-content: center;
@@ -1239,18 +1274,11 @@ body.en-vuelo .vestibulo {
 }
 
 /* ==========================================================================
-   RESPONSIVE MÓVIL (IPHONE & TABLETS): PERMITE SCROLL VERTICAL Y 1 COLUMNA
+   RESPONSIVE MÓVIL (IPHONE & TABLETS)
    ========================================================================== */
 @media (max-width: 900px) {
 
-  /* ------------------------------------------------------------------
-     FIX CLAVE: romper el bloqueo de scroll del html y del body.
-     Sin esto, aunque el .vestibulo sea position:relative con altura
-     automática, su padre (body) sigue con height:100svh + overflow:hidden
-     y recorta todo lo que sobresale. El scroll queda imposible.
-     ------------------------------------------------------------------ */
-
-  /* html: deja que se expanda y scrollee cuando haya contenido alto */
+  /* Romper el bloqueo de scroll del html y del body */
   html {
     height: auto !important;
     max-height: none !important;
@@ -1258,7 +1286,6 @@ body.en-vuelo .vestibulo {
     overflow-x: hidden !important;
   }
 
-  /* body.en-vuelo (vestíbulo visible): crece con el contenido */
   body.en-vuelo {
     height: auto !important;
     max-height: none !important;
@@ -1267,8 +1294,6 @@ body.en-vuelo .vestibulo {
     position: relative !important;
   }
 
-  /* body.antes-vuelo (escena de cabina): sigue SIN scroll — la ventanilla
-     está pensada como una experiencia a pantalla completa, sin scroll. */
   body.antes-vuelo {
     height: 100vh !important;
     height: 100svh !important;
@@ -1277,9 +1302,6 @@ body.en-vuelo .vestibulo {
     overflow: hidden !important;
   }
 
-  /* ------------------------------------------------------------------
-     VESTÍBULO: relativo, altura automática, sin recortes
-     ------------------------------------------------------------------ */
   body.en-vuelo .vestibulo {
     position: relative !important;
     inset: auto !important;
@@ -1296,7 +1318,6 @@ body.en-vuelo .vestibulo {
     justify-content: flex-start !important;
   }
 
-  /* La cristalera animada con los aviones se mantiene fija en el fondo */
   body.en-vuelo .aeropuerto-tarmac-panoramica {
     position: fixed !important;
     inset: 0 !important;
@@ -1308,7 +1329,6 @@ body.en-vuelo .vestibulo {
     gap: 1.4rem !important;
   }
 
-  /* Las puertas de embarque se despliegan en 1 columna cómoda y espaciosa */
   .puertas-compact-grid {
     grid-template-columns: 1fr !important;
     gap: 1.5rem !important;
@@ -1325,5 +1345,29 @@ body.en-vuelo .vestibulo {
 
   .terminal-bottom-bar {
     padding: 1.2rem 0 0.8rem !important;
+  }
+}
+
+/* Ajustes extra para móviles muy estrechos */
+@media (max-width: 420px) {
+  .tablon-salidas-compacto {
+    padding: 0.5rem 0.6rem !important;
+    border-width: 2px !important;
+  }
+  .tablon-header {
+    gap: 0.5rem !important;
+  }
+  .tablon-header__simbolo {
+    width: 22px !important;
+    height: 16px !important;
+  }
+  .tablon-header__simbolo svg {
+    width: 22px !important;
+    height: 16px !important;
+  }
+  .flap-tile {
+    width: 10px !important;
+    height: 17px !important;
+    font-size: 0.6rem !important;
   }
 }
