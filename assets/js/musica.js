@@ -2,9 +2,10 @@
    MUSICA.JS — reproductor de la mixtape (con descubrimiento automático)
    1) Descubre las canciones listando la carpeta de audio vía la API de
       GitHub (o usa CANCIONES_EXTRA si no hay conexión/configuración).
-   2) Genera un color único por canción a partir de su nombre de archivo.
-   3) Pinta un fondo ambiental animado con ese color y, si el navegador
-      lo permite, un visualizador de audio en tiempo real (Web Audio API).
+   2) Genera un color único por canción a partir de su nombre de archivo,
+      usado en las miniaturas de la lista y del dock.
+   3) Si el navegador lo permite, dibuja un visualizador de audio en
+      tiempo real (Web Audio API) junto al botón de play grande.
    4) Reproducción real con aleatorio, repetición, progreso, volumen y
       búsqueda.
    ========================================================================== */
@@ -14,8 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if(!listaEl || !audio) return;
 
   const estadoCarga = document.getElementById('musica-estado');
-  const heroVinilo = document.getElementById('hero-vinilo');
-  const heroEtiqueta = document.getElementById('hero-etiqueta');
+  const heroCover = document.getElementById('hero-cover');
   const heroTitulo = document.getElementById('hero-titulo');
   const heroArtista = document.getElementById('hero-artista');
   const heroNota = document.getElementById('hero-nota');
@@ -39,15 +39,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const buscadorInput = document.getElementById('musica-buscador-input');
   const sidebarAleatorio = document.getElementById('sidebar-aleatorio');
   const statTotal = document.getElementById('stat-total');
-  const blobA = document.getElementById('blob-a');
-  const blobB = document.getElementById('blob-b');
 
   let CANCIONES = [];
   const estado = { indiceActual: 0, sonando: false, aleatorio: false, repetir: 'apagado', cola: [], filtro: '' };
 
   /* ---------------------------------------------------------------
      COLOR ÚNICO POR CANCIÓN — hash simple del nombre de archivo,
-     así cada canción tiene su propia identidad visual sin que nadie
+     así cada miniatura tiene su propia identidad visual sin que nadie
      tenga que elegir un color a mano.
      --------------------------------------------------------------- */
   function hashTexto(texto){
@@ -171,7 +169,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return `${m}:${String(s).padStart(2, '0')}`;
   }
   function fondoGradiente(portada){
-    const de = portada?.de || '#e5a93c', a = portada?.a || '#2c2140';
+    const de = portada?.de || '#a855f7', a = portada?.a || '#ec4899';
     return `background: linear-gradient(150deg, ${de}, ${a});`;
   }
   function mezclar(array){
@@ -188,10 +186,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   function iconoPlay(){ return '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'; }
   function iconoPausa(){ return '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>'; }
+  function iconoNota(){ return '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>'; }
+  function iconoPlayMini(){ return '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'; }
 
   function aplicarColorAmbiente(portada){
-    document.documentElement.style.setProperty('--track-a', portada?.de || '#e5a93c');
-    document.documentElement.style.setProperty('--track-b', portada?.a || '#2c2140');
+    // Solo alimenta el visualizador (--track-a); el resto del tema
+    // (hero, botones) usa la paleta fija --color-de/--color-a del CSS.
+    document.documentElement.style.setProperty('--track-a', portada?.de || '#a855f7');
+    document.documentElement.style.setProperty('--track-b', portada?.a || '#ec4899');
   }
 
   /* ---------------------------------------------------------------
@@ -206,35 +208,36 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function renderLista(){
     if(!CANCIONES.length){
-      listaEl.innerHTML = '<div class="musica-vacio">Todavía no hay canciones que mostrar.</div>';
+      listaEl.innerHTML = '<div class="musica-vacio"><span class="musica-vacio__icono">🎵</span>Todavía no hay canciones que mostrar.</div>';
       return;
     }
     const items = cancionesFiltradas();
     if(!items.length){
-      listaEl.innerHTML = '<div class="musica-vacio">Ninguna canción coincide con esa búsqueda.</div>';
+      listaEl.innerHTML = '<div class="musica-vacio"><span class="musica-vacio__icono">🔍</span>Ninguna canción coincide con esa búsqueda.</div>';
       return;
     }
     listaEl.innerHTML = items.map((c) => {
       const activa = c.indiceOriginal === estado.indiceActual;
       const sonandoAqui = activa && estado.sonando;
+      const celdaIndice = sonandoAqui
+        ? '<div class="eq-bars"><span></span><span></span><span></span></div>'
+        : `<span class="pista-card__num">${c.indiceOriginal + 1}</span>${iconoPlayMini().replace('<svg', '<svg class="pista-card__hover-play"')}`;
       return `
-      <article class="cancion ${activa ? 'activa' : ''}" data-reveal data-indice="${c.indiceOriginal}" tabindex="0" role="button"
-        aria-label="Reproducir ${c.titulo}" style="--acento:${c.portada.de}">
-        <div class="cancion__indice">${sonandoAqui ? '<div class="ecualizador-mini"><i></i><i></i><i></i></div>' : (c.indiceOriginal + 1)}</div>
-        <div class="cancion__mini" style="${fondoGradiente(c.portada)}"></div>
-        <div class="cancion__info">
-          <div class="cancion__titulo">${c.titulo}</div>
-          <div class="cancion__artista">${c.artista}</div>
-          ${c.nota ? `<div class="cancion__nota">${c.nota}</div>` : ''}
+      <article class="pista-card ${activa ? 'activa' : ''}" data-reveal data-indice="${c.indiceOriginal}" tabindex="0" role="button"
+        aria-label="Reproducir ${c.titulo}">
+        <div class="pista-card__index">${celdaIndice}</div>
+        <div class="pista-card__thumb" style="${fondoGradiente(c.portada)}">${iconoNota()}</div>
+        <div class="pista-card__info">
+          <div class="pista-card__name">${c.titulo}</div>
+          <div class="pista-card__artist">${c.artista}${c.nota ? ` <span class="pista-card__tag">${c.nota}</span>` : ''}</div>
         </div>
-        <div class="cancion__derecha">
-          ${!c.src ? '<span class="cancion__externo">Enlace</span>' : ''}
-          <span class="cancion__duracion">${formatearTiempo(c.duracion)}</span>
+        <div class="pista-card__time">
+          ${!c.src ? '<span class="chip-external">Enlace</span>' : ''}${formatearTiempo(c.duracion)}
         </div>
       </article>`;
     }).join('');
 
-    listaEl.querySelectorAll('.cancion').forEach(fila => {
+    listaEl.querySelectorAll('.pista-card').forEach(fila => {
       const activar = () => cargarCancion(Number(fila.dataset.indice), true);
       fila.addEventListener('click', activar);
       fila.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activar(); } });
@@ -253,8 +256,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if(heroTitulo) heroTitulo.textContent = c.titulo;
     if(heroArtista) heroArtista.textContent = c.artista;
     if(heroNota) heroNota.textContent = c.nota || '';
-    if(heroEtiqueta) heroEtiqueta.style.cssText = `background: radial-gradient(circle, ${c.portada.a}, ${c.portada.de});`;
-    if(heroVinilo) heroVinilo.classList.toggle('sonando', estado.sonando);
+    if(heroCover) heroCover.classList.toggle('girando', estado.sonando);
     if(heroPlay) heroPlay.innerHTML = estado.sonando ? iconoPausa() : iconoPlay();
 
     if(barraTitulo) barraTitulo.textContent = c.titulo;
@@ -367,7 +369,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       nodoAnalizador.getByteFrequencyData(datosFrecuencia);
       const n = datosFrecuencia.length;
       const anchoBarra = ancho / n * .68;
-      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--track-a') || '#e5a93c';
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--track-a') || '#a855f7';
       for(let i = 0; i < n; i++){
         const h = Math.max(3, (datosFrecuencia[i] / 255) * alto);
         const x = i * (ancho / n);
@@ -454,7 +456,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   CANCIONES = canciones;
 
   if(estadoCarga) estadoCarga.textContent = aviso || '';
-  if(statTotal) statTotal.textContent = CANCIONES.length;
+  if(statTotal) statTotal.textContent = CANCIONES.length + (CANCIONES.length === 1 ? ' canción' : ' canciones');
 
   if(CANCIONES.length){
     generarCola();
