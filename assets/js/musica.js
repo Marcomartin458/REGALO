@@ -1,7 +1,7 @@
 /* ==========================================================================
    MUSICA.JS — Reproductor de la mixtape con tema dinámico
-   - Cada canción tiene su propio color y TODO el tema cambia con ella.
-   - Ya NO se genera el span de hover-play (se eliminó el crossfade).
+   Fix: pista-cards ya no llevan data-reveal (evita que queden invisibles
+   con opacity: 0 si el IntersectionObserver no se dispara a tiempo).
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', async () => {
   const listaEl = document.getElementById('musica-lista');
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    // Sin crossfade: el índice siempre muestra el número o el ecualizador.
+    // FIX: sin data-reveal en las pista-cards. Se muestran siempre visibles.
     listaEl.innerHTML = items.map((c) => {
       const activa = c.indiceOriginal === estado.indiceActual;
       const sonandoAqui = activa && estado.sonando;
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         ? '<div class="eq-bars"><span></span><span></span><span></span></div>'
         : `<span class="pista-card__num">${c.indiceOriginal + 1}</span>`;
       return `
-      <article class="pista-card ${activa ? 'activa' : ''}" data-reveal data-indice="${c.indiceOriginal}" tabindex="0" role="button"
+      <article class="pista-card ${activa ? 'activa' : ''}" data-indice="${c.indiceOriginal}" tabindex="0" role="button"
         aria-label="Reproducir ${c.titulo}">
         <div class="pista-card__index">${celdaIndice}</div>
         <div class="pista-card__thumb" style="${fondoGradiente(c.portada)}">${iconoNota()}</div>
@@ -245,7 +245,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       fila.addEventListener('click', activar);
       fila.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activar(); } });
     });
-    if(typeof inicializarRevelado === 'function') inicializarRevelado();
   }
 
   /* ---------------------------------------------------------------
@@ -465,9 +464,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     cargarCancion(0, false);
   } else {
     renderLista();
-  }
-
-  if(typeof inicializarRevelado !== 'function'){
-    document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('revelado'));
   }
 });
