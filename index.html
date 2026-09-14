@@ -10,11 +10,12 @@
   <!-- Tipografías de alta definición -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800;900&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800;900&family=Poppins:wght@500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
   <!-- Estilos principales -->
   <link rel="stylesheet" href="assets/css/estilos.css">
   <link rel="stylesheet" href="assets/css/home.css">
+  <link rel="stylesheet" href="assets/css/secreto.css">
 
   <!-- Three.js UMD vía CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -691,10 +692,10 @@
                   <span class="text-red">ACCESO CLASIFICADO</span>
                   <strong class="text-red">PUERTA BLOQUEADA</strong>
                 </div>
-                <a href="secreto.html" class="btn-board-gate btn--vip">
+                <button type="button" class="btn-board-gate btn--vip js-abrir-candado">
                   <span class="btn-label">DESBLOQUEAR ACCESO</span>
                   <span class="btn-arrow">&rarr;</span>
-                </a>
+                </button>
               </div>
             </div>
           </article>
@@ -811,11 +812,61 @@
     </div>
   </footer>
 
+  <!-- ====================================================================
+       MODAL DE CANDADO VIP — se abre desde la Puerta C-03
+       ==================================================================== -->
+  <div class="candado-overlay" id="candado-overlay" aria-hidden="true">
+    <div class="candado-panel" role="dialog" aria-modal="true" aria-labelledby="candado-titulo">
+
+      <button class="candado-cerrar" type="button" aria-label="Cerrar">×</button>
+
+      <div class="candado-led" id="candado-led"></div>
+      <div class="candado-badge">RESTRICTED AREA</div>
+      <h2 id="candado-titulo" class="candado-titulo">SALA VIP · PUERTA C-03</h2>
+      <p class="candado-subtitulo">Introduce el código de 4 dígitos para desbloquear el acceso.</p>
+
+      <div class="candado-display" id="candado-display">
+        <span class="digito"></span>
+        <span class="digito"></span>
+        <span class="digito"></span>
+        <span class="digito"></span>
+      </div>
+
+      <div class="candado-teclado" id="candado-teclado">
+        <button type="button" data-tecla="1">1</button>
+        <button type="button" data-tecla="2">2</button>
+        <button type="button" data-tecla="3">3</button>
+        <button type="button" data-tecla="4">4</button>
+        <button type="button" data-tecla="5">5</button>
+        <button type="button" data-tecla="6">6</button>
+        <button type="button" data-tecla="7">7</button>
+        <button type="button" data-tecla="8">8</button>
+        <button type="button" data-tecla="9">9</button>
+        <button type="button" data-tecla="borrar" class="tecla--accion">⌫</button>
+        <button type="button" data-tecla="0">0</button>
+        <button type="button" data-tecla="ok" class="tecla--accion">✓</button>
+      </div>
+
+      <p class="candado-error" id="candado-error" role="alert"></p>
+
+      <div class="candado-pistas">
+        <h3 class="candado-pistas__titulo">Pistas</h3>
+        <ul>
+          <li><strong>Cifra 1 y 2</strong> La edad que tenías en tu primera vez.</li>
+          <li><strong>Cifra 3 y 4</strong> La edad que tenías en tu último.</li>
+        </ul>
+        <p class="candado-pistas__nota">Ponlas en orden: primero la primera cifra, después la segunda.</p>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Scripts de animación y lógica -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
   <script src="assets/js/main.js"></script>
   <script src="assets/js/three-scenes.js"></script>
+  <script src="assets/js/secreto.js"></script>
   <script src="assets/js/home.js"></script>
 </body>
 </html>
