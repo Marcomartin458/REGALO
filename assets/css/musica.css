@@ -1,17 +1,12 @@
 /* ==========================================================================
-   MUSICA.CSS — Interfaz neumórfica dinámica
-   - Neumorfismo real: superficies del mismo color que el fondo, separadas
-     solo por sombras dobles (clara arriba-izq, oscura abajo-der).
-   - Estados hundidos para inputs, presionados para botones.
-   - Color dinámico por canción aplicado solo como acento (glow, línea activa,
-     barra de progreso, badges) para no romper el neumorfismo.
+   MUSICA.CSS — Interfaz neumórfica dinámica (v2 — sombras corregidas)
+   - Neumorfismo real con superficies y fondo del mismo color, pero con
+     sombras suficientemente intensas para que el relieve se vea.
+   - Color dinámico por canción aplicado como acento.
    - Lista sin crossfade. Hover = elevación. Activo = hundido con acento.
    - Dock no tapa contenido en móvil.
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   PROPIEDADES CSS REGISTRADAS — permiten transicionar colores suavemente
-   -------------------------------------------------------------------------- */
 @property --color-de {
   syntax: '<color>';
   inherits: true;
@@ -37,45 +32,47 @@
   --track-b: #ec4899;
 
   /* --- BASE NEUMÓRFICA --- */
-  /* La superficie y el fondo comparten color. Todo se distingue por sombras. */
-  --nm-base: #101219;
-  --nm-surface: #101219;         /* misma que base, obligatorio para neumorfismo */
-  --nm-surface-sunk: #0d0f15;    /* un pelín más oscuro para elementos hundidos */
+  /* Superficie y fondo comparten color (obligatorio para neumorfismo real).
+     El relieve se consigue SOLO con las sombras dobles. */
+  --nm-base: #1a1d27;
+  --nm-surface: #1a1d27;
+  --nm-surface-sunk: #15171f;
 
-  /* Sombras: clara arriba-izquierda, oscura abajo-derecha */
-  --nm-light: rgba(255, 255, 255, 0.045);
-  --nm-light-strong: rgba(255, 255, 255, 0.075);
-  --nm-dark: rgba(0, 0, 0, 0.65);
-  --nm-dark-strong: rgba(0, 0, 0, 0.9);
+  /* Sombras: clara arriba-izquierda, oscura abajo-derecha.
+     Valores más intensos que antes para que el relieve se vea. */
+  --nm-light: rgba(255, 255, 255, 0.075);
+  --nm-light-strong: rgba(255, 255, 255, 0.12);
+  --nm-dark: rgba(0, 0, 0, 0.8);
+  --nm-dark-strong: rgba(0, 0, 0, 1);
 
   /* Presets de sombra neumórfica */
   --nm-raised-sm:
     -3px -3px 8px var(--nm-light),
     3px 3px 8px var(--nm-dark);
   --nm-raised:
-    -5px -5px 12px var(--nm-light),
-    5px 5px 12px var(--nm-dark);
+    -5px -5px 14px var(--nm-light),
+    5px 5px 14px var(--nm-dark);
   --nm-raised-lg:
-    -8px -8px 20px var(--nm-light),
-    8px 8px 20px var(--nm-dark);
+    -8px -8px 22px var(--nm-light),
+    8px 8px 22px var(--nm-dark);
   --nm-raised-xl:
-    -12px -12px 28px var(--nm-light),
-    12px 12px 28px var(--nm-dark);
+    -12px -12px 30px var(--nm-light),
+    12px 12px 30px var(--nm-dark);
   --nm-inset:
-    inset -4px -4px 10px var(--nm-light),
-    inset 4px 4px 10px var(--nm-dark);
+    inset -4px -4px 12px var(--nm-light),
+    inset 4px 4px 12px var(--nm-dark);
   --nm-inset-sm:
     inset -2px -2px 6px var(--nm-light),
     inset 2px 2px 6px var(--nm-dark);
   --nm-inset-lg:
-    inset -6px -6px 14px var(--nm-light),
-    inset 6px 6px 14px var(--nm-dark);
+    inset -6px -6px 16px var(--nm-light),
+    inset 6px 6px 16px var(--nm-dark);
 
   /* --- TEXTO --- */
-  --text-white: #e8ecf5;
-  --text-soft: #cbd5e1;
-  --text-muted: #8b96ab;
-  --text-dim: #5c6479;
+  --text-white: #eef1f7;
+  --text-soft: #cbd2e0;
+  --text-muted: #8f99ad;
+  --text-dim: #656d80;
 
   --font-music: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-mono: 'Space Grotesk', monospace;
@@ -114,9 +111,7 @@ body.musica-body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Auras: en neumorfismo puro sobran, así que las hacemos muy tenues
-   y las mantenemos solo como matiz del fondo. Sin ellas el efecto
-   se ve más limpio, pero un toque sutil ayuda a la calidez. */
+/* Auras muy tenues: solo matiz de color de la canción activa */
 .aura-fondo {
   position: fixed;
   inset: 0;
@@ -129,7 +124,7 @@ body.musica-body {
   position: absolute;
   border-radius: 50%;
   filter: blur(160px);
-  opacity: 0.06;
+  opacity: 0.1;
   transition: background 1.5s var(--ease-out-soft);
 }
 
@@ -149,7 +144,6 @@ body.musica-body {
   background: var(--color-a);
 }
 
-/* Disposición general */
 .musica-layout {
   position: relative;
   z-index: 2;
@@ -175,7 +169,6 @@ body.musica-body {
   overflow: hidden;
 }
 
-/* Halo de color sutilísimo */
 .hero-player::before {
   content: '';
   position: absolute;
@@ -184,7 +177,7 @@ body.musica-body {
   width: 55%;
   height: 200%;
   background: radial-gradient(circle, var(--color-de), transparent 65%);
-  opacity: 0.08;
+  opacity: 0.1;
   pointer-events: none;
   filter: blur(40px);
   transition: background 1.5s var(--ease-out-soft);
@@ -196,8 +189,6 @@ body.musica-body {
   z-index: 1;
 }
 
-/* La portada mantiene su gradiente de color: es el único elemento
-   "plano" del hero, y sirve como contrapunto al neumorfismo. */
 .hero-player__cover {
   width: clamp(130px, 18vw, 190px);
   height: clamp(130px, 18vw, 190px);
@@ -208,8 +199,8 @@ body.musica-body {
   background: linear-gradient(135deg, var(--color-de), var(--color-a));
   box-shadow:
     0 18px 40px -12px var(--color-brillo),
-    -6px -6px 18px rgba(255, 255, 255, 0.06),
-    6px 6px 18px rgba(0, 0, 0, 0.7);
+    -6px -6px 18px rgba(255, 255, 255, 0.08),
+    6px 6px 18px rgba(0, 0, 0, 0.85);
   transition:
     transform 0.6s var(--ease-snappy),
     box-shadow 1s var(--ease-out-soft);
@@ -260,7 +251,6 @@ body.musica-body {
   z-index: 1;
 }
 
-/* Badge: única pieza con color pleno, funciona como acento de tema */
 .hero-player__badge {
   display: inline-block;
   font-family: var(--font-mono);
@@ -315,7 +305,6 @@ body.musica-body {
   gap: 1.5rem;
 }
 
-/* Botón play hero: neumórfico elevado con glow tintado sutil */
 .btn-play-hero {
   position: relative;
   width: 62px;
@@ -370,18 +359,17 @@ body.musica-body {
 }
 
 /* ==========================================================================
-   TOOLBAR — búsqueda hundida + botones elevados
+   TOOLBAR
    ========================================================================== */
 .musica-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.8rem;
   flex-wrap: wrap;
 }
 
-/* Buscador: estado hundido (inset) */
 .toolbar__search {
   flex: 1;
   min-width: 260px;
@@ -428,7 +416,6 @@ body.musica-body {
   gap: 0.9rem;
 }
 
-/* Botón pill elevado */
 .btn-tool {
   display: inline-flex;
   align-items: center;
@@ -463,7 +450,6 @@ body.musica-body {
   box-shadow: var(--nm-inset);
 }
 
-/* Estado activo: se hunde y toma color de acento */
 .btn-tool.activo {
   color: #ffffff;
   box-shadow:
@@ -485,14 +471,16 @@ body.musica-body {
 }
 
 /* ==========================================================================
-   LISTA DE CANCIONES — cada fila es una superficie neumórfica
+   LISTA DE CANCIONES
    ========================================================================== */
 .musica-lista-wrap {
-  background: transparent;
+  background: var(--nm-surface-sunk);
   border: none;
   border-radius: var(--radius-lg);
   padding: 1.6rem 1.2rem 1.2rem;
-  box-shadow: var(--nm-inset);
+  box-shadow:
+    var(--nm-inset),
+    0 0 60px -30px rgba(0, 0, 0, 0.9);
 }
 
 .lista-cabecera {
@@ -505,14 +493,14 @@ body.musica-body {
   color: var(--text-dim);
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .canciones-grid {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  margin-top: 0.9rem;
+  gap: 0.95rem;
+  margin-top: 1rem;
 }
 
 /* Fila elevada */
@@ -529,7 +517,7 @@ body.musica-body {
   border: none;
   cursor: pointer;
   isolation: isolate;
-  box-shadow: var(--nm-raised-sm);
+  box-shadow: var(--nm-raised);
   transition:
     box-shadow 0.4s var(--ease-out-soft),
     transform 0.3s var(--ease-out-soft);
@@ -537,27 +525,24 @@ body.musica-body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Hover: se eleva más (más separación de la "superficie") */
 .pista-card:hover {
   transform: translateY(-2px);
   box-shadow:
-    -6px -6px 16px var(--nm-light-strong),
-    6px 6px 16px var(--nm-dark-strong);
+    -7px -7px 18px var(--nm-light-strong),
+    7px 7px 18px var(--nm-dark-strong);
 }
 
-/* Activa: hundida + acento lateral del color del tema */
 .pista-card.activa {
   transform: translateY(0);
   box-shadow:
     var(--nm-inset),
     inset 3px 0 0 0 var(--color-de),
-    0 0 24px -12px var(--color-brillo);
+    0 0 30px -14px var(--color-brillo);
   transition:
     box-shadow 1s var(--ease-out-soft),
     transform 0.3s var(--ease-out-soft);
 }
 
-/* Columna índice */
 .pista-card__index {
   display: flex;
   align-items: center;
@@ -587,7 +572,6 @@ body.musica-body {
   display: none !important;
 }
 
-/* Ecualizador */
 .eq-bars {
   display: flex;
   gap: 2.5px;
@@ -610,8 +594,6 @@ body.musica-body {
   to { height: 15%; }
 }
 
-/* Miniatura: mantiene su gradiente (rompe el neumorfismo a propósito,
-   es el "objeto" que vive dentro de la superficie) */
 .pista-card__thumb {
   width: 52px;
   height: 52px;
@@ -622,8 +604,8 @@ body.musica-body {
   font-size: 1.2rem;
   color: #ffffff;
   box-shadow:
-    0 8px 18px -6px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 8px 18px -6px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
   flex-shrink: 0;
   background-size: cover;
   overflow: hidden;
@@ -634,7 +616,6 @@ body.musica-body {
   transform: scale(1.04);
 }
 
-/* Info */
 .pista-card__info {
   min-width: 0;
   overflow: hidden;
@@ -673,11 +654,9 @@ body.musica-body {
   font-weight: 600;
   line-height: 1;
   color: var(--color-a);
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--nm-surface-sunk);
   border: none;
-  box-shadow:
-    inset -1px -1px 3px rgba(255, 255, 255, 0.03),
-    inset 1px 1px 3px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--nm-inset-sm);
   border-radius: 999px;
   padding: 0.3rem 0.7rem;
   margin-left: 0.4rem;
@@ -770,7 +749,7 @@ body.musica-body {
 }
 
 /* ==========================================================================
-   DOCK PLAYER INFERIOR — panel neumórfico flotante
+   DOCK PLAYER INFERIOR
    ========================================================================== */
 .dock-player {
   position: fixed;
@@ -787,9 +766,9 @@ body.musica-body {
   align-items: center;
   gap: 1.5rem;
   box-shadow:
-    -10px -10px 24px var(--nm-light),
-    10px 10px 26px var(--nm-dark-strong),
-    0 0 50px -20px var(--color-brillo);
+    -12px -12px 28px var(--nm-light),
+    12px 12px 30px var(--nm-dark-strong),
+    0 0 60px -20px var(--color-brillo);
   z-index: 100;
   transition: box-shadow 1s var(--ease-out-soft);
 }
@@ -807,8 +786,8 @@ body.musica-body {
   border-radius: 12px;
   flex-shrink: 0;
   box-shadow:
-    0 8px 18px -6px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    0 8px 18px -6px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .dock-track__meta {
@@ -849,7 +828,6 @@ body.musica-body {
   gap: 1.1rem;
 }
 
-/* Controles secundarios: botón circular neumórfico pequeño */
 .btn-dock-ctrl {
   width: 36px;
   height: 36px;
@@ -888,7 +866,6 @@ body.musica-body {
     0 0 18px -8px var(--color-brillo);
 }
 
-/* Botón play del dock */
 .btn-dock-play {
   position: relative;
   width: 48px;
@@ -932,7 +909,6 @@ body.musica-body {
   fill: currentColor;
 }
 
-/* Barra de progreso: hundida, con fill tintado */
 .dock-seek {
   width: 100%;
   display: flex;
