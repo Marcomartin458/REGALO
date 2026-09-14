@@ -1,468 +1,1066 @@
 /* ==========================================================================
-   MUSICA.JS — Reproductor de la mixtape con tema dinámico
-   Fix: pista-cards ya no llevan data-reveal (evita que queden invisibles
-   con opacity: 0 si el IntersectionObserver no se dispara a tiempo).
+   MUSICA.CSS — Interfaz neumórfica dinámica (v2 — sombras corregidas)
+   - Neumorfismo real con superficies y fondo del mismo color, pero con
+     sombras suficientemente intensas para que el relieve se vea.
+   - Color dinámico por canción aplicado como acento.
+   - Lista sin crossfade. Hover = elevación. Activo = hundido con acento.
+   - Dock no tapa contenido en móvil.
    ========================================================================== */
-document.addEventListener('DOMContentLoaded', async () => {
-  const listaEl = document.getElementById('musica-lista');
-  const audio = document.getElementById('audio-elemento');
-  if(!listaEl || !audio) return;
 
-  const estadoCarga = document.getElementById('musica-estado');
-  const heroCover = document.getElementById('hero-cover');
-  const heroTitulo = document.getElementById('hero-titulo');
-  const heroArtista = document.getElementById('hero-artista');
-  const heroNota = document.getElementById('hero-nota');
-  const heroPlay = document.getElementById('hero-play');
-  const lienzoViz = document.getElementById('visualizador');
+@property --color-de {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #a855f7;
+}
+@property --color-a {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ec4899;
+}
+@property --color-brillo {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(168, 85, 247, 0.45);
+}
 
-  const barraTitulo = document.getElementById('barra-titulo');
-  const barraArtista = document.getElementById('barra-artista');
-  const barraMini = document.getElementById('barra-mini');
-  const barraPlay = document.getElementById('barra-play');
-  const barraPrev = document.getElementById('barra-prev');
-  const barraNext = document.getElementById('barra-next');
-  const barraAleatorio = document.getElementById('barra-aleatorio');
-  const barraRepetir = document.getElementById('barra-repetir');
-  const barraProgreso = document.getElementById('barra-progreso');
-  const barraProgresoRelleno = document.getElementById('barra-progreso-relleno');
-  const tiempoActualEl = document.getElementById('tiempo-actual');
-  const tiempoTotalEl = document.getElementById('tiempo-total');
-  const barraVolumen = document.getElementById('barra-volumen');
-  const barraAviso = document.getElementById('barra-aviso');
-  const buscadorInput = document.getElementById('musica-buscador-input');
-  const sidebarAleatorio = document.getElementById('sidebar-aleatorio');
-  const statTotal = document.getElementById('stat-total');
+:root {
+  /* --- COLORES DINÁMICOS (acento) --- */
+  --color-de: #a855f7;
+  --color-a: #ec4899;
+  --color-brillo: rgba(168, 85, 247, 0.45);
+  --track-a: #a855f7;
+  --track-b: #ec4899;
 
-  let CANCIONES = [];
-  const estado = { indiceActual: 0, sonando: false, aleatorio: false, repetir: 'apagado', cola: [], filtro: '' };
+  /* --- BASE NEUMÓRFICA --- */
+  /* Superficie y fondo comparten color (obligatorio para neumorfismo real).
+     El relieve se consigue SOLO con las sombras dobles. */
+  --nm-base: #1a1d27;
+  --nm-surface: #1a1d27;
+  --nm-surface-sunk: #15171f;
 
-  /* ---------------------------------------------------------------
-     COLOR ÚNICO POR CANCIÓN
-     --------------------------------------------------------------- */
-  function hashTexto(texto){
-    let h = 0;
-    for(let i = 0; i < texto.length; i++){ h = (h * 31 + texto.charCodeAt(i)) >>> 0; }
-    return h;
+  /* Sombras: clara arriba-izquierda, oscura abajo-derecha.
+     Valores más intensos que antes para que el relieve se vea. */
+  --nm-light: rgba(255, 255, 255, 0.075);
+  --nm-light-strong: rgba(255, 255, 255, 0.12);
+  --nm-dark: rgba(0, 0, 0, 0.8);
+  --nm-dark-strong: rgba(0, 0, 0, 1);
+
+  /* Presets de sombra neumórfica */
+  --nm-raised-sm:
+    -3px -3px 8px var(--nm-light),
+    3px 3px 8px var(--nm-dark);
+  --nm-raised:
+    -5px -5px 14px var(--nm-light),
+    5px 5px 14px var(--nm-dark);
+  --nm-raised-lg:
+    -8px -8px 22px var(--nm-light),
+    8px 8px 22px var(--nm-dark);
+  --nm-raised-xl:
+    -12px -12px 30px var(--nm-light),
+    12px 12px 30px var(--nm-dark);
+  --nm-inset:
+    inset -4px -4px 12px var(--nm-light),
+    inset 4px 4px 12px var(--nm-dark);
+  --nm-inset-sm:
+    inset -2px -2px 6px var(--nm-light),
+    inset 2px 2px 6px var(--nm-dark);
+  --nm-inset-lg:
+    inset -6px -6px 16px var(--nm-light),
+    inset 6px 6px 16px var(--nm-dark);
+
+  /* --- TEXTO --- */
+  --text-white: #eef1f7;
+  --text-soft: #cbd2e0;
+  --text-muted: #8f99ad;
+  --text-dim: #656d80;
+
+  --font-music: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'Space Grotesk', monospace;
+  --nav-h: 70px;
+
+  --radius-lg: 26px;
+  --radius-md: 20px;
+  --radius-sm: 14px;
+  --radius-xs: 12px;
+
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-snappy: cubic-bezier(0.34, 1.3, 0.5, 1);
+
+  transition:
+    --color-de 0.9s var(--ease-out-soft),
+    --color-a 0.9s var(--ease-out-soft),
+    --color-brillo 0.9s var(--ease-out-soft);
+}
+
+html {
+  scroll-padding-bottom: calc(200px + env(safe-area-inset-bottom, 20px));
+}
+
+body.musica-body {
+  background: var(--nm-base) !important;
+  color: var(--text-white) !important;
+  font-family: var(--font-music);
+  font-weight: 400;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow-x: hidden;
+  padding-bottom: calc(190px + env(safe-area-inset-bottom, 20px));
+  position: relative;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Auras muy tenues: solo matiz de color de la canción activa */
+.aura-fondo {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.aura-luz {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(160px);
+  opacity: 0.1;
+  transition: background 1.5s var(--ease-out-soft);
+}
+
+.aura-luz--1 {
+  width: min(580px, 90vw);
+  height: min(580px, 90vw);
+  top: -140px;
+  right: -120px;
+  background: var(--color-de);
+}
+
+.aura-luz--2 {
+  width: min(650px, 95vw);
+  height: min(650px, 95vw);
+  bottom: 80px;
+  left: -160px;
+  background: var(--color-a);
+}
+
+.musica-layout {
+  position: relative;
+  z-index: 2;
+  width: min(1140px, 92%);
+  margin: 0 auto;
+  padding-top: calc(var(--nav-h) + 2rem);
+}
+
+/* ==========================================================================
+   HERO PLAYER — tarjeta neumórfica elevada
+   ========================================================================== */
+.hero-player {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding: clamp(1.8rem, 3.4vw, 2.8rem);
+  border-radius: var(--radius-lg);
+  background: var(--nm-surface);
+  box-shadow: var(--nm-raised-xl);
+  margin-bottom: 2.5rem;
+  transition: box-shadow 0.6s var(--ease-out-soft);
+  overflow: hidden;
+}
+
+.hero-player::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 55%;
+  height: 200%;
+  background: radial-gradient(circle, var(--color-de), transparent 65%);
+  opacity: 0.1;
+  pointer-events: none;
+  filter: blur(40px);
+  transition: background 1.5s var(--ease-out-soft);
+}
+
+.hero-player__cover-wrap {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-player__cover {
+  width: clamp(130px, 18vw, 190px);
+  height: clamp(130px, 18vw, 190px);
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-de), var(--color-a));
+  box-shadow:
+    0 18px 40px -12px var(--color-brillo),
+    -6px -6px 18px rgba(255, 255, 255, 0.08),
+    6px 6px 18px rgba(0, 0, 0, 0.85);
+  transition:
+    transform 0.6s var(--ease-snappy),
+    box-shadow 1s var(--ease-out-soft);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-player__cover.girando {
+  transform: scale(1.03);
+}
+
+.hero-player__vinyl-grooves {
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 0 0 8px rgba(0, 0, 0, 0.28),
+    0 0 0 16px rgba(255, 255, 255, 0.13),
+    0 0 0 24px rgba(0, 0, 0, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: discoGiro 20s linear infinite;
+  animation-play-state: paused;
+}
+
+.hero-player__cover.girando .hero-player__vinyl-grooves {
+  animation-play-state: running;
+}
+
+@keyframes discoGiro {
+  to { transform: rotate(360deg); }
+}
+
+.vinyl-center {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.hero-player__content {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-player__badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--color-de), var(--color-a));
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  margin-bottom: 0.9rem;
+  box-shadow:
+    0 6px 16px -4px var(--color-brillo),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition:
+    background 1s var(--ease-out-soft),
+    box-shadow 1s var(--ease-out-soft);
+}
+
+.hero-player__title {
+  font-size: clamp(1.4rem, 2.8vw, 2.3rem);
+  font-weight: 800;
+  margin: 0 0 0.4rem 0;
+  line-height: 1.15;
+  color: #ffffff;
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hero-player__artist {
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  font-weight: 500;
+  color: var(--text-muted);
+  margin: 0 0 0.6rem 0;
+  letter-spacing: -0.01em;
+}
+
+.hero-player__note {
+  font-size: 0.92rem;
+  color: var(--text-soft);
+  font-style: italic;
+  margin: 0 0 1.4rem 0;
+  line-height: 1.5;
+}
+
+.hero-player__controls {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.btn-play-hero {
+  position: relative;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: none;
+  background: var(--nm-surface);
+  color: var(--text-white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    var(--nm-raised),
+    0 0 26px -8px var(--color-brillo);
+  transition:
+    transform 0.25s var(--ease-snappy),
+    box-shadow 0.35s var(--ease-out-soft),
+    color 0.35s ease;
+  flex-shrink: 0;
+}
+
+.btn-play-hero:hover {
+  transform: scale(1.05);
+  color: #ffffff;
+  box-shadow:
+    -6px -6px 16px var(--nm-light-strong),
+    6px 6px 16px var(--nm-dark-strong),
+    0 0 40px -6px var(--color-brillo);
+}
+
+.btn-play-hero:active {
+  transform: scale(0.97);
+  box-shadow:
+    var(--nm-inset),
+    0 0 20px -8px var(--color-brillo);
+}
+
+.btn-play-hero svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.hero-visualizer {
+  width: min(240px, 45vw);
+  height: 46px;
+  border-radius: 12px;
+  background: var(--nm-surface-sunk);
+  box-shadow: var(--nm-inset-sm);
+  padding: 4px;
+}
+
+/* ==========================================================================
+   TOOLBAR
+   ========================================================================== */
+.musica-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.8rem;
+  flex-wrap: wrap;
+}
+
+.toolbar__search {
+  flex: 1;
+  min-width: 260px;
+  max-width: 440px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--nm-surface-sunk);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1.2rem;
+  color: var(--text-muted);
+  box-shadow: var(--nm-inset);
+  transition:
+    color 0.25s ease,
+    box-shadow 0.4s var(--ease-out-soft);
+}
+
+.toolbar__search:focus-within {
+  color: var(--color-de);
+  box-shadow:
+    var(--nm-inset-lg),
+    0 0 22px -10px var(--color-brillo);
+}
+
+.toolbar__search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  width: 100%;
+  font-size: 0.92rem;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.toolbar__search input::placeholder {
+  color: var(--text-dim);
+}
+
+.toolbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.btn-tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.3rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--nm-surface);
+  color: var(--text-soft);
+  font-weight: 600;
+  font-size: 0.88rem;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  box-shadow: var(--nm-raised);
+  transition:
+    color 0.25s ease,
+    box-shadow 0.35s var(--ease-out-soft),
+    transform 0.2s var(--ease-snappy);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-tool:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow:
+    -6px -6px 14px var(--nm-light-strong),
+    6px 6px 14px var(--nm-dark-strong);
+}
+
+.btn-tool:active {
+  transform: translateY(0);
+  box-shadow: var(--nm-inset);
+}
+
+.btn-tool.activo {
+  color: #ffffff;
+  box-shadow:
+    var(--nm-inset),
+    0 0 24px -8px var(--color-brillo);
+}
+
+.counter-badge {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--nm-surface-sunk);
+  padding: 0.85rem 1.1rem;
+  border-radius: 999px;
+  border: none;
+  box-shadow: var(--nm-inset-sm);
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================================================
+   LISTA DE CANCIONES
+   ========================================================================== */
+.musica-lista-wrap {
+  background: var(--nm-surface-sunk);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 1.6rem 1.2rem 1.2rem;
+  box-shadow:
+    var(--nm-inset),
+    0 0 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+.lista-cabecera {
+  display: grid;
+  grid-template-columns: 44px 1fr 90px;
+  padding: 0.5rem 1.1rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.canciones-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+  margin-top: 1rem;
+}
+
+/* Fila elevada */
+.pista-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px 52px minmax(0, 1fr) 90px;
+  align-items: center;
+  gap: 1rem;
+  min-height: 78px;
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--radius-md);
+  background: var(--nm-surface);
+  border: none;
+  cursor: pointer;
+  isolation: isolate;
+  box-shadow: var(--nm-raised);
+  transition:
+    box-shadow 0.4s var(--ease-out-soft),
+    transform 0.3s var(--ease-out-soft);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pista-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    -7px -7px 18px var(--nm-light-strong),
+    7px 7px 18px var(--nm-dark-strong);
+}
+
+.pista-card.activa {
+  transform: translateY(0);
+  box-shadow:
+    var(--nm-inset),
+    inset 3px 0 0 0 var(--color-de),
+    0 0 30px -14px var(--color-brillo);
+  transition:
+    box-shadow 1s var(--ease-out-soft),
+    transform 0.3s var(--ease-out-soft);
+}
+
+.pista-card__index {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.pista-card__num {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: color 0.25s ease;
+}
+
+.pista-card:hover .pista-card__num {
+  color: #ffffff;
+}
+
+.pista-card.activa .pista-card__num {
+  color: var(--color-de);
+}
+
+.pista-card__hover-play {
+  display: none !important;
+}
+
+.eq-bars {
+  display: flex;
+  gap: 2.5px;
+  align-items: flex-end;
+  height: 16px;
+}
+
+.eq-bars span {
+  width: 3px;
+  background: var(--color-de);
+  border-radius: 2px;
+  animation: eqPulse 0.9s ease-in-out infinite alternate;
+  transition: background 1s var(--ease-out-soft);
+}
+.eq-bars span:nth-child(1) { height: 40%; animation-delay: 0.1s; }
+.eq-bars span:nth-child(2) { height: 100%; animation-delay: 0.25s; }
+.eq-bars span:nth-child(3) { height: 60%; animation-delay: 0.4s; }
+
+@keyframes eqPulse {
+  to { height: 15%; }
+}
+
+.pista-card__thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #ffffff;
+  box-shadow:
+    0 8px 18px -6px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  flex-shrink: 0;
+  background-size: cover;
+  overflow: hidden;
+  transition: transform 0.3s var(--ease-snappy);
+}
+
+.pista-card:hover .pista-card__thumb {
+  transform: scale(1.04);
+}
+
+.pista-card__info {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.pista-card__name {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.2rem;
+  transition: color 0.5s var(--ease-out-soft);
+}
+
+.pista-card.activa .pista-card__name {
+  color: var(--color-de);
+}
+
+.pista-card__artist {
+  font-size: 0.85rem;
+  line-height: 1.25;
+  color: var(--text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pista-card__tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--color-a);
+  background: var(--nm-surface-sunk);
+  border: none;
+  box-shadow: var(--nm-inset-sm);
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 1s var(--ease-out-soft);
+}
+
+.pista-card__time {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.chip-external {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: var(--nm-surface-sunk);
+  color: var(--text-soft);
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  box-shadow: var(--nm-inset-sm);
+}
+
+.musica-vacio {
+  text-align: center;
+  padding: 3.5rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.musica-estado-msg {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* ==========================================================================
+   BOTÓN RETORNO A LA TERMINAL
+   ========================================================================== */
+.musica-volver-wrap {
+  text-align: center;
+  margin: 3.5rem 0 2rem;
+}
+
+.btn-volver-terminal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: var(--nm-surface);
+  border: none;
+  border-radius: 999px;
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  box-shadow: var(--nm-raised);
+  transition:
+    color 0.25s ease,
+    transform 0.25s var(--ease-snappy),
+    box-shadow 0.35s var(--ease-out-soft);
+}
+
+.btn-volver-terminal:hover {
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow:
+    -7px -7px 18px var(--nm-light-strong),
+    7px 7px 18px var(--nm-dark-strong),
+    0 0 30px -12px var(--color-brillo);
+}
+
+.btn-volver-terminal:active {
+  transform: translateY(0);
+  box-shadow: var(--nm-inset);
+}
+
+/* ==========================================================================
+   DOCK PLAYER INFERIOR
+   ========================================================================== */
+.dock-player {
+  position: fixed;
+  bottom: calc(1.4rem + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1080px, calc(100% - 2rem));
+  background: var(--nm-surface);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.7rem;
+  display: grid;
+  grid-template-columns: 260px 1fr 180px;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow:
+    -12px -12px 28px var(--nm-light),
+    12px 12px 30px var(--nm-dark-strong),
+    0 0 60px -20px var(--color-brillo);
+  z-index: 100;
+  transition: box-shadow 1s var(--ease-out-soft);
+}
+
+.dock-track {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+.dock-track__thumb {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  box-shadow:
+    0 8px 18px -6px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.dock-track__meta {
+  min-width: 0;
+}
+
+.dock-track__name {
+  display: block;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dock-track__artist {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dock-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dock-controls__buttons {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.btn-dock-ctrl {
+  width: 36px;
+  height: 36px;
+  background: var(--nm-surface);
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: var(--nm-raised-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    color 0.25s ease,
+    transform 0.2s var(--ease-snappy),
+    box-shadow 0.3s var(--ease-out-soft);
+}
+
+.btn-dock-ctrl:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow:
+    -4px -4px 10px var(--nm-light-strong),
+    4px 4px 10px var(--nm-dark-strong);
+}
+
+.btn-dock-ctrl:active {
+  transform: translateY(0);
+  box-shadow: var(--nm-inset-sm);
+}
+
+.btn-dock-ctrl.activo {
+  color: var(--color-de);
+  box-shadow:
+    var(--nm-inset-sm),
+    0 0 18px -8px var(--color-brillo);
+}
+
+.btn-dock-play {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--nm-surface);
+  color: var(--text-white);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    var(--nm-raised),
+    0 0 24px -8px var(--color-brillo);
+  transition:
+    transform 0.2s var(--ease-snappy),
+    box-shadow 0.3s var(--ease-out-soft),
+    color 0.3s ease;
+}
+
+.btn-dock-play:hover {
+  transform: scale(1.06);
+  color: #ffffff;
+  box-shadow:
+    -6px -6px 16px var(--nm-light-strong),
+    6px 6px 16px var(--nm-dark-strong),
+    0 0 36px -6px var(--color-brillo);
+}
+
+.btn-dock-play:active {
+  transform: scale(0.96);
+  box-shadow:
+    var(--nm-inset),
+    0 0 20px -8px var(--color-brillo);
+}
+
+.btn-dock-play svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.dock-seek {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-dim);
+}
+
+.dock-seek__bar {
+  flex: 1;
+  height: 8px;
+  background: var(--nm-surface-sunk);
+  border-radius: 999px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--nm-inset-sm);
+}
+
+.dock-seek__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-de), var(--color-a));
+  border-radius: 999px;
+  width: 0%;
+  box-shadow: 0 0 12px -2px var(--color-brillo);
+  transition:
+    width 0.1s linear,
+    background 1s var(--ease-out-soft),
+    box-shadow 1s var(--ease-out-soft);
+}
+
+.dock-volume {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  color: var(--text-dim);
+}
+
+.dock-volume input[type="range"] {
+  accent-color: var(--color-de);
+  cursor: pointer;
+  width: 90px;
+  transition: accent-color 1s var(--ease-out-soft);
+}
+
+/* ==========================================================================
+   RESPONSIVE — MÓVIL / TABLET
+   ========================================================================== */
+@media (max-width: 860px) {
+  body.musica-body {
+    padding-bottom: calc(230px + env(safe-area-inset-bottom, 20px));
   }
-  function hslAHex(h, s, l){
-    s /= 100; l /= 100;
-    const k = n => (n + h / 30) % 12;
-    const a = s * Math.min(l, 1 - l);
-    const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-    const rgb = [f(0), f(8), f(4)].map(x => Math.round(x * 255).toString(16).padStart(2, '0'));
-    return `#${rgb.join('')}`;
-  }
-  function colorDesde(clave){
-    const h = hashTexto(clave);
-    const tono = h % 360;
-    return {
-      de: hslAHex(tono, 78, 58),
-      a: hslAHex((tono + 46) % 360, 70, 30)
-    };
+
+  .musica-layout {
+    padding-bottom: 1rem;
+    padding-top: calc(var(--nav-h) + 1.4rem);
   }
 
-  function hexARgba(hex, alpha){
-    const limpio = hex.replace('#', '');
-    const bigint = parseInt(limpio.length === 3
-      ? limpio.split('').map(c => c + c).join('')
-      : limpio, 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  .hero-player {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.4rem;
+    padding: 1.8rem 1.4rem;
   }
 
-  /* ---------------------------------------------------------------
-     DESCUBRIMIENTO AUTOMÁTICO VÍA LA API DE GITHUB
-     --------------------------------------------------------------- */
-  const EXTENSIONES_AUDIO = ['.mp3', '.m4a', '.wav', '.ogg'];
-
-  function parsearNombre(nombreArchivo){
-    const sinExtension = nombreArchivo.replace(/\.[^.]+$/, '');
-    const partes = sinExtension.split(' - ');
-    if(partes.length >= 2){
-      return { artista: partes[0].trim(), titulo: partes.slice(1).join(' - ').trim() };
-    }
-    return { artista: '', titulo: sinExtension.trim() };
+  .hero-player__controls {
+    justify-content: center;
   }
 
-  function detectarRepoDesdeUrl(){
-    const host = location.hostname;
-    if(!host.endsWith('.github.io')) return null;
-    const usuario = host.replace('.github.io', '');
-    const segmentos = location.pathname.split('/').filter(Boolean);
-    const repositorio = segmentos.length ? segmentos[0] : `${usuario}.github.io`;
-    return { usuario, repositorio, rama: 'main', carpeta: (typeof REPO_GITHUB !== 'undefined' && REPO_GITHUB.carpeta) || 'assets/audio' };
+  .hero-visualizer {
+    width: min(220px, 60vw);
   }
 
-  async function descubrirCanciones(){
-    const manual = (typeof REPO_GITHUB !== 'undefined') ? REPO_GITHUB : {};
-    const manualValido = manual.usuario && manual.repositorio && !manual.usuario.startsWith('TU-');
-    const { usuario, repositorio, rama, carpeta } = manualValido ? manual : (detectarRepoDesdeUrl() || {});
-    const extra = (typeof CANCIONES_EXTRA !== 'undefined') ? CANCIONES_EXTRA : [];
-    const notas = (typeof NOTAS !== 'undefined') ? NOTAS : {};
-
-    let descubiertas = [];
-    let avisoCarga = '';
-
-    if(usuario && repositorio){
-      try{
-        const url = `https://api.github.com/repos/${usuario}/${repositorio}/contents/${carpeta}?ref=${rama || 'main'}`;
-        const resp = await fetch(url, { headers: { Accept: 'application/vnd.github+json' } });
-        if(!resp.ok) throw new Error('respuesta ' + resp.status);
-        const archivos = await resp.json();
-
-        descubiertas = archivos
-          .filter(f => f.type === 'file' && EXTENSIONES_AUDIO.some(ext => f.name.toLowerCase().endsWith(ext)))
-          .map(f => {
-            const { artista, titulo } = parsearNombre(f.name);
-            return {
-              id: 'auto-' + f.sha,
-              titulo: titulo || f.name,
-              artista: artista || 'Pista de la mixtape',
-              nota: notas[f.name] || '',
-              duracion: null,
-              src: f.download_url,
-              enlaceExterno: '',
-              portada: colorDesde(f.name),
-              archivo: f.name
-            };
-          });
-
-        if(!descubiertas.length) avisoCarga = 'No hay archivos de audio en esa carpeta todavía. Sube alguno a ' + carpeta + ' y recarga.';
-      }catch(err){
-        console.warn('No se pudo listar el audio automáticamente:', err);
-        avisoCarga = 'No se pudieron detectar canciones automáticamente (revisa REPO_GITHUB en musica-datos.js). Mostrando solo las añadidas a mano, si las hay.';
-      }
-    } else {
-      avisoCarga = 'No se detectó automáticamente un repositorio de GitHub Pages (¿estás viendo esto fuera de github.io, por ejemplo en local?). Si quieres probar aquí, rellena REPO_GITHUB en musica-datos.js; si no, sube el sitio a GitHub Pages y funcionará solo.';
-    }
-
-    const manuales = extra.map((c, i) => ({
-      id: 'extra-' + i,
-      titulo: c.titulo,
-      artista: c.artista || '',
-      nota: c.nota || '',
-      duracion: c.duracion || null,
-      src: c.src || '',
-      enlaceExterno: c.enlaceExterno || '',
-      portada: c.portada || colorDesde(c.titulo + i)
-    }));
-
-    return { canciones: [...descubiertas, ...manuales], aviso: avisoCarga };
+  .dock-player {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 0.9rem 1.1rem;
+    bottom: calc(0.7rem + env(safe-area-inset-bottom, 0px));
+    width: calc(100% - 1.4rem);
+    border-radius: 22px;
   }
 
-  /* ---------------------------------------------------------------
-     UTILIDADES
-     --------------------------------------------------------------- */
-  function formatearTiempo(segundos){
-    if(!isFinite(segundos) || segundos === null || segundos < 0) return '—:—';
-    const m = Math.floor(segundos / 60);
-    const s = Math.floor(segundos % 60);
-    return `${m}:${String(s).padStart(2, '0')}`;
-  }
-  function fondoGradiente(portada){
-    const de = portada?.de || '#a855f7', a = portada?.a || '#ec4899';
-    return `background: linear-gradient(150deg, ${de}, ${a});`;
-  }
-  function mezclar(array){
-    const copia = array.slice();
-    for(let i = copia.length - 1; i > 0; i--){
-      const j = Math.floor(Math.random() * (i + 1));
-      [copia[i], copia[j]] = [copia[j], copia[i]];
-    }
-    return copia;
-  }
-  function generarCola(){
-    const indices = CANCIONES.map((_, i) => i);
-    estado.cola = estado.aleatorio ? mezclar(indices) : indices;
-  }
-  function iconoPlay(){ return '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'; }
-  function iconoPausa(){ return '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>'; }
-  function iconoNota(){ return '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>'; }
-
-  /* ---------------------------------------------------------------
-     TEMA DINÁMICO
-     --------------------------------------------------------------- */
-  function aplicarColorAmbiente(portada){
-    const de = portada?.de || '#a855f7';
-    const a = portada?.a || '#ec4899';
-    const raiz = document.documentElement.style;
-
-    raiz.setProperty('--color-de', de);
-    raiz.setProperty('--color-a', a);
-    raiz.setProperty('--color-brillo', hexARgba(de, 0.45));
-    raiz.setProperty('--track-a', de);
-    raiz.setProperty('--track-b', a);
+  .dock-volume {
+    display: none;
   }
 
-  /* ---------------------------------------------------------------
-     RENDER DE LA LISTA
-     --------------------------------------------------------------- */
-  function cancionesFiltradas(){
-    const q = estado.filtro.trim().toLowerCase();
-    const conIndice = CANCIONES.map((c, i) => ({ ...c, indiceOriginal: i }));
-    if(!q) return conIndice;
-    return conIndice.filter(c => c.titulo.toLowerCase().includes(q) || c.artista.toLowerCase().includes(q));
+  .dock-track__thumb {
+    width: 42px;
+    height: 42px;
   }
 
-  function renderLista(){
-    if(!CANCIONES.length){
-      listaEl.innerHTML = '<div class="musica-vacio"><span class="musica-vacio__icono">🎵</span>Todavía no hay canciones que mostrar.</div>';
-      return;
-    }
-    const items = cancionesFiltradas();
-    if(!items.length){
-      listaEl.innerHTML = '<div class="musica-vacio"><span class="musica-vacio__icono">🔍</span>Ninguna canción coincide con esa búsqueda.</div>';
-      return;
-    }
-
-    // FIX: sin data-reveal en las pista-cards. Se muestran siempre visibles.
-    listaEl.innerHTML = items.map((c) => {
-      const activa = c.indiceOriginal === estado.indiceActual;
-      const sonandoAqui = activa && estado.sonando;
-      const celdaIndice = sonandoAqui
-        ? '<div class="eq-bars"><span></span><span></span><span></span></div>'
-        : `<span class="pista-card__num">${c.indiceOriginal + 1}</span>`;
-      return `
-      <article class="pista-card ${activa ? 'activa' : ''}" data-indice="${c.indiceOriginal}" tabindex="0" role="button"
-        aria-label="Reproducir ${c.titulo}">
-        <div class="pista-card__index">${celdaIndice}</div>
-        <div class="pista-card__thumb" style="${fondoGradiente(c.portada)}">${iconoNota()}</div>
-        <div class="pista-card__info">
-          <div class="pista-card__name">${c.titulo}</div>
-          <div class="pista-card__artist">${c.artista}${c.nota ? ` <span class="pista-card__tag">${c.nota}</span>` : ''}</div>
-        </div>
-        <div class="pista-card__time">
-          ${!c.src ? '<span class="chip-external">Enlace</span>' : ''}${formatearTiempo(c.duracion)}
-        </div>
-      </article>`;
-    }).join('');
-
-    listaEl.querySelectorAll('.pista-card').forEach(fila => {
-      const activar = () => cargarCancion(Number(fila.dataset.indice), true);
-      fila.addEventListener('click', activar);
-      fila.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activar(); } });
-    });
+  .lista-cabecera {
+    grid-template-columns: 34px 1fr 60px;
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
   }
 
-  /* ---------------------------------------------------------------
-     REPRODUCCIÓN
-     --------------------------------------------------------------- */
-  function actualizarInterfazCancion(){
-    const c = CANCIONES[estado.indiceActual];
-    if(!c) return;
-    aplicarColorAmbiente(c.portada);
-
-    if(heroTitulo) heroTitulo.textContent = c.titulo;
-    if(heroArtista) heroArtista.textContent = c.artista;
-    if(heroNota) heroNota.textContent = c.nota || '';
-    if(heroCover) heroCover.classList.toggle('girando', estado.sonando);
-    if(heroPlay) heroPlay.innerHTML = estado.sonando ? iconoPausa() : iconoPlay();
-
-    if(barraTitulo) barraTitulo.textContent = c.titulo;
-    if(barraArtista) barraArtista.textContent = c.artista;
-    if(barraMini) barraMini.style.cssText = fondoGradiente(c.portada);
-    if(barraPlay) barraPlay.innerHTML = estado.sonando ? iconoPausa() : iconoPlay();
-    if(tiempoTotalEl) tiempoTotalEl.textContent = formatearTiempo(c.duracion);
-
-    if(barraAviso){
-      barraAviso.innerHTML = c.src
-        ? ''
-        : (c.enlaceExterno ? `Sin audio local · <a href="${c.enlaceExterno}" target="_blank" rel="noopener">escuchar en el enlace</a>` : 'Esta canción no tiene audio todavía.');
-    }
-    renderLista();
+  .pista-card {
+    grid-template-columns: 28px 46px minmax(0, 1fr) 60px;
+    gap: 0.7rem;
+    padding: 0.75rem 0.85rem;
+    min-height: 72px;
   }
 
-  function cargarCancion(indice, autoreproducir){
-    estado.indiceActual = indice;
-    const c = CANCIONES[indice];
-    if(!c) return;
-
-    if(c.src){
-      audio.crossOrigin = 'anonymous';
-      audio.src = c.src;
-      audio.load();
-      if(autoreproducir) reproducir(); else { estado.sonando = false; actualizarInterfazCancion(); }
-    } else {
-      audio.removeAttribute('src');
-      estado.sonando = false;
-      actualizarInterfazCancion();
-      if(autoreproducir && c.enlaceExterno) window.open(c.enlaceExterno, '_blank', 'noopener');
-    }
-    if(barraProgresoRelleno) barraProgresoRelleno.style.width = '0%';
-    if(tiempoActualEl) tiempoActualEl.textContent = '0:00';
+  .pista-card__thumb {
+    width: 46px;
+    height: 46px;
   }
 
-  function reproducir(){
-    const c = CANCIONES[estado.indiceActual];
-    if(!c) return;
-    if(!c.src){
-      if(c.enlaceExterno) window.open(c.enlaceExterno, '_blank', 'noopener');
-      return;
-    }
-    iniciarVisualizador();
-    audio.play().then(() => {
-      estado.sonando = true;
-      actualizarInterfazCancion();
-    }).catch(() => {
-      estado.sonando = false;
-      if(barraAviso) barraAviso.textContent = 'No se pudo reproducir este archivo.';
-      actualizarInterfazCancion();
-    });
-  }
-  function pausar(){ audio.pause(); estado.sonando = false; actualizarInterfazCancion(); }
-  function alternarReproduccion(){
-    if(estado.sonando) pausar();
-    else if(audio.src) reproducir();
-    else cargarCancion(estado.indiceActual, true);
-  }
-  function siguiente(automatico){
-    const posicion = estado.cola.indexOf(estado.indiceActual);
-    const siguientePosicion = posicion + 1;
-    if(siguientePosicion >= estado.cola.length){
-      if(estado.repetir === 'todas' || !automatico) cargarCancion(estado.cola[0], true);
-      else pausar();
-      return;
-    }
-    cargarCancion(estado.cola[siguientePosicion], true);
-  }
-  function anterior(){
-    if(audio.currentTime > 3){ audio.currentTime = 0; return; }
-    const posicion = estado.cola.indexOf(estado.indiceActual);
-    const anteriorPosicion = (posicion - 1 + estado.cola.length) % estado.cola.length;
-    cargarCancion(estado.cola[anteriorPosicion], true);
+  .musica-toolbar {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  /* ---------------------------------------------------------------
-     VISUALIZADOR DE AUDIO EN VIVO
-     --------------------------------------------------------------- */
-  let contextoAudio, nodoAnalizador, nodoFuente, datosFrecuencia, vizActivo = false;
-  function iniciarVisualizador(){
-    if(!lienzoViz || contextoAudio) { if(nodoAnalizador) dibujarVisualizador(); return; }
-    try{
-      const AC = window.AudioContext || window.webkitAudioContext;
-      contextoAudio = new AC();
-      nodoFuente = contextoAudio.createMediaElementSource(audio);
-      nodoAnalizador = contextoAudio.createAnalyser();
-      nodoAnalizador.fftSize = 64;
-      datosFrecuencia = new Uint8Array(nodoAnalizador.frequencyBinCount);
-      nodoFuente.connect(nodoAnalizador);
-      nodoAnalizador.connect(contextoAudio.destination);
-      dibujarVisualizador();
-    }catch(err){
-      console.warn('Visualizador no disponible, usando modo simple.', err);
-      lienzoViz.classList.add('viz-simple');
-    }
-  }
-  function dibujarVisualizador(){
-    if(vizActivo) return;
-    vizActivo = true;
-    const ctx = lienzoViz.getContext('2d');
-    function fotograma(){
-      requestAnimationFrame(fotograma);
-      if(contextoAudio && contextoAudio.state === 'suspended') contextoAudio.resume();
-      const ancho = lienzoViz.width = lienzoViz.clientWidth * devicePixelRatio;
-      const alto = lienzoViz.height = lienzoViz.clientHeight * devicePixelRatio;
-      ctx.clearRect(0, 0, ancho, alto);
-      if(!nodoAnalizador || !estado.sonando) return;
-      nodoAnalizador.getByteFrequencyData(datosFrecuencia);
-      const n = datosFrecuencia.length;
-      const anchoBarra = ancho / n * .68;
-      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--track-a') || '#a855f7';
-      for(let i = 0; i < n; i++){
-        const h = Math.max(3, (datosFrecuencia[i] / 255) * alto);
-        const x = i * (ancho / n);
-        ctx.fillRect(x, alto - h, anchoBarra, h);
-      }
-    }
-    fotograma();
+  .toolbar__search {
+    max-width: none;
   }
 
-  /* ---------------------------------------------------------------
-     EVENTOS DEL <audio>
-     --------------------------------------------------------------- */
-  audio.addEventListener('timeupdate', () => {
-    const c = CANCIONES[estado.indiceActual];
-    const duracion = isFinite(audio.duration) && audio.duration > 0 ? audio.duration : (c?.duracion || 0);
-    if(duracion && barraProgresoRelleno) barraProgresoRelleno.style.width = (audio.currentTime / duracion * 100) + '%';
-    if(tiempoActualEl) tiempoActualEl.textContent = formatearTiempo(audio.currentTime);
-  });
-  audio.addEventListener('loadedmetadata', () => {
-    const c = CANCIONES[estado.indiceActual];
-    if(c && isFinite(audio.duration)){
-      c.duracion = audio.duration;
-      if(tiempoTotalEl) tiempoTotalEl.textContent = formatearTiempo(audio.duration);
-      renderLista();
-    }
-  });
-  audio.addEventListener('ended', () => {
-    if(estado.repetir === 'una'){ audio.currentTime = 0; audio.play(); }
-    else siguiente(true);
-  });
-  audio.addEventListener('error', () => {
-    if(audio.getAttribute('src')){
-      estado.sonando = false;
-      if(barraAviso) barraAviso.textContent = 'No se encontró el archivo de audio.';
-      actualizarInterfazCancion();
-    }
-  });
-
-  /* ---------------------------------------------------------------
-     CONTROLES
-     --------------------------------------------------------------- */
-  [heroPlay, barraPlay].forEach(btn => btn && btn.addEventListener('click', alternarReproduccion));
-  if(barraPrev) barraPrev.addEventListener('click', anterior);
-  if(barraNext) barraNext.addEventListener('click', () => siguiente(false));
-
-  function alternarAleatorio(){
-    estado.aleatorio = !estado.aleatorio;
-    generarCola();
-    [barraAleatorio, sidebarAleatorio].forEach(el => el && el.classList.toggle('activo', estado.aleatorio));
+  .toolbar__actions {
+    justify-content: space-between;
   }
-  if(barraAleatorio) barraAleatorio.addEventListener('click', alternarAleatorio);
-  if(sidebarAleatorio) sidebarAleatorio.addEventListener('click', alternarAleatorio);
+}
 
-  if(barraRepetir){
-    const etiquetas = { apagado: 'Repetir', todas: 'Repetir todas', una: 'Repetir una' };
-    barraRepetir.addEventListener('click', () => {
-      estado.repetir = estado.repetir === 'apagado' ? 'todas' : (estado.repetir === 'todas' ? 'una' : 'apagado');
-      barraRepetir.classList.toggle('activo', estado.repetir !== 'apagado');
-      barraRepetir.title = etiquetas[estado.repetir];
-    });
+@media (max-width: 420px) {
+  .pista-card {
+    grid-template-columns: 24px 42px minmax(0, 1fr) 52px;
+    gap: 0.55rem;
   }
-  if(barraProgreso){
-    barraProgreso.addEventListener('click', (evento) => {
-      const c = CANCIONES[estado.indiceActual];
-      const duracion = isFinite(audio.duration) && audio.duration > 0 ? audio.duration : (c?.duracion || 0);
-      if(!duracion) return;
-      const rect = barraProgreso.getBoundingClientRect();
-      const ratio = Math.min(1, Math.max(0, (evento.clientX - rect.left) / rect.width));
-      if(audio.src) audio.currentTime = ratio * duracion;
-      if(barraProgresoRelleno) barraProgresoRelleno.style.width = (ratio * 100) + '%';
-    });
-  }
-  if(barraVolumen){
-    audio.volume = Number(barraVolumen.value) / 100;
-    barraVolumen.addEventListener('input', () => { audio.volume = Number(barraVolumen.value) / 100; });
-  }
-  if(buscadorInput) buscadorInput.addEventListener('input', () => { estado.filtro = buscadorInput.value; renderLista(); });
 
-  /* ---------------------------------------------------------------
-     INICIO
-     --------------------------------------------------------------- */
-  if(estadoCarga) estadoCarga.textContent = 'Buscando canciones…';
-  const { canciones, aviso } = await descubrirCanciones();
-  CANCIONES = canciones;
-
-  if(estadoCarga) estadoCarga.textContent = aviso || '';
-  if(statTotal) statTotal.textContent = CANCIONES.length + (CANCIONES.length === 1 ? ' canción' : ' canciones');
-
-  if(CANCIONES.length){
-    generarCola();
-    cargarCancion(0, false);
-  } else {
-    renderLista();
+  .pista-card__thumb {
+    width: 42px;
+    height: 42px;
   }
-});
+
+  .pista-card__name {
+    font-size: 0.92rem;
+  }
+
+  .pista-card__artist {
+    font-size: 0.78rem;
+  }
+
+  .hero-player__title {
+    font-size: 1.3rem;
+  }
+
+  .hero-player__cover {
+    width: 140px;
+    height: 140px;
+  }
+}
