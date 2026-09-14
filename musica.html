@@ -4,9 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Música de a Bordo · Marta Airlines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/estilos.css">
+  <link rel="stylesheet" href="assets/css/musica.css">
 </head>
-<body>
+<body class="pagina-musica">
+  <div class="fondo-vivo" aria-hidden="true">
+    <div class="blob blob--a" id="blob-a"></div>
+    <div class="blob blob--b" id="blob-b"></div>
+  </div>
+
   <header class="navbar">
     <div class="navbar__inner">
       <a href="index.html" class="marca">
@@ -14,6 +22,9 @@
         <span class="marca__texto">MARTA <span>AIRLINES</span></span>
         <span class="marca__vuelo">GATE B-02</span>
       </a>
+      <button class="hamburguesa" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
       <nav class="nav-enlaces">
         <a href="index.html" data-pagina="index.html">Ventanilla</a>
         <a href="amigos.html" data-pagina="amigos.html">Amigos</a>
@@ -24,14 +35,109 @@
     </div>
   </header>
 
-  <main style="padding-top: calc(var(--nav-h) + 3rem); min-height: 80vh;">
-    <div class="contenedor">
-      <!-- contenido pendiente -->
-    </div>
+  <main class="musica-shell">
+
+    <aside class="musica-sidebar">
+      <div>
+        <div class="musica-sidebar__titulo">Tu mixtape</div>
+        <div class="musica-sidebar__sub">Canciones elegidas para ti</div>
+      </div>
+
+      <label class="musica-buscador">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="musica-buscador-input" placeholder="Buscar canción o artista" autocomplete="off">
+      </label>
+
+      <p class="musica-sidebar__estado" id="musica-estado"></p>
+
+      <div class="musica-toggles">
+        <button class="musica-toggle" id="sidebar-aleatorio" type="button">
+          <span style="display:flex;align-items:center;gap:.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
+            Aleatorio
+          </span>
+          <span class="musica-toggle__badge">ON</span>
+        </button>
+      </div>
+
+      <div class="musica-sidebar__stat"><b id="stat-total">0</b> canciones en la mixtape</div>
+    </aside>
+
+    <section class="musica-main">
+
+      <div class="musica-hero" data-reveal>
+        <div class="vinilo" id="hero-vinilo">
+          <div class="vinilo__etiqueta" id="hero-etiqueta"></div>
+        </div>
+        <div class="musica-hero__info">
+          <span class="musica-hero__eyebrow">Sonando ahora</span>
+          <h1 class="h-lg musica-hero__titulo" id="hero-titulo">—</h1>
+          <p class="musica-hero__artista" id="hero-artista">—</p>
+          <p class="musica-hero__nota" id="hero-nota"></p>
+          <div class="musica-hero__accion">
+            <button class="boton-play-grande" id="hero-play" type="button" aria-label="Reproducir"></button>
+            <canvas id="visualizador"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="musica-lista__cabecera">
+        <span>#</span><span>Título</span><span>Duración</span>
+      </div>
+      <div id="musica-lista"></div>
+
+    </section>
   </main>
+
+  <div class="reproductor-fijo">
+    <div class="reproductor-fijo__pista">
+      <div class="reproductor-fijo__mini" id="barra-mini"></div>
+      <div style="min-width:0;">
+        <div class="reproductor-fijo__titulo" id="barra-titulo">—</div>
+        <div class="reproductor-fijo__artista" id="barra-artista">—</div>
+      </div>
+    </div>
+
+    <div class="reproductor-fijo__centro">
+      <div class="reproductor-fijo__controles">
+        <button class="control-mini" id="barra-aleatorio" type="button" aria-label="Aleatorio" title="Aleatorio">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
+          <span class="control-mini__punto"></span>
+        </button>
+        <button class="control-circular" id="barra-prev" type="button" aria-label="Anterior">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6L9 12l11 6z"/></svg>
+        </button>
+        <button class="control-circular control-circular--play" id="barra-play" type="button" aria-label="Reproducir"></button>
+        <button class="control-circular" id="barra-next" type="button" aria-label="Siguiente">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM4 6l11 6-11 6z"/></svg>
+        </button>
+        <button class="control-mini" id="barra-repetir" type="button" aria-label="Repetir" title="Repetir">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          <span class="control-mini__punto"></span>
+        </button>
+      </div>
+      <div class="barra-progreso-fila">
+        <time id="tiempo-actual">0:00</time>
+        <div class="barra-progreso" id="barra-progreso"><div class="barra-progreso__relleno" id="barra-progreso-relleno"></div></div>
+        <time id="tiempo-total">0:00</time>
+      </div>
+      <div class="reproductor-fijo__aviso" id="barra-aviso"></div>
+    </div>
+
+    <div class="reproductor-fijo__volumen">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>
+      <input type="range" id="barra-volumen" min="0" max="100" value="75" aria-label="Volumen">
+    </div>
+  </div>
+
+  <audio id="audio-elemento" preload="metadata"></audio>
 
   <footer class="pie">
     <div class="contenedor">Hecho con <span class="corazon">❤</span> para Marta · Vuelo 23</div>
   </footer>
+
+  <script src="assets/js/musica-datos.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/musica.js"></script>
 </body>
 </html>
