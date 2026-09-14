@@ -1,14 +1,15 @@
 /* ==========================================================================
    HOME.CSS — PERSPECTIVA DE CABINA Y TERMINAL DE DÍA
-   Fixes aplicados:
-   - Ventanilla: el canvas de Three.js ya no sobresale del marco redondeado
-     en Safari iOS (mask hack + border-radius en el propio canvas).
-   - Tablón Split-Flap: no se desborda en móvil, tiles redimensionados.
-   - Vestíbulo: scroll intacto en móvil.
+   Fixes iOS Safari:
+   - Ventanilla: el canvas de Three.js ya no sobresale del marco. Se aplica
+     border-radius directamente al canvas + mask-image en el contenedor
+     (único método fiable en Safari iOS para recortar canvas).
+   - Tablón Split-Flap: tiles reducidos a tamaños móviles reales, sin
+     desbordes.
    ========================================================================== */
 
 /* ==========================================================================
-   CONTROL DE VISIBILIDAD DE ESTADOS & BLOQUEO DE SCROLL (DESKTOP)
+   CONTROL DE VISIBILIDAD Y BLOQUEO DE SCROLL (DESKTOP)
    ========================================================================== */
 html, body {
   margin: 0 !important;
@@ -44,7 +45,7 @@ body.en-vuelo .escena-vuelo {
 body.en-vuelo .navbar {
   display: flex !important;
   opacity: 1 !important;
-  transform: translateY(0) !important;
+  transform: none !important; /* sin transform, así no rompe position:fixed internos */
   visibility: visible !important;
   pointer-events: all !important;
 }
@@ -73,11 +74,9 @@ body.en-vuelo .vestibulo {
   padding: 0;
   box-sizing: border-box;
   background: radial-gradient(130% 85% at 50% 45%, #f7f4ec 0%, #e9e3d6 40%, #d8cfbe 80%, #beaf9a 100%);
-  perspective: 1200px;
   z-index: 50;
 }
 
-/* Techo compacto con maleteros e iluminación LED cálida */
 .cabina-techo {
   position: relative;
   width: 100%;
@@ -171,7 +170,6 @@ body.en-vuelo .vestibulo {
   border-radius: 3px;
 }
 
-/* Pared de fuselaje */
 .cabina-pared-completa {
   position: relative;
   width: 100%;
@@ -272,7 +270,6 @@ body.en-vuelo .vestibulo {
   height: min(46vh, 350px);
   width: calc(min(46vh, 350px) / 1.42);
   max-width: 80vw;
-  perspective: 1200px;
   flex-shrink: 0;
 }
 
@@ -306,11 +303,14 @@ body.en-vuelo .vestibulo {
   display: flex;
 }
 
-/* --------------------------------------------------------------------------
-   FIX SAFARI iOS: el canvas de Three.js no se recorta con border-radius
-   del padre. Hay que (a) forzar compositing con translateZ(0) y mask hack,
-   y (b) aplicar el propio border-radius también al canvas.
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   FIX iOS SAFARI — recorte del canvas de Three.js
+   Safari iOS ignora border-radius+overflow:hidden sobre canvas. Solución:
+   (1) mask-image radial en el contenedor (fuerza render pass que respeta
+       el redondeo).
+   (2) border-radius aplicado TAMBIÉN al propio canvas.
+   (3) transform: translateZ(0) para forzar compositing GPU.
+   ========================================================================== */
 .ventanilla-cristal {
   position: relative;
   width: 100%;
@@ -333,17 +333,22 @@ body.en-vuelo .vestibulo {
   width: 100%;
   height: 100%;
   z-index: 1;
-  border-radius: inherit;
+  border-radius: 42% 42% 38% 38% / 28% 28% 24% 24%;
   overflow: hidden;
   transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
 }
 
 .webgl-canvas-holder canvas {
   width: 100% !important;
   height: 100% !important;
   display: block;
-  /* Doble seguridad: el canvas también lleva el border-radius */
-  border-radius: 42% 42% 38% 38% / 28% 28% 24% 24%;
+  border-radius: 42% 42% 38% 38% / 28% 28% 24% 24% !important;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
 }
 
 .cristal-tint {
@@ -453,7 +458,6 @@ body.en-vuelo .vestibulo {
   pointer-events: none;
 }
 
-/* Consola de cabina */
 .cabina-consola {
   width: 100%;
   max-width: 310px;
@@ -501,7 +505,6 @@ body.en-vuelo .vestibulo {
 .placard-avion strong { font-family: var(--f-titulos); font-size: 0.55rem; font-weight: 800; color: #8c261e; letter-spacing: 0.06em; }
 .placard-avion span { font-size: 0.5rem; font-weight: 700; color: #4a4539; letter-spacing: 0.04em; }
 
-/* Manilla mecánica aeronáutica */
 .consola-mecanismo {
   margin-top: clamp(0.3rem, 0.7vh, 0.6rem);
   width: 100%; max-width: 280px;
@@ -552,7 +555,7 @@ body.en-vuelo .vestibulo {
 }
 
 /* ==========================================================================
-   ESCENA 2: VESTÍBULO TERMINAL DE AEROPUERTO DE DÍA
+   ESCENA 2: VESTÍBULO
    ========================================================================== */
 .vestibulo {
   position: fixed;
@@ -612,7 +615,7 @@ body.en-vuelo .vestibulo {
 }
 
 /* ==========================================================================
-   TABLÓN DE SALIDAS MECÁNICO COMPACTO (SOLARI DEPARTURES)
+   TABLÓN SOLARI
    ========================================================================== */
 .tablon-salidas-compacto {
   width: 100%;
@@ -624,7 +627,7 @@ body.en-vuelo .vestibulo {
   padding: clamp(0.55rem, 1.2vh, 0.85rem) clamp(0.85rem, 2vw, 1.3rem);
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.4), 0 0 0 1px #050608;
   flex-shrink: 0;
-  overflow: hidden; /* nada se sale del marco */
+  overflow: hidden;
 }
 
 .tablon-header {
@@ -634,6 +637,7 @@ body.en-vuelo .vestibulo {
   padding-bottom: 0.5rem;
   margin-bottom: 0.5rem;
   border-bottom: 1.5px solid #202736;
+  min-width: 0;
 }
 
 .tablon-header__simbolo {
@@ -658,6 +662,7 @@ body.en-vuelo .vestibulo {
   color: #ffffff !important;
   margin: 0;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .tablon-header__vuelo {
@@ -672,6 +677,7 @@ body.en-vuelo .vestibulo {
   color: #cbd5e1 !important;
   letter-spacing: 0.1em;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .tablon-cuerpo {
@@ -680,7 +686,6 @@ body.en-vuelo .vestibulo {
   gap: 0.38rem;
 }
 
-/* FIX: overflow oculto y flex-wrap no permitido, forzamos encogimiento */
 .tablon-fila {
   display: flex;
   justify-content: space-between;
@@ -700,12 +705,11 @@ body.en-vuelo .vestibulo {
 }
 
 /* ==========================================================================
-   LETRAS SPLIT-FLAP (SOLARI TILES)
+   SPLIT-FLAP TILES
    ========================================================================== */
 .split-flap-row {
   display: inline-flex;
-  gap: 2px;
-  perspective: 700px;
+  gap: 2.5px;
   min-width: 0;
   flex-shrink: 1;
   overflow: hidden;
@@ -713,8 +717,8 @@ body.en-vuelo .vestibulo {
 
 .flap-tile {
   position: relative;
-  width: clamp(11px, 1.4vw, 22px);
-  height: clamp(18px, 2.4vw, 32px);
+  width: clamp(13px, 1.6vw, 24px);
+  height: clamp(20px, 2.8vw, 36px);
   background: #14171f;
   border-radius: 2.5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -722,7 +726,7 @@ body.en-vuelo .vestibulo {
   align-items: center;
   justify-content: center;
   font-family: 'Montserrat', monospace, sans-serif;
-  font-size: clamp(0.6rem, 1.1vw, 1.15rem);
+  font-size: clamp(0.72rem, 1.3vw, 1.35rem);
   font-weight: 800;
   overflow: hidden;
   user-select: none;
@@ -773,28 +777,70 @@ body.en-vuelo .vestibulo {
   100% { transform: rotateX(0deg); filter: brightness(1); }
 }
 
-/* En móvil, reducir aún más los tiles para que quepan todos */
-@media (max-width: 600px) {
-  .flap-tile {
-    width: 12px !important;
-    height: 20px !important;
-    font-size: 0.68rem !important;
-    border-radius: 2px !important;
+/* --------------------------------------------------------------------------
+   FIX MÓVIL: en iPhone los tiles se salían del marco y desbordaban la fila.
+   Reducimos drásticamente su tamaño y forzamos que la fila no crezca.
+   -------------------------------------------------------------------------- */
+@media (max-width: 700px) {
+  .tablon-salidas-compacto {
+    padding: 0.5rem 0.65rem !important;
+    border-width: 2px !important;
+  }
+  .tablon-header {
+    gap: 0.5rem !important;
+    padding-bottom: 0.4rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+  .tablon-header__simbolo {
+    width: 20px !important;
+    height: 14px !important;
+  }
+  .tablon-header__simbolo svg {
+    width: 20px !important;
+    height: 14px !important;
+  }
+  .tablon-header__titulo {
+    font-size: 0.95rem !important;
+    letter-spacing: 0.14em !important;
+  }
+  .tablon-header__vuelo {
+    font-size: 0.58rem !important;
+    padding: 0.15rem 0.4rem !important;
+    letter-spacing: 0.06em !important;
+  }
+  .tablon-fila {
+    gap: 0.2rem !important;
+    padding: 0.2rem 0.3rem !important;
   }
   .split-flap-row {
     gap: 1px !important;
   }
-  .tablon-fila {
-    gap: 0.25rem !important;
-    padding: 0.22rem 0.35rem !important;
+  .flap-tile {
+    width: 11px !important;
+    height: 17px !important;
+    font-size: 0.62rem !important;
+    border-radius: 2px !important;
+    min-width: 11px !important;
+  }
+  .flap-tile .flap-notch-l,
+  .flap-tile .flap-notch-r {
+    display: none !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .flap-tile {
+    width: 9px !important;
+    height: 15px !important;
+    font-size: 0.55rem !important;
+    min-width: 9px !important;
   }
   .tablon-header__titulo {
-    font-size: 1rem !important;
-    letter-spacing: 0.16em !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 0.1em !important;
   }
   .tablon-header__vuelo {
-    font-size: 0.6rem !important;
-    padding: 0.15rem 0.4rem !important;
+    font-size: 0.52rem !important;
   }
 }
 
@@ -1274,11 +1320,9 @@ body.en-vuelo .vestibulo {
 }
 
 /* ==========================================================================
-   RESPONSIVE MÓVIL (IPHONE & TABLETS)
+   RESPONSIVE MÓVIL — PERMITE SCROLL Y 1 COLUMNA
    ========================================================================== */
 @media (max-width: 900px) {
-
-  /* Romper el bloqueo de scroll del html y del body */
   html {
     height: auto !important;
     max-height: none !important;
@@ -1345,29 +1389,5 @@ body.en-vuelo .vestibulo {
 
   .terminal-bottom-bar {
     padding: 1.2rem 0 0.8rem !important;
-  }
-}
-
-/* Ajustes extra para móviles muy estrechos */
-@media (max-width: 420px) {
-  .tablon-salidas-compacto {
-    padding: 0.5rem 0.6rem !important;
-    border-width: 2px !important;
-  }
-  .tablon-header {
-    gap: 0.5rem !important;
-  }
-  .tablon-header__simbolo {
-    width: 22px !important;
-    height: 16px !important;
-  }
-  .tablon-header__simbolo svg {
-    width: 22px !important;
-    height: 16px !important;
-  }
-  .flap-tile {
-    width: 10px !important;
-    height: 17px !important;
-    font-size: 0.6rem !important;
   }
 }

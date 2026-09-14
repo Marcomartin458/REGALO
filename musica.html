@@ -4,8 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Música de a Bordo · Marta Airlines</title>
+
+  <!-- Preconnect a Google Fonts (evita handshake TLS tardío) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&family=Caveat:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Solo 4 familias y 7 pesos en total (antes: 6 familias y ~20 pesos) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&family=Montserrat:wght@800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="assets/css/estilos.css">
   <link rel="stylesheet" href="assets/css/musica.css">
 </head>
@@ -108,7 +114,7 @@
       </div>
       <div class="dock-seek">
         <time id="tiempo-actual">0:00</time>
-        <div class="dock-seek__bar" id="barra-progreso"><div class="dock-seek__fill" id="barra-progreso-relleno"></div></div>
+        <div class="dock-seek__bar" id="barra-progreso"><div class="dock-seek__fill" id="barra-progreso-rellenido"></div></div>
         <time id="tiempo-total">0:00</time>
       </div>
       <p class="musica-estado-msg" id="barra-aviso" style="margin-top:.35rem;"></p>
@@ -120,9 +126,7 @@
     </div>
   </div>
 
-  <audio id="audio-elemento" preload="metadata"></audio>
-
-
+  <audio id="audio-elemento" preload="none"></audio>
 
   <script src="assets/js/musica-datos.js"></script>
   <script src="assets/js/main.js"></script>

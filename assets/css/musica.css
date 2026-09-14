@@ -1,10 +1,9 @@
 /* ==========================================================================
-   MUSICA.CSS — Interfaz neumórfica dinámica (v2 — sombras corregidas)
-   - Neumorfismo real con superficies y fondo del mismo color, pero con
-     sombras suficientemente intensas para que el relieve se vea.
-   - Color dinámico por canción aplicado como acento.
-   - Lista sin crossfade. Hover = elevación. Activo = hundido con acento.
-   - Dock no tapa contenido en móvil.
+   MUSICA.CSS — Interfaz neumórfica dinámica (v3 — optimizada)
+   - Auras con radial-gradient en vez de filter:blur(160px) — mismo efecto
+     visual, coste de GPU casi nulo.
+   - hero-player::before sin filter:blur(40px).
+   - Todo lo demás igual que la v2.
    ========================================================================== */
 
 @property --color-de {
@@ -24,28 +23,21 @@
 }
 
 :root {
-  /* --- COLORES DINÁMICOS (acento) --- */
   --color-de: #a855f7;
   --color-a: #ec4899;
   --color-brillo: rgba(168, 85, 247, 0.45);
   --track-a: #a855f7;
   --track-b: #ec4899;
 
-  /* --- BASE NEUMÓRFICA --- */
-  /* Superficie y fondo comparten color (obligatorio para neumorfismo real).
-     El relieve se consigue SOLO con las sombras dobles. */
   --nm-base: #1a1d27;
   --nm-surface: #1a1d27;
   --nm-surface-sunk: #15171f;
 
-  /* Sombras: clara arriba-izquierda, oscura abajo-derecha.
-     Valores más intensos que antes para que el relieve se vea. */
   --nm-light: rgba(255, 255, 255, 0.075);
   --nm-light-strong: rgba(255, 255, 255, 0.12);
   --nm-dark: rgba(0, 0, 0, 0.8);
   --nm-dark-strong: rgba(0, 0, 0, 1);
 
-  /* Presets de sombra neumórfica */
   --nm-raised-sm:
     -3px -3px 8px var(--nm-light),
     3px 3px 8px var(--nm-dark);
@@ -68,7 +60,6 @@
     inset -6px -6px 16px var(--nm-light),
     inset 6px 6px 16px var(--nm-dark);
 
-  /* --- TEXTO --- */
   --text-white: #eef1f7;
   --text-soft: #cbd2e0;
   --text-muted: #8f99ad;
@@ -111,7 +102,12 @@ body.musica-body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Auras muy tenues: solo matiz de color de la canción activa */
+/* ==========================================================================
+   AURAS — antes usaban filter:blur(160px) en un elemento de 580-650px
+   (coste brutal de GPU). Ahora son radial-gradient puros: mismo aspecto,
+   coste casi nulo. Se han agrandado porque el radial pierde opacidad hacia
+   los bordes.
+   ========================================================================== */
 .aura-fondo {
   position: fixed;
   inset: 0;
@@ -123,25 +119,28 @@ body.musica-body {
 .aura-luz {
   position: absolute;
   border-radius: 50%;
-  filter: blur(160px);
-  opacity: 0.1;
-  transition: background 1.5s var(--ease-out-soft);
+  opacity: 0.32;
+  transition: background 1.2s var(--ease-out-soft);
 }
 
 .aura-luz--1 {
-  width: min(580px, 90vw);
-  height: min(580px, 90vw);
-  top: -140px;
-  right: -120px;
-  background: var(--color-de);
+  width: min(920px, 135vw);
+  height: min(920px, 135vw);
+  top: -260px;
+  right: -220px;
+  background: radial-gradient(circle,
+    var(--color-de) 0%,
+    rgba(0, 0, 0, 0) 62%);
 }
 
 .aura-luz--2 {
-  width: min(650px, 95vw);
-  height: min(650px, 95vw);
-  bottom: 80px;
-  left: -160px;
-  background: var(--color-a);
+  width: min(1020px, 145vw);
+  height: min(1020px, 145vw);
+  bottom: -240px;
+  left: -260px;
+  background: radial-gradient(circle,
+    var(--color-a) 0%,
+    rgba(0, 0, 0, 0) 62%);
 }
 
 .musica-layout {
@@ -153,7 +152,7 @@ body.musica-body {
 }
 
 /* ==========================================================================
-   HERO PLAYER — tarjeta neumórfica elevada
+   HERO PLAYER
    ========================================================================== */
 .hero-player {
   position: relative;
@@ -169,18 +168,20 @@ body.musica-body {
   overflow: hidden;
 }
 
+/* El ::before mantiene el halo de color pero sin filter:blur */
 .hero-player::before {
   content: '';
   position: absolute;
   top: -50%;
-  right: -20%;
-  width: 55%;
+  right: -30%;
+  width: 80%;
   height: 200%;
-  background: radial-gradient(circle, var(--color-de), transparent 65%);
-  opacity: 0.1;
+  background: radial-gradient(circle,
+    var(--color-de) 0%,
+    rgba(0, 0, 0, 0) 65%);
+  opacity: 0.12;
   pointer-events: none;
-  filter: blur(40px);
-  transition: background 1.5s var(--ease-out-soft);
+  transition: background 1.2s var(--ease-out-soft);
 }
 
 .hero-player__cover-wrap {
@@ -226,6 +227,7 @@ body.musica-body {
   justify-content: center;
   animation: discoGiro 20s linear infinite;
   animation-play-state: paused;
+  will-change: transform;
 }
 
 .hero-player__cover.girando .hero-player__vinyl-grooves {
@@ -503,7 +505,6 @@ body.musica-body {
   margin-top: 1rem;
 }
 
-/* Fila elevada */
 .pista-card {
   position: relative;
   display: grid;
@@ -706,7 +707,7 @@ body.musica-body {
 }
 
 /* ==========================================================================
-   BOTÓN RETORNO A LA TERMINAL
+   BOTÓN RETORNO
    ========================================================================== */
 .musica-volver-wrap {
   text-align: center;
@@ -749,7 +750,7 @@ body.musica-body {
 }
 
 /* ==========================================================================
-   DOCK PLAYER INFERIOR
+   DOCK PLAYER
    ========================================================================== */
 .dock-player {
   position: fixed;
@@ -1033,6 +1034,11 @@ body.musica-body {
 
   .toolbar__actions {
     justify-content: space-between;
+  }
+
+  /* Menos opacidad de auras en móvil: menos pintura por frame */
+  .aura-luz {
+    opacity: 0.22;
   }
 }
 
