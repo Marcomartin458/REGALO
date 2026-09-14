@@ -1,13 +1,8 @@
 /* ==========================================================================
-   MUSICA.JS — reproductor de la mixtape (con descubrimiento automático)
-   1) Descubre las canciones listando la carpeta de audio vía la API de
-      GitHub (o usa CANCIONES_EXTRA si no hay conexión/configuración).
-   2) Genera un color único por canción a partir de su nombre de archivo,
-      usado en las miniaturas de la lista y del dock.
-   3) Si el navegador lo permite, dibuja un visualizador de audio en
-      tiempo real (Web Audio API) junto al botón de play grande.
-   4) Reproducción real con aleatorio, repetición, progreso, volumen y
-      búsqueda.
+   MUSICA.JS — Reproductor de la mixtape con tema dinámico
+   - Cada canción tiene su propio color (hash del nombre) y ahora TODO
+     el tema (auras, hero, botones, ecualizador, dock) cambia con ella.
+   - La transición de color la hace CSS vía @property + transition.
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', async () => {
   const listaEl = document.getElementById('musica-lista');
@@ -44,9 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const estado = { indiceActual: 0, sonando: false, aleatorio: false, repetir: 'apagado', cola: [], filtro: '' };
 
   /* ---------------------------------------------------------------
-     COLOR ÚNICO POR CANCIÓN — hash simple del nombre de archivo,
-     así cada miniatura tiene su propia identidad visual sin que nadie
-     tenga que elegir un color a mano.
+     COLOR ÚNICO POR CANCIÓN — hash simple del nombre de archivo
      --------------------------------------------------------------- */
   function hashTexto(texto){
     let h = 0;
@@ -70,6 +63,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
   }
 
+  /* Convierte un hex (#rrggbb) a rgba con la opacidad indicada. */
+  function hexARgba(hex, alpha){
+    const limpio = hex.replace('#', '');
+    const bigint = parseInt(limpio.length === 3
+      ? limpio.split('').map(c => c + c).join('')
+      : limpio, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+
   /* ---------------------------------------------------------------
      DESCUBRIMIENTO AUTOMÁTICO VÍA LA API DE GITHUB
      --------------------------------------------------------------- */
@@ -84,20 +89,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     return { artista: '', titulo: sinExtension.trim() };
   }
 
-  /* ---------------------------------------------------------------
-     REPOSITORIO — se detecta solo a partir de la URL en la que se
-     está sirviendo la página (marco.github.io/tu-repo/...), así que
-     normalmente NO hace falta tocar nada aquí. REPO_GITHUB solo se
-     usa si esa detección falla (por ejemplo, probando la web en tu
-     ordenador en vez de en GitHub Pages, o si usas un dominio propio).
-     --------------------------------------------------------------- */
   function detectarRepoDesdeUrl(){
-    const host = location.hostname; // ej. "marco.github.io"
+    const host = location.hostname;
     if(!host.endsWith('.github.io')) return null;
     const usuario = host.replace('.github.io', '');
     const segmentos = location.pathname.split('/').filter(Boolean);
-    // Página de usuario (marco.github.io) publica desde el repo "usuario.github.io" y sirve en la raíz.
-    // Página de proyecto (marco.github.io/mi-repo/...) sirve el repo "mi-repo" bajo ese primer segmento.
     const repositorio = segmentos.length ? segmentos[0] : `${usuario}.github.io`;
     return { usuario, repositorio, rama: 'main', carpeta: (typeof REPO_GITHUB !== 'undefined' && REPO_GITHUB.carpeta) || 'assets/audio' };
   }
@@ -189,11 +185,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   function iconoNota(){ return '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>'; }
   function iconoPlayMini(){ return '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'; }
 
+  /* ---------------------------------------------------------------
+     TEMA DINÁMICO — actualiza las variables CSS de color según la
+     canción activa. El CSS (@property + transition) hace el resto:
+     toda la página cambia de color suavemente.
+     --------------------------------------------------------------- */
   function aplicarColorAmbiente(portada){
-    // Solo alimenta el visualizador (--track-a); el resto del tema
-    // (hero, botones) usa la paleta fija --color-de/--color-a del CSS.
-    document.documentElement.style.setProperty('--track-a', portada?.de || '#a855f7');
-    document.documentElement.style.setProperty('--track-b', portada?.a || '#ec4899');
+    const de = portada?.de || '#a855f7';
+    const a = portada?.a || '#ec4899';
+    const raiz = document.documentElement.style;
+
+    // Tema general (hero, botones, ecualizador, dock, auras...)
+    raiz.setProperty('--color-de', de);
+    raiz.setProperty('--color-a', a);
+    raiz.setProperty('--color-brillo', hexARgba(de, 0.45));
+
+    // Colores del visualizador (usa --track-a/b)
+    raiz.setProperty('--track-a', de);
+    raiz.setProperty('--track-b', a);
   }
 
   /* ---------------------------------------------------------------
@@ -334,8 +343,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   /* ---------------------------------------------------------------
-     VISUALIZADOR DE AUDIO EN VIVO (Web Audio API) — con degradado a
-     un pulso CSS si el navegador o el origen del audio no lo permiten
+     VISUALIZADOR DE AUDIO EN VIVO (Web Audio API)
      --------------------------------------------------------------- */
   let contextoAudio, nodoAnalizador, nodoFuente, datosFrecuencia, vizActivo = false;
   function iniciarVisualizador(){
@@ -369,6 +377,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       nodoAnalizador.getByteFrequencyData(datosFrecuencia);
       const n = datosFrecuencia.length;
       const anchoBarra = ancho / n * .68;
+      // Lee la variable CSS en cada frame para que el visualizador
+      // también siga el color de la canción activa.
       ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--track-a') || '#a855f7';
       for(let i = 0; i < n; i++){
         const h = Math.max(3, (datosFrecuencia[i] / 255) * alto);

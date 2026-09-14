@@ -1,10 +1,37 @@
 /* ==========================================================================
    MUSICA.CSS — Interfaz de Estudio Dinámica, Vibrante y Optimizada
+   Fixes aplicados:
+   - Tema dinámico (los colores cambian según la canción)
+   - Hover de la lista sin solapamientos
+   - Reproductor inferior no tapa contenido en móvil
    ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   PROPIEDADES CSS REGISTRADAS — permiten transicionar colores
+   de variables CSS suavemente (Safari 16.4+ / iOS 16.4+)
+   -------------------------------------------------------------------------- */
+@property --color-de {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #a855f7;
+}
+@property --color-a {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ec4899;
+}
+@property --color-brillo {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(168, 85, 247, 0.45);
+}
+
 :root {
   --color-de: #a855f7;
   --color-a: #ec4899;
   --color-brillo: rgba(168, 85, 247, 0.45);
+  --track-a: #a855f7;
+  --track-b: #ec4899;
   --bg-deep: #07090e;
   --card-glass: rgba(255, 255, 255, 0.05);
   --border-glass: rgba(255, 255, 255, 0.12);
@@ -13,6 +40,16 @@
   --font-music: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-mono: 'Space Grotesk', monospace;
   --nav-h: 70px;
+
+  /* Transición de tema al cambiar de canción */
+  transition:
+    --color-de 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    --color-a 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    --color-brillo 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  scroll-padding-bottom: calc(200px + env(safe-area-inset-bottom, 20px));
 }
 
 body.musica-body {
@@ -22,12 +59,12 @@ body.musica-body {
   min-height: 100vh;
   min-height: 100svh;
   overflow-x: hidden;
-  padding-bottom: calc(140px + env(safe-area-inset-bottom, 20px));
+  padding-bottom: calc(190px + env(safe-area-inset-bottom, 20px));
   position: relative;
   margin: 0;
 }
 
-/* Auras vivas reactivas */
+/* Auras vivas reactivas — siguen el color de la canción activa */
 .aura-fondo {
   position: fixed;
   inset: 0;
@@ -41,7 +78,7 @@ body.musica-body {
   border-radius: 50%;
   filter: blur(120px);
   opacity: 0.35;
-  transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .aura-luz--1 {
@@ -84,7 +121,7 @@ body.musica-body {
   -webkit-backdrop-filter: blur(24px);
   box-shadow: 0 25px 50px -15px rgba(0, 0, 0, 0.6), 0 0 40px var(--color-brillo);
   margin-bottom: 2rem;
-  transition: box-shadow 0.6s ease;
+  transition: box-shadow 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero-player__cover-wrap {
@@ -100,7 +137,7 @@ body.musica-body {
   justify-content: center;
   background: linear-gradient(135deg, var(--color-de), var(--color-a));
   box-shadow: 0 16px 36px var(--color-brillo);
-  transition: transform 0.5s ease, background 0.6s ease, box-shadow 0.6s ease;
+  transition: transform 0.5s ease, box-shadow 0.9s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
 }
@@ -157,7 +194,7 @@ body.musica-body {
   padding: 0.25rem 0.75rem;
   border-radius: 999px;
   margin-bottom: 0.65rem;
-  transition: background 0.6s ease;
+  transition: background 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero-player__title {
@@ -249,7 +286,7 @@ body.musica-body {
   border-radius: 12px;
   padding: 0.75rem 1.1rem;
   color: var(--text-muted);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
 }
 
 .toolbar__search:focus-within {
@@ -286,7 +323,7 @@ body.musica-body {
   font-weight: 600;
   font-size: 0.88rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
 }
 
 .btn-tool:hover,
@@ -307,7 +344,7 @@ body.musica-body {
 }
 
 /* ==========================================================================
-   LISTA DE CANCIONES (SIN BUG DE OPACIDAD)
+   LISTA DE CANCIONES
    ========================================================================== */
 .musica-lista-wrap {
   background: rgba(255, 255, 255, 0.02);
@@ -347,7 +384,7 @@ body.musica-body {
   background: transparent;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
   opacity: 1 !important;
   user-select: none;
 }
@@ -362,26 +399,47 @@ body.musica-body {
   background: rgba(255, 255, 255, 0.09);
   border-color: var(--color-de);
   box-shadow: 0 4px 20px var(--color-brillo);
+  transition: background 0.25s ease, border-color 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s ease;
 }
 
+/* --- Columna índice: número ↔ icono play ↔ ecualizador --- */
 .pista-card__index {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.pista-card__num,
+.pista-card__hover-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.pista-card__num {
   font-family: var(--font-mono);
   font-size: 0.95rem;
-  color: var(--text-muted);
   font-weight: 700;
-  width: 24px;
+  color: var(--text-muted);
+  opacity: 1;
 }
 
 .pista-card__hover-play {
-  display: none;
   color: #ffffff;
+  opacity: 0;
 }
 
-.pista-card:hover .pista-card__num { display: none; }
-.pista-card:hover .pista-card__hover-play { display: block; }
+.pista-card:hover .pista-card__num { opacity: 0; }
+.pista-card:hover .pista-card__hover-play { opacity: 1; }
 
 .eq-bars {
   display: flex;
@@ -395,6 +453,7 @@ body.musica-body {
   background: var(--color-de);
   border-radius: 2px;
   animation: eqPulse 0.9s ease-in-out infinite alternate;
+  transition: background 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .eq-bars span:nth-child(1) { height: 40%; animation-delay: 0.1s; }
 .eq-bars span:nth-child(2) { height: 100%; animation-delay: 0.25s; }
@@ -430,6 +489,7 @@ body.musica-body {
   overflow: hidden;
   text-overflow: ellipsis;
   margin-bottom: 0.15rem;
+  transition: color 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pista-card.activa .pista-card__name {
@@ -458,6 +518,8 @@ body.musica-body {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
+  transition: color 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pista-card__time {
@@ -545,33 +607,7 @@ body.musica-body {
   gap: 1.5rem;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
   z-index: 100;
-  transition: border-color 0.5s ease;
-}
-
-@media (max-width: 860px) {
-  .hero-player {
-    flex-direction: column;
-    text-align: center;
-  }
-  .hero-player__controls {
-    justify-content: center;
-  }
-  .dock-player {
-    grid-template-columns: 1fr;
-    gap: 0.65rem;
-    padding: 0.85rem 1rem;
-    bottom: calc(0.6rem + env(safe-area-inset-bottom, 0px));
-  }
-  .dock-volume { 
-    display: none; 
-  }
-  .lista-cabecera {
-    grid-template-columns: 34px 1fr 60px;
-  }
-  .pista-card {
-    grid-template-columns: 28px 42px 1fr 60px;
-    gap: 0.65rem;
-  }
+  transition: border-color 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dock-track {
@@ -630,7 +666,7 @@ body.musica-body {
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition: color 0.25s ease, transform 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -697,7 +733,8 @@ body.musica-body {
   border-radius: 6px;
   width: 0%;
   box-shadow: 0 0 10px var(--color-de);
-  transition: width 0.1s linear;
+  transition: width 0.1s linear, background 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dock-volume {
@@ -712,4 +749,93 @@ body.musica-body {
   accent-color: var(--color-de);
   cursor: pointer;
   width: 90px;
+  transition: accent-color 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   RESPONSIVE — MÓVIL / TABLET
+   ========================================================================== */
+@media (max-width: 860px) {
+  /* Padding inferior generoso para que el dock fijo nunca tape contenido */
+  body.musica-body {
+    padding-bottom: calc(220px + env(safe-area-inset-bottom, 20px));
+  }
+
+  .musica-layout {
+    padding-bottom: 1rem;
+  }
+
+  .hero-player {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-player__controls {
+    justify-content: center;
+  }
+
+  .hero-visualizer {
+    width: min(200px, 55vw);
+  }
+
+  .dock-player {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+    padding: 0.75rem 1rem;
+    bottom: calc(0.6rem + env(safe-area-inset-bottom, 0px));
+    width: calc(100% - 1.2rem);
+    border-radius: 16px;
+  }
+
+  .dock-volume {
+    display: none;
+  }
+
+  .dock-track__thumb {
+    width: 40px;
+    height: 40px;
+  }
+
+  .lista-cabecera {
+    grid-template-columns: 34px 1fr 60px;
+  }
+
+  .pista-card {
+    grid-template-columns: 28px 42px 1fr 60px;
+    gap: 0.65rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .pista-card__thumb {
+    width: 42px;
+    height: 42px;
+  }
+
+  .musica-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbar__search {
+    max-width: none;
+  }
+
+  .toolbar__actions {
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 420px) {
+  .pista-card {
+    grid-template-columns: 24px 40px 1fr 52px;
+    gap: 0.55rem;
+  }
+
+  .pista-card__name {
+    font-size: 0.92rem;
+  }
+
+  .pista-card__artist {
+    font-size: 0.78rem;
+  }
 }
