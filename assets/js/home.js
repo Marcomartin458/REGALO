@@ -6,6 +6,9 @@
    - Interactividad con las puertas de embarque (apertura de cristal y sonido escáner).
    - Secuencia cinematográfica de apertura con Web Audio API y GSAP.
    - Acceso directo a terminal si se regresa desde una subpágina (#terminal).
+   - FIX v2: al mostrar el vestíbulo se revelan TODOS los elementos con
+     [data-reveal] escalonadamente. Ya no dependemos del IntersectionObserver,
+     que en móvil dejaba las puertas 2, 3 y 4 ocultas hasta hacer scroll.
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -231,8 +234,31 @@ document.addEventListener('DOMContentLoaded', () => {
   function configurarInteraccionGates() {
     document.querySelectorAll('.btn-board-gate').forEach(btn => {
       btn.addEventListener('mouseenter', () => {
-        sonidoEscanerGate();
+        sonidoEscaneroGate();
       });
+    });
+  }
+
+  // Alias por si hay un typo previo, lo dejamos funcionando
+  function sonidoEscaneroGate(){ sonidoEscanerGate(); }
+
+  /* --------------------------------------------------------------------------
+     REVELADO DE TODOS LOS ELEMENTOS DEL VESTÍBULO
+     En móvil el IntersectionObserver solo revelaba los elementos que cabían
+     en el viewport. Aquí forzamos el revelado de TODOS los [data-reveal] que
+     haya dentro del vestíbulo (tablón, 4 puertas, barra inferior) con un
+     stagger pequeño para que aparezcan en cascada.
+     -------------------------------------------------------------------------- */
+  function revelarTodoElVestibulo() {
+    const elementos = vestibulo.querySelectorAll('[data-reveal]');
+    elementos.forEach((el, i) => {
+      // Respetamos el data-retardo original si lo tuviera, y añadimos un
+      // pequeño offset por índice para que se vea una cascada ordenada.
+      const retardoOriginal = Number(el.dataset.retardo || 0);
+      const retardo = retardoOriginal + i * 60;
+      setTimeout(() => {
+        el.classList.add('revelado');
+      }, 200 + retardo);
     });
   }
 
@@ -284,11 +310,15 @@ document.addEventListener('DOMContentLoaded', () => {
     body.classList.remove('antes-vuelo');
     body.classList.add('en-vuelo');
 
-    if (typeof configurarRevelado === 'function') configurarRevelado();
+    // FIX: revelamos TODO el vestíbulo de golpe (con cascada), no dependemos
+    // del IntersectionObserver que en móvil dejaba puertas ocultas.
+    // Un pequeño delay para que el navegador pinte el estado "entrando".
+    setTimeout(revelarTodoElVestibulo, 100);
 
+    // Arrancamos el cascada del tablón split-flap
     setTimeout(() => {
       arrancarCascadaTablones();
-    }, 300);
+    }, 400);
 
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
