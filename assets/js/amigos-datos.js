@@ -61,11 +61,12 @@ const AMIGOS = [
     asiento: '01D',
     categoria: 'diplomatico',
     fotos: [
-      { src: 'assets/img/amigos/MarcoyMarta.jpg', pie: 'Los dos' },
-      { src: 'assets/img/amigos/MarcoyMarta2.jpg', pie: 'De viaje' }
+      { src: 'assets/img/amigos/MarcoyMarta3.jpg', pie: 'Los dos' },
+      { src: 'assets/img/amigos/MarcoyMarta2.jpg', pie: 'De viaje' },
+      { src: 'assets/img/amigos/MarcoyMarta.jpg', pie: 'De viaje' }
     ],
     sellos: [
-      { tipo: 'diplomatico', fecha: '2024-01-01', texto: 'Hola Tuki, Loli, Marta. Esta seguro que no te la esperabas eh, jajaja. Eres esa persona a la que miro (afortunadamente casi todos los días) y siempre me pregunto: Cómo lo hará para seguir con esa sonrisa? Te admiro porque no conozco a nadie con tu filosofía. Me haces querer ser mejor persona, porque tú quieres serlo todos los días. Me haces aprender a querer y quererme mejor, porque tu forma de querer es preciosa. Desde pequeños te prometí que pasase lo que pasase siempre estaría a tu lado y, pase lo que pase, seguiré estando aquí. Por toda una vida sonriendo, abrazando, llorando y queriendo a tu lado. Te quiero tuki.' }
+      { tipo: 'diplomatico', fecha: '2024-01-01', texto: 'Hola Tuki, Loli, Marta. Esta seguro que no te la esperabas eh, jajaja. Eres esa persona a la que miro (afortunadamente casi todos los días) y siempre me pregunto: Cómo lo hará para seguir adelante con tanta fuerza? Te admiro porque no conozco a nadie con tu filosofía. Me haces querer ser mejor persona, porque tú quieres serlo todos los días. Me haces aprender a querer y quererme mejor, porque tu forma de querer es preciosa. Desde pequeños te prometí que pasase lo que pasase siempre estaría contigo y, pase lo que pase, seguiré estando aquí. Por toda una vida sonriendo, abrazando, llorando y queriendo a tu lado. Te quiero tuki.' }
     ]
   },
   {
