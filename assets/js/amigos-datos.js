@@ -61,7 +61,7 @@ const AMIGOS = [
     asiento: '01D',
     categoria: 'diplomatico',
     fotos: [
-      { src: 'assets/img/amigos/MarcoyMarta3.Jpg', pie: 'Los dos' },
+      { src: 'assets/img/amigos/MarcoyMarta3.JPG', pie: 'Los dos' },
       { src: 'assets/img/amigos/MarcoyMarta2.jpg', pie: 'De viaje' },
       { src: 'assets/img/amigos/MarcoyMarta.jpg', pie: 'De viaje' }
     ],
