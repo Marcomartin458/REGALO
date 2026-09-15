@@ -1203,6 +1203,16 @@ footer.pie .corazon{ color: var(--oro); }
   flex: 1 1 260px;
 }
 
+/* Al abrir un pasaporte dentro de la fila flex de Capitanes, el ancho
+   fijo de 260px (pensado para la tapa cerrada) comprimía la doble
+   página, que necesita hasta 900px. Igual que ".pasaporte.abierto"
+   hace "grid-column: 1 / -1" en las secciones que usan grid, aquí le
+   damos el equivalente en flex: ocupar toda la fila. */
+.fila-capitanes .pasaporte.abierto{
+  flex: 1 1 100%;
+  max-width: 100%;
+}
+
 .fila-capitanes .pasaporte__tapa{
   box-shadow:
     0 20px 40px -14px rgba(74, 40, 112, 0.5),

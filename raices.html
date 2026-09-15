@@ -3,17 +3,248 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Hangar de Recuerdos · Marta Airlines</title>
+  <title>El Cielo Compartido · Marta Airlines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=Caveat:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/estilos.css">
+  <link rel="stylesheet" href="assets/css/raices.css">
 </head>
-<body>
+<body class="pagina-raices">
+
+  <!-- ================= FONDO: CIELO NOCTURNO ================= -->
+  <div class="cielo-fondo" aria-hidden="true">
+    <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Cielo profundo: azul noche arriba, morado medio, índigo bajo -->
+        <linearGradient id="rCielo" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"  stop-color="#050a1e"/>
+          <stop offset="25%" stop-color="#0a1430"/>
+          <stop offset="50%" stop-color="#131f4a"/>
+          <stop offset="72%" stop-color="#1e2c5c"/>
+          <stop offset="88%" stop-color="#2a3a6e"/>
+          <stop offset="100%" stop-color="#3a4a80"/>
+        </linearGradient>
+
+        <!-- Vía láctea: banda difusa diagonal -->
+        <linearGradient id="rViaLactea" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%"  stop-color="#9a8ec0" stop-opacity="0"/>
+          <stop offset="30%" stop-color="#b8a8d8" stop-opacity="0.35"/>
+          <stop offset="50%" stop-color="#e8d8f0" stop-opacity="0.5"/>
+          <stop offset="70%" stop-color="#b8a8d8" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#9a8ec0" stop-opacity="0"/>
+        </linearGradient>
+
+        <!-- Halo de la luna -->
+        <radialGradient id="rHaloLuna" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"  stop-color="#fff8e0" stop-opacity="0.55"/>
+          <stop offset="35%" stop-color="#e8e0ff" stop-opacity="0.2"/>
+          <stop offset="70%" stop-color="#c8c0e8" stop-opacity="0.06"/>
+          <stop offset="100%" stop-color="#a0a0d0" stop-opacity="0"/>
+        </radialGradient>
+
+        <!-- Luna: degradado radial suave -->
+        <radialGradient id="rLuna" cx="40%" cy="38%" r="65%">
+          <stop offset="0%"  stop-color="#ffffff"/>
+          <stop offset="55%" stop-color="#f0eed8"/>
+          <stop offset="100%" stop-color="#c8c0a0"/>
+        </radialGradient>
+
+        <!-- Nubes altas: azul-plata translúcidas -->
+        <radialGradient id="rNubeNocturna" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"  stop-color="#8898c8" stop-opacity="0.55"/>
+          <stop offset="70%" stop-color="#5a6898" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#3a4878" stop-opacity="0"/>
+        </radialGradient>
+
+        <!-- Brillo dorado tenue para la base -->
+        <radialGradient id="rBruma" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"  stop-color="#6a5a8a" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#2a2a5a" stop-opacity="0"/>
+        </radialGradient>
+
+        <!-- Estrella fugaz: estela -->
+        <linearGradient id="rFugaz" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%"  stop-color="#ffffff" stop-opacity="0"/>
+          <stop offset="70%" stop-color="#ffffff" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="1"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Cielo principal -->
+      <rect width="1920" height="1080" fill="url(#rCielo)"/>
+
+      <!-- Vía Láctea: banda diagonal difusa -->
+      <g class="cielo-vialactea">
+        <polygon points="0,0 900,0 400,1080 0,1080" fill="url(#rViaLactea)" opacity="0.55"/>
+        <ellipse cx="500" cy="500" rx="700" ry="150" fill="url(#rViaLactea)" opacity="0.35" transform="rotate(-30 500 500)"/>
+      </g>
+
+      <!-- Estrellas del fondo (muchas pequeñas) -->
+      <g class="cielo-estrellas-bg" fill="#ffffff">
+        <circle cx="120"  cy="80"  r="0.8" opacity="0.7"/>
+        <circle cx="240"  cy="180" r="0.6" opacity="0.5"/>
+        <circle cx="360"  cy="60"  r="0.9" opacity="0.8"/>
+        <circle cx="480"  cy="140" r="0.7" opacity="0.6"/>
+        <circle cx="620"  cy="90"  r="0.8" opacity="0.7"/>
+        <circle cx="760"  cy="200" r="0.6" opacity="0.5"/>
+        <circle cx="900"  cy="70"  r="0.9" opacity="0.75"/>
+        <circle cx="1040" cy="160" r="0.7" opacity="0.55"/>
+        <circle cx="1180" cy="100" r="0.8" opacity="0.7"/>
+        <circle cx="1320" cy="220" r="0.6" opacity="0.5"/>
+        <circle cx="1460" cy="80"  r="0.9" opacity="0.8"/>
+        <circle cx="1600" cy="180" r="0.7" opacity="0.6"/>
+        <circle cx="1740" cy="60"  r="0.8" opacity="0.75"/>
+        <circle cx="1880" cy="160" r="0.6" opacity="0.5"/>
+
+        <circle cx="80"   cy="280" r="0.6" opacity="0.5"/>
+        <circle cx="200"  cy="380" r="0.7" opacity="0.6"/>
+        <circle cx="320"  cy="300" r="0.5" opacity="0.45"/>
+        <circle cx="440"  cy="420" r="0.8" opacity="0.7"/>
+        <circle cx="560"  cy="340" r="0.6" opacity="0.5"/>
+        <circle cx="680"  cy="460" r="0.7" opacity="0.6"/>
+        <circle cx="820"  cy="360" r="0.5" opacity="0.45"/>
+        <circle cx="940"  cy="440" r="0.8" opacity="0.7"/>
+        <circle cx="1060" cy="320" r="0.6" opacity="0.5"/>
+        <circle cx="1200" cy="420" r="0.7" opacity="0.6"/>
+        <circle cx="1340" cy="340" r="0.5" opacity="0.45"/>
+        <circle cx="1480" cy="440" r="0.8" opacity="0.7"/>
+        <circle cx="1620" cy="380" r="0.6" opacity="0.5"/>
+        <circle cx="1760" cy="460" r="0.7" opacity="0.6"/>
+        <circle cx="1880" cy="340" r="0.5" opacity="0.45"/>
+
+        <circle cx="150"  cy="600" r="0.6" opacity="0.5"/>
+        <circle cx="300"  cy="720" r="0.7" opacity="0.55"/>
+        <circle cx="450"  cy="600" r="0.5" opacity="0.4"/>
+        <circle cx="600"  cy="740" r="0.6" opacity="0.5"/>
+        <circle cx="750"  cy="620" r="0.7" opacity="0.55"/>
+        <circle cx="900"  cy="760" r="0.5" opacity="0.4"/>
+        <circle cx="1050" cy="640" r="0.6" opacity="0.5"/>
+        <circle cx="1200" cy="780" r="0.7" opacity="0.55"/>
+        <circle cx="1350" cy="660" r="0.5" opacity="0.4"/>
+        <circle cx="1500" cy="760" r="0.6" opacity="0.5"/>
+        <circle cx="1650" cy="620" r="0.7" opacity="0.55"/>
+        <circle cx="1800" cy="740" r="0.5" opacity="0.4"/>
+        <circle cx="1900" cy="620" r="0.6" opacity="0.5"/>
+      </g>
+
+      <!-- Estrellas destacadas (con destello) -->
+      <g class="cielo-estrellas-destacadas">
+        <g class="estrella-punto">
+          <circle cx="240" cy="140" r="1.8" fill="#ffffff"/>
+          <circle cx="240" cy="140" r="5" fill="#fff8e0" opacity="0.35"/>
+        </g>
+        <g class="estrella-punto">
+          <circle cx="520" cy="220" r="2.2" fill="#ffffff"/>
+          <circle cx="520" cy="220" r="7" fill="#fff8e0" opacity="0.4"/>
+        </g>
+        <g class="estrella-punto">
+          <circle cx="880" cy="180" r="1.8" fill="#ffffff"/>
+          <circle cx="880" cy="180" r="5" fill="#fff8e0" opacity="0.35"/>
+        </g>
+        <g class="estrella-punto">
+          <circle cx="1180" cy="280" r="2.4" fill="#ffffff"/>
+          <circle cx="1180" cy="280" r="8" fill="#fff0d0" opacity="0.4"/>
+        </g>
+        <g class="estrella-punto">
+          <circle cx="1580" cy="200" r="2" fill="#ffffff"/>
+          <circle cx="1580" cy="200" r="6" fill="#fff8e0" opacity="0.38"/>
+        </g>
+        <g class="estrella-punto">
+          <circle cx="780" cy="380" r="1.8" fill="#ffffff"/>
+          <circle cx="780" cy="380" r="5" fill="#fff8e0" opacity="0.35"/>
+        </g>
+        <g class="estrella-punto">
+          <circle cx="300" cy="520" r="2" fill="#ffffff"/>
+          <circle cx="300" cy="520" r="6" fill="#fff8e0" opacity="0.38"/>
+        </g>
+        <g class="estrella-punto">
+          <circle cx="1700" cy="460" r="2.2" fill="#ffffff"/>
+          <circle cx="1700" cy="460" r="7" fill="#fff0d0" opacity="0.4"/>
+        </g>
+      </g>
+
+      <!-- Luna con halo grande -->
+      <g class="cielo-luna">
+        <circle cx="1560" cy="220" r="320" fill="url(#rHaloLuna)" class="cielo-halo"/>
+        <circle cx="1560" cy="220" r="320" fill="url(#rHaloLuna)" class="cielo-halo cielo-halo--2"/>
+        <circle cx="1560" cy="220" r="68" fill="url(#rLuna)" class="cielo-luna-disco"/>
+        <!-- Cráteres suaves -->
+        <circle cx="1538" cy="200" r="9" fill="#d8d0a8" opacity="0.35"/>
+        <circle cx="1580" cy="230" r="11" fill="#d8d0a8" opacity="0.3"/>
+        <circle cx="1548" cy="248" r="6" fill="#d8d0a8" opacity="0.3"/>
+        <circle cx="1592" cy="200" r="5" fill="#d8d0a8" opacity="0.25"/>
+      </g>
+
+      <!-- Estrella fugaz 1 -->
+      <g class="cielo-fugaz cielo-fugaz--1">
+        <line x1="0" y1="0" x2="180" y2="60" stroke="url(#rFugaz)" stroke-width="1.5"/>
+        <circle cx="180" cy="60" r="2" fill="#ffffff"/>
+      </g>
+
+      <!-- Estrella fugaz 2 (más tardía) -->
+      <g class="cielo-fugaz cielo-fugaz--2">
+        <line x1="0" y1="0" x2="140" y2="48" stroke="url(#rFugaz)" stroke-width="1.2"/>
+        <circle cx="140" cy="48" r="1.8" fill="#ffffff"/>
+      </g>
+
+      <!-- Nubes altas: azul-plata translúcidas, dan profundidad -->
+      <g class="cielo-nube cielo-nube--a">
+        <ellipse cx="280" cy="820" rx="500" ry="80" fill="url(#rNubeNocturna)"/>
+        <ellipse cx="160" cy="850" rx="320" ry="60" fill="url(#rNubeNocturna)"/>
+      </g>
+      <g class="cielo-nube cielo-nube--b">
+        <ellipse cx="1400" cy="860" rx="520" ry="90" fill="url(#rNubeNocturna)"/>
+        <ellipse cx="1600" cy="890" rx="340" ry="70" fill="url(#rNubeNocturna)"/>
+      </g>
+      <g class="cielo-nube cielo-nube--c">
+        <ellipse cx="800" cy="920" rx="700" ry="100" fill="url(#rNubeNocturna)" opacity="0.7"/>
+      </g>
+
+      <!-- Bruma luminosa en la parte baja (da un aire de horizonte) -->
+      <ellipse cx="960" cy="1080" rx="1400" ry="200" fill="url(#rBruma)"/>
+
+      <!-- Avión lejano con estela -->
+      <g class="cielo-avion-lejano">
+        <rect x="240" y="290" width="180" height="3" fill="url(#rFugaz)" opacity="0.6"/>
+        <g transform="translate(410, 288)" fill="#c8c8e8" opacity="0.75">
+          <path d="M0 0 L 14 -2 L 12 -6 L 13 -6 L 16 -2 L 20 -2 L 21 0 L 16 1 L 12 5 L 11 5 L 13 1 Z"/>
+        </g>
+      </g>
+
+      <g class="cielo-avion-lejano cielo-avion-lejano--2" fill="#a8a8c8" opacity="0.6">
+        <rect x="1200" y="120" width="120" height="2" fill="url(#rFugaz)" opacity="0.5"/>
+        <g transform="translate(1310, 119)">
+          <path d="M0 0 L 11 -1.5 L 9 -4.5 L 10 -4.5 L 12 -1.5 L 15 -1.5 L 16 0 L 12 1 L 9 4 L 8 4 L 10 1 Z"/>
+        </g>
+      </g>
+
+      <!-- Motas doradas flotando -->
+      <g class="cielo-motas" fill="#fff8d0" opacity="0.75">
+        <circle cx="180"  cy="420" r="1.4"/>
+        <circle cx="560"  cy="620" r="1.1"/>
+        <circle cx="820"  cy="280" r="1.2"/>
+        <circle cx="1080" cy="400" r="1.3"/>
+        <circle cx="1300" cy="640" r="1.1"/>
+        <circle cx="1620" cy="380" r="1.4"/>
+        <circle cx="1760" cy="620" r="1.2"/>
+        <circle cx="420"  cy="740" r="1.1"/>
+        <circle cx="1480" cy="780" r="1.2"/>
+        <circle cx="980"  cy="820" r="1.3"/>
+      </g>
+    </svg>
+  </div>
+
   <header class="navbar">
     <div class="navbar__inner">
       <a href="index.html" class="marca">
         <svg class="marca__icono" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5C13 2.67 12.33 2 11.5 2S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
         <span class="marca__texto">MARTA <span>AIRLINES</span></span>
-        <span class="marca__vuelo">GATE D-04</span>
+        <span class="marca__vuelo">35.000 PIES</span>
       </a>
+      <button class="hamburguesa" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
       <nav class="nav-enlaces">
         <a href="index.html" data-pagina="index.html">Ventanilla</a>
         <a href="amigos.html" data-pagina="amigos.html">Amigos</a>
@@ -24,14 +255,145 @@
     </div>
   </header>
 
-  <main style="padding-top: calc(var(--nav-h) + 3rem); min-height: 80vh;">
-    <div class="contenedor">
-      <!-- contenido pendiente -->
-    </div>
+  <main>
+
+    <header class="hero-interno">
+      <div class="contenedor">
+        <span class="eyebrow">Nivel de crucero · 35.000 pies · Vuelo 23</span>
+        <h1 class="h-lg">La parte final de tu vuelo 23</h1>
+        <p class="lead">Aquí ya no hay turbulencias. Solo cielo. Aquí viven los que te quieren — estén donde estén.</p>
+      </div>
+    </header>
+
+    <!-- FRANJA 1 -->
+    <section class="franja franja--1" aria-label="Cielo bajo">
+      <div class="franja__pista" id="franja-1"></div>
+    </section>
+
+    <!-- FRANJA 2 -->
+    <section class="franja franja--2" aria-label="Cielo medio">
+      <div class="franja__pista" id="franja-2"></div>
+    </section>
+
+    <!-- FRANJA 3 -->
+    <section class="franja franja--3" aria-label="Cielo alto">
+      <div class="franja__pista" id="franja-3"></div>
+    </section>
+
+    <!-- SOBRE FINAL -->
+    <section class="seccion-sobre" aria-label="Carta final">
+      <div class="contenedor contenedor--estrecho">
+        <p class="sobre-instruccion">Fin del vuelo. Pero antes, una última carta.</p>
+
+        <div class="sobre-final" id="sobre-final" role="button" tabindex="0" aria-label="Abrir la carta final">
+          <div class="sobre-final__envoltorio">
+            <div class="sobre-final__cuerpo">
+
+              <div class="sobre-final__papel"></div>
+
+              <span class="sobre-final__cordel" aria-hidden="true">
+                <span class="sobre-final__cordel-h"></span>
+                <span class="sobre-final__cordel-v"></span>
+              </span>
+
+              <div class="sobre-final__sellos" aria-hidden="true">
+                <span class="sobre-final__sello-postal sobre-final__sello-postal--avion">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5C13 2.67 12.33 2 11.5 2S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+                </span>
+                <span class="sobre-final__sello-postal sobre-final__sello-postal--estrella">★</span>
+                <span class="sobre-final__sello-postal sobre-final__sello-postal--corazon">❤</span>
+              </div>
+
+              <span class="sobre-final__matasellos" aria-hidden="true">
+                <span class="sobre-final__matasellos-texto">MARTA AIRLINES</span>
+                <span class="sobre-final__matasellos-lineas">
+                  <span></span><span></span><span></span><span></span>
+                </span>
+              </span>
+
+              <span class="sobre-final__texto-mano" aria-hidden="true">Para Marta</span>
+              <span class="sobre-final__subtexto-mano" aria-hidden="true">De todos los que te quieren · Vuelo 23</span>
+
+              <div class="sobre-final__solapa"></div>
+
+              <div class="sobre-final__carta-doblada" aria-hidden="true"></div>
+
+              <div class="sobre-final__sello">
+                <svg viewBox="0 0 100 100" aria-hidden="true">
+                  <defs>
+                    <radialGradient id="selloGrad" cx="50%" cy="40%" r="60%">
+                      <stop offset="0%"  stop-color="#f7d070"/>
+                      <stop offset="55%" stop-color="#d4a83c"/>
+                      <stop offset="100%" stop-color="#8a6a1a"/>
+                    </radialGradient>
+                  </defs>
+                  <circle cx="50" cy="50" r="47" fill="url(#selloGrad)"/>
+                  <circle cx="50" cy="50" r="42" fill="none" stroke="#6b4a1a" stroke-width="0.8" opacity="0.6"/>
+                  <circle cx="50" cy="50" r="38" fill="none" stroke="#6b4a1a" stroke-width="0.5" opacity="0.4"/>
+                  <text x="50" y="30" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-size="9" font-weight="700" fill="#4a2a08" letter-spacing="1.5">MARTA</text>
+                  <text x="50" y="78" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-size="9" font-weight="700" fill="#4a2a08" letter-spacing="1.5">AIRLINES</text>
+                  <path d="M 30,50 L 70,50 M 50,34 L 50,66" stroke="#4a2a08" stroke-width="0.5" opacity="0.4"/>
+                  <path d="M 33,55 L 42,63 L 67,38" stroke="#4a2a08" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARTA FINAL -->
+    <section class="seccion-carta" id="carta-final" aria-label="Carta manuscrita">
+      <div class="contenedor contenedor--estrecho">
+        <article class="carta" id="carta-contenido"></article>
+      </div>
+    </section>
+
   </main>
 
   <footer class="pie">
     <div class="contenedor">Hecho con <span class="corazon">❤</span> para Marta · Vuelo 23</div>
   </footer>
+
+  <!-- MODAL FOTO -->
+  <div class="modal-foto" id="modal-foto" aria-hidden="true">
+    <div class="modal-foto__caja">
+      <button class="modal-foto__cerrar" type="button" aria-label="Cerrar">✕</button>
+      <img class="modal-foto__img" src="" alt="">
+      <div class="modal-foto__info">
+        <h3 class="modal-foto__nombre"></h3>
+        <span class="modal-foto__anio"></span>
+        <p class="modal-foto__comentario"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY DE TRANSICIÓN INVERSA -->
+  <div class="transicion-overlay" id="transicion-overlay" aria-hidden="true">
+    <div class="transicion-pared">
+      <div class="transicion-ventanilla ventanilla-ensamblaje">
+        <div class="ventanilla-moldura">
+          <div class="ventanilla-bisel">
+            <div class="ventanilla-goma">
+              <div class="ventanilla-cristal">
+                <div class="transicion-cielo" aria-hidden="true"></div>
+                <div class="transicion-luna" aria-hidden="true"></div>
+                <div class="transicion-hoja transicion-hoja--izq" aria-hidden="true"></div>
+                <div class="transicion-hoja transicion-hoja--der" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="transicion-destello" aria-hidden="true"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+  <script src="assets/js/raices-datos.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/raices.js"></script>
 </body>
 </html>
