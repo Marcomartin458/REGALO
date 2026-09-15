@@ -3,20 +3,224 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Terminal de Amigos · Marta Airlines</title>
+  <title>Control de Fronteras · Marta Airlines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/estilos.css">
+  <link rel="stylesheet" href="assets/css/amigos.css">
 </head>
-<body>
-  <!-- NAVBAR COMÚN -->
+<body class="pagina-amigos">
+
+  <!-- FONDO — SALÓN DE HONOR / PASAPORTES DE BIENVENIDA -->
+  <div class="frontera-fondo" aria-hidden="true">
+    <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="amPared" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"  stop-color="#f5ecd2"/>
+          <stop offset="35%" stop-color="#ede0c0"/>
+          <stop offset="80%" stop-color="#e0cf9e"/>
+          <stop offset="100%" stop-color="#d4c08a"/>
+        </linearGradient>
+
+        <linearGradient id="amCielo" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"  stop-color="#c8b0d8"/>
+          <stop offset="25%" stop-color="#e8b8a0"/>
+          <stop offset="55%" stop-color="#ffc88a"/>
+          <stop offset="80%" stop-color="#ffd9a8"/>
+          <stop offset="100%" stop-color="#f0d8b0"/>
+        </linearGradient>
+
+        <linearGradient id="amSuelo" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"  stop-color="#e8dcc0"/>
+          <stop offset="50%" stop-color="#d8c8a0"/>
+          <stop offset="100%" stop-color="#b8a680"/>
+        </linearGradient>
+
+        <radialGradient id="amLuz" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"  stop-color="#ffe8b8" stop-opacity="0.9"/>
+          <stop offset="50%" stop-color="#ffd090" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#ffd090" stop-opacity="0"/>
+        </radialGradient>
+
+        <radialGradient id="amBrumaVentana" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"  stop-color="#ffd9a8" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#ffd9a8" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <rect width="1920" height="1080" fill="url(#amPared)"/>
+
+      <rect y="180" width="1920" height="8" fill="#c9a227" opacity="0.4"/>
+      <rect y="196" width="1920" height="2" fill="#c9a227" opacity="0.25"/>
+
+      <!-- ============== VENTANALES CON ATARDECER ============== -->
+      <g>
+        <g transform="translate(120, 240)">
+          <rect x="-6" y="-6" width="412" height="580" rx="4" fill="#6b4a2a"/>
+          <rect x="0" y="0" width="400" height="568" fill="url(#amCielo)"/>
+          <circle cx="200" cy="380" r="80" fill="#ffe8b8" opacity="0.9"/>
+          <circle cx="200" cy="380" r="42" fill="#fff8e0"/>
+          <ellipse cx="120" cy="200" rx="110" ry="22" fill="#ffffff" opacity="0.35"/>
+          <ellipse cx="280" cy="260" rx="90" ry="18" fill="#ffffff" opacity="0.3"/>
+          <ellipse cx="180" cy="440" rx="140" ry="24" fill="#ffe8d0" opacity="0.4"/>
+          <path d="M 0,470 Q 200,455 400,470 L 400,568 L 0,568 Z" fill="#c8a888" opacity="0.55"/>
+          <g fill="#8a6a48" opacity="0.7">
+            <rect x="40"  y="440" width="60" height="30"/>
+            <rect x="150" y="430" width="40" height="40"/>
+            <rect x="260" y="445" width="70" height="25"/>
+          </g>
+          <g transform="translate(310, 150) rotate(8)" fill="#7a5c3a" opacity="0.55">
+            <path d="M 0,0 L 22,-3 L 18,-9 L 20,-9 L 25,-3 L 32,-3 L 33,0 L 25,2 L 18,8 L 16,8 L 19,2 Z"/>
+          </g>
+          <rect x="196" y="0" width="8" height="568" fill="#6b4a2a"/>
+          <rect x="0" y="188" width="400" height="6" fill="#6b4a2a"/>
+          <rect x="0" y="380" width="400" height="6" fill="#6b4a2a"/>
+          <polygon points="0,0 60,0 20,568 0,568" fill="#ffffff" opacity="0.1"/>
+        </g>
+
+        <g transform="translate(1388, 240)">
+          <rect x="-6" y="-6" width="412" height="580" rx="4" fill="#6b4a2a"/>
+          <rect x="0" y="0" width="400" height="568" fill="url(#amCielo)"/>
+          <circle cx="200" cy="380" r="80" fill="#ffe8b8" opacity="0.9"/>
+          <circle cx="200" cy="380" r="42" fill="#fff8e0"/>
+          <ellipse cx="120" cy="200" rx="110" ry="22" fill="#ffffff" opacity="0.35"/>
+          <ellipse cx="280" cy="260" rx="90" ry="18" fill="#ffffff" opacity="0.3"/>
+          <ellipse cx="180" cy="440" rx="140" ry="24" fill="#ffe8d0" opacity="0.4"/>
+          <path d="M 0,470 Q 200,455 400,470 L 400,568 L 0,568 Z" fill="#c8a888" opacity="0.55"/>
+          <g fill="#8a6a48" opacity="0.7">
+            <rect x="40"  y="440" width="60" height="30"/>
+            <rect x="150" y="430" width="40" height="40"/>
+            <rect x="260" y="445" width="70" height="25"/>
+          </g>
+          <g transform="translate(80, 170) rotate(-6)" fill="#7a5c3a" opacity="0.55">
+            <path d="M 0,0 L 22,-3 L 18,-9 L 20,-9 L 25,-3 L 32,-3 L 33,0 L 25,2 L 18,8 L 16,8 L 19,2 Z"/>
+          </g>
+          <rect x="196" y="0" width="8" height="568" fill="#6b4a2a"/>
+          <rect x="0" y="188" width="400" height="6" fill="#6b4a2a"/>
+          <rect x="0" y="380" width="400" height="6" fill="#6b4a2a"/>
+          <polygon points="380,0 400,0 400,568 360,568" fill="#ffffff" opacity="0.1"/>
+        </g>
+
+        <g transform="translate(680, 300)">
+          <rect x="-5" y="-5" width="295" height="525" rx="4" fill="#6b4a2a"/>
+          <rect x="0" y="0" width="285" height="515" fill="url(#amCielo)"/>
+          <circle cx="140" cy="340" r="60" fill="#ffe8b8" opacity="0.85"/>
+          <circle cx="140" cy="340" r="32" fill="#fff8e0"/>
+          <ellipse cx="80" cy="180" rx="80" ry="18" fill="#ffffff" opacity="0.3"/>
+          <path d="M 0,420 Q 140,410 285,420 L 285,515 L 0,515 Z" fill="#c8a888" opacity="0.5"/>
+          <rect x="138" y="0" width="6" height="515" fill="#6b4a2a"/>
+          <rect x="0" y="170" width="285" height="5" fill="#6b4a2a"/>
+          <rect x="0" y="340" width="285" height="5" fill="#6b4a2a"/>
+        </g>
+
+        <g transform="translate(995, 300)">
+          <rect x="-5" y="-5" width="295" height="525" rx="4" fill="#6b4a2a"/>
+          <rect x="0" y="0" width="285" height="515" fill="url(#amCielo)"/>
+          <circle cx="140" cy="340" r="60" fill="#ffe8b8" opacity="0.85"/>
+          <circle cx="140" cy="340" r="32" fill="#fff8e0"/>
+          <ellipse cx="200" cy="180" rx="80" ry="18" fill="#ffffff" opacity="0.3"/>
+          <path d="M 0,420 Q 140,410 285,420 L 285,515 L 0,515 Z" fill="#c8a888" opacity="0.5"/>
+          <rect x="138" y="0" width="6" height="515" fill="#6b4a2a"/>
+          <rect x="0" y="170" width="285" height="5" fill="#6b4a2a"/>
+          <rect x="0" y="340" width="285" height="5" fill="#6b4a2a"/>
+        </g>
+      </g>
+
+      <ellipse cx="960" cy="440" rx="900" ry="140" fill="url(#amBrumaVentana)"/>
+
+      <!-- ============== LÁMPARAS COLGANTES ============== -->
+      <g>
+        <line x1="360" y1="0" x2="360" y2="180" stroke="#8a6a3a" stroke-width="2"/>
+        <path d="M 320,180 L 400,180 L 380,240 L 340,240 Z" fill="#c9a227" opacity="0.9"/>
+        <path d="M 340,240 Q 360,260 380,240" fill="#ffe8b8"/>
+        <circle cx="360" cy="255" r="60" fill="url(#amLuz)"/>
+      </g>
+
+      <g>
+        <line x1="960" y1="0" x2="960" y2="200" stroke="#8a6a3a" stroke-width="2"/>
+        <path d="M 900,200 L 1020,200 L 990,280 L 930,280 Z" fill="#c9a227" opacity="0.9"/>
+        <path d="M 930,280 Q 960,310 990,280" fill="#ffe8b8"/>
+        <circle cx="960" cy="300" r="90" fill="url(#amLuz)"/>
+      </g>
+
+      <g>
+        <line x1="1560" y1="0" x2="1560" y2="180" stroke="#8a6a3a" stroke-width="2"/>
+        <path d="M 1520,180 L 1600,180 L 1580,240 L 1540,240 Z" fill="#c9a227" opacity="0.9"/>
+        <path d="M 1540,240 Q 1560,260 1580,240" fill="#ffe8b8"/>
+        <circle cx="1560" cy="255" r="60" fill="url(#amLuz)"/>
+      </g>
+
+      <!-- ============== SUELO DE MÁRMOL EN DAMERO ============== -->
+      <rect y="880" width="1920" height="200" fill="url(#amSuelo)"/>
+
+      <g opacity="0.35">
+        <line x1="0" y1="915" x2="1920" y2="915" stroke="#a89878" stroke-width="1"/>
+        <line x1="0" y1="955" x2="1920" y2="955" stroke="#a89878" stroke-width="1"/>
+        <line x1="0" y1="1000" x2="1920" y2="1000" stroke="#a89878" stroke-width="1"/>
+        <line x1="0" y1="1050" x2="1920" y2="1050" stroke="#a89878" stroke-width="1"/>
+        <line x1="960" y1="880" x2="-200"  y2="1080" stroke="#a89878" stroke-width="1"/>
+        <line x1="960" y1="880" x2="100"   y2="1080" stroke="#a89878" stroke-width="1"/>
+        <line x1="960" y1="880" x2="400"   y2="1080" stroke="#a89878" stroke-width="1"/>
+        <line x1="960" y1="880" x2="700"   y2="1080" stroke="#a89878" stroke-width="1"/>
+        <line x1="960" y1="880" x2="960"   y2="1080" stroke="#a89878" stroke-width="1"/>
+        <line x1="960" y1="880" x2="1220"  y2="1080" stroke="#a89878" stroke-width="1"/>
+        <line x1="960" y1="880" x2="1520"  y2="1080" stroke="#a89878" stroke-width="1"/>
+        <line x1="960" y1="880" x2="1820"  y2="1080" stroke="#a89878" stroke-width="1"/>
+        <line x1="960" y1="880" x2="2120"  y2="1080" stroke="#a89878" stroke-width="1"/>
+      </g>
+
+      <!-- ============== PLANTAS DE INTERIOR ============== -->
+      <g transform="translate(30, 660)">
+        <path d="M 20,260 L 140,260 L 130,340 L 30,340 Z" fill="#8a6a3a"/>
+        <path d="M 20,260 L 140,260 L 130,280 L 30,280 Z" fill="#a88850"/>
+        <ellipse cx="80" cy="230" rx="60" ry="50" fill="#4a6a40"/>
+        <ellipse cx="60" cy="200" rx="40" ry="35" fill="#5a7a48"/>
+        <ellipse cx="100" cy="195" rx="45" ry="38" fill="#5a7a48"/>
+        <ellipse cx="80" cy="170" rx="35" ry="28" fill="#6a8a50"/>
+      </g>
+
+      <g transform="translate(1750, 660)">
+        <path d="M 20,260 L 140,260 L 130,340 L 30,340 Z" fill="#8a6a3a"/>
+        <path d="M 20,260 L 140,260 L 130,280 L 30,280 Z" fill="#a88850"/>
+        <ellipse cx="80" cy="230" rx="60" ry="50" fill="#4a6a40"/>
+        <ellipse cx="60" cy="200" rx="40" ry="35" fill="#5a7a48"/>
+        <ellipse cx="100" cy="195" rx="45" ry="38" fill="#5a7a48"/>
+        <ellipse cx="80" cy="170" rx="35" ry="28" fill="#6a8a50"/>
+      </g>
+
+      <!-- ============== MOSTRADOR DE PASAPORTES ============== -->
+      <g transform="translate(600, 720)" opacity="0.95">
+        <rect x="0" y="0" width="720" height="180" rx="6" fill="#6b4a2a"/>
+        <rect x="0" y="0" width="720" height="24" rx="6" fill="#8a6a3a"/>
+        <rect x="0" y="24" width="720" height="6" fill="#a88850"/>
+        <line x1="40" y1="0" x2="40" y2="24" stroke="#c9a227" stroke-width="2"/>
+        <line x1="680" y1="0" x2="680" y2="24" stroke="#c9a227" stroke-width="2"/>
+        <line x1="240" y1="0" x2="240" y2="24" stroke="#c9a227" stroke-width="2"/>
+        <line x1="480" y1="0" x2="480" y2="24" stroke="#c9a227" stroke-width="2"/>
+        <g transform="translate(360, -40)">
+          <circle cx="0" cy="0" r="34" fill="#c9a227" opacity="0.9"/>
+          <circle cx="0" cy="0" r="28" fill="#e8c87a"/>
+          <path d="M -12,-4 L -6,4 L 12,-10" stroke="#6b4a2a" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+      </g>
+
+      <ellipse cx="960" cy="920" rx="500" ry="60" fill="#e8c87a" opacity="0.15"/>
+    </svg>
+  </div>
+
   <header class="navbar">
     <div class="navbar__inner">
-      <a href="index.html#terminal" class="marca">
-        <svg class="marca__icono" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5C13 2.67 12.33 2 11.5 2S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+      <a href="index.html" class="marca">
+        <svg class="marca__icono" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5C13 2.67 12.33 2 11.5 2S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
         <span class="marca__texto">MARTA <span>AIRLINES</span></span>
-        <span class="marca__vuelo">GATE A-01</span>
+        <span class="marca__vuelo">SALÓN DE HONOR</span>
       </a>
+      <button class="hamburguesa" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
       <nav class="nav-enlaces">
-        <a href="index.html#terminal" data-pagina="index.html">Puertas de Embarque</a>
+        <a href="index.html" data-pagina="index.html">Ventanilla</a>
         <a href="amigos.html" data-pagina="amigos.html" class="activo">Amigos</a>
         <a href="musica.html" data-pagina="musica.html">Música</a>
         <a href="secreto.html" data-pagina="secreto.html">Secreto</a>
@@ -25,24 +229,73 @@
     </div>
   </header>
 
-  <main style="padding-top: calc(var(--nav-h) + 2.5rem); min-height: 80vh;">
-    <div class="contenedor">
-      <!-- contenido pendiente -->
-
-      <!-- Botón para regresar a la página de las puertas de embarque -->
-      <div class="centro" style="margin-top: 3.5rem; margin-bottom: 3.5rem;">
-        <a href="index.html#terminal" class="btn btn--fantasma">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="display:inline-block; vertical-align:middle; margin-right:6px;">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
-          </svg>
-          Volver a las Puertas de Embarque
-        </a>
+  <main>
+    <header class="hero-interno">
+      <div class="contenedor">
+        <span class="eyebrow">Salón de honor · Pasaportes de bienvenida</span>
+        <h1 class="h-lg">Cada pasajero, su pasaporte</h1>
+        <p class="lead">Pasa al mostrador y presenta tu documentación. Cada uno lleva su propio sello de entrada — toca un pasaporte para abrirlo.</p>
       </div>
-    </div>
+    </header>
+
+    <section class="seccion-visados">
+      <div class="contenedor">
+        <div class="seccion-titulo">
+          <span class="adorno">✦</span>
+          <h2>Visados colectivos</h2>
+          <span class="adorno">✦</span>
+        </div>
+        <div id="visados-colectivos" class="visados-colectivos"></div>
+      </div>
+    </section>
+
+    <div class="contenedor"><div class="divisor-elegante"><span>❖</span></div></div>
+
+    <section class="seccion-diplomatica">
+      <div class="contenedor">
+        <div class="seccion-titulo">
+          <span class="adorno">✦</span>
+          <h2>Personal diplomático</h2>
+          <span class="adorno">✦</span>
+        </div>
+        <div id="personal-diplomatico" class="fila-diplomatica"></div>
+      </div>
+    </section>
+
+    <div class="contenedor"><div class="divisor-elegante"><span>❖</span></div></div>
+
+    <section class="seccion-pasaportes">
+      <div class="contenedor">
+        <div class="seccion-titulo">
+          <span class="adorno">✦</span>
+          <h2>Pasajeros · Pasaportes</h2>
+          <span class="adorno">✦</span>
+        </div>
+        <div id="chips-paises" class="chips-paises" role="group" aria-label="Filtrar por país emisor"></div>
+        <div id="grid-pasaportes" class="grid-pasaportes"></div>
+      </div>
+    </section>
   </main>
 
-  <footer class="pie">
-    <div class="contenedor">Hecho con <span class="corazon">❤</span> para Marta · Vuelo 23</div>
-  </footer>
+  <!-- ============== MODAL DE VISADO COLECTIVO ============== -->
+  <div class="modal-visado" id="modal-visado" aria-hidden="true">
+    <div class="modal-visado__caja">
+      <button class="modal-visado__cerrar" type="button" aria-label="Cerrar">✕</button>
+      <img class="modal-visado__img" src="" alt="">
+      <div class="modal-visado__miniaturas" aria-label="Fotos del visado"></div>
+      <div class="modal-visado__meta">
+        <span class="modal-visado__fecha"></span>
+        <span class="modal-visado__lugar"></span>
+      </div>
+      <span class="modal-visado__personas"></span>
+      <p class="modal-visado__pie"></p>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+  <script src="assets/js/amigos-datos.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/amigos.js"></script>
 </body>
 </html>
