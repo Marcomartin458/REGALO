@@ -66,7 +66,7 @@ const AMIGOS = [
       { src: 'assets/img/amigos/MarcoyMarta.jpg', pie: 'De viaje' }
     ],
     sellos: [
-      { tipo: 'diplomatico', fecha: '2024-01-01', texto: 'Hola Tuki, Loli, Marta. Esta seguro que no te la esperabas eh, jajaja. Eres esa persona a la que miro (afortunadamente casi todos los días) y siempre me pregunto: Cómo lo hará para seguir adelante con tanta fuerza? Te admiro porque no conozco a nadie con tu filosofía. Me haces querer ser mejor persona, porque tú quieres serlo todos los días. Me haces aprender a querer y quererme mejor, porque tu forma de querer es preciosa. Desde pequeños te prometí que pasase lo que pasase siempre estaría contigo y, pase lo que pase, seguiré estando aquí. Por toda una vida sonriendo, abrazando, llorando y queriendo a tu lado. Te quiero tuki.' }
+      { tipo: 'diplomatico', fecha: '2026-09-17', texto: 'Hola Tuki, Loli, Marta. Esta seguro que no te la esperabas eh, jajaja. Eres esa persona a la que miro (afortunadamente casi todos los días) y siempre me pregunto: Cómo lo hará para seguir adelante con tanta fuerza? Te admiro porque no conozco a nadie con tu filosofía. Me haces querer ser mejor persona, porque tú quieres serlo todos los días. Me haces aprender a querer y quererme mejor, porque tu forma de querer es preciosa. Desde pequeños te prometí que pasase lo que pasase siempre estaría contigo y, pase lo que pase, seguiré estando aquí. Por toda una vida sonriendo, abrazando, llorando y queriendo a tu lado. Te quiero tuki.' }
     ]
   },
   {
@@ -74,14 +74,14 @@ const AMIGOS = [
     nombre: 'Adam',
     pais: 'barrio',
     numeroPasaporte: 'D23-VIP-002',
-    fechaEmision: '2010-01-01',
+    fechaEmision: '2069-69-69',
     asiento: '01E',
     categoria: 'diplomatico',
     fotos: [
-      { src: 'assets/img/amigos/adam-01.jpg', pie: 'De toda la vida' }
+      { src: 'assets/img/amigos/Adam.jpg', pie: 'De toda la vida' }
     ],
     sellos: [
-      { tipo: 'diplomatico', fecha: '2024-01-01', texto: 'Mensaje EDITABLE de Adam para Marta.' }
+      { tipo: 'diplomatico', fecha: '2026-09-17', texto: 'Esa tukiiiii, la chiquilla más guapa y perfecta chocho. Es muy poco tiempo que se me ha hecho infinito contigo. Llegamos a un punto en el que me costaría no verte en mi vida en un futuro así que no tengas novio ni nada de eso que te echaría de menos joder. Te amo mi pequeña.' }
     ]
   },
   {
@@ -93,11 +93,11 @@ const AMIGOS = [
     asiento: '01F',
     categoria: 'diplomatico',
     fotos: [
-      { src: 'assets/img/amigos/ines2-01.jpg', pie: 'Primer viaje juntas' },
-      { src: 'assets/img/amigos/ines2-02.jpg', pie: 'Verano inolvidable' }
+      { src: 'assets/img/amigos/InesP1.jpg', pie: 'Primer viaje juntas' },
+      { src: 'assets/img/amigos/InesP2.jpg', pie: 'Verano inolvidable' }
     ],
     sellos: [
-      { tipo: 'diplomatico', fecha: '2024-05-01', texto: 'Mensaje EDITABLE de Inés para Marta.' }
+      { tipo: 'diplomatico', fecha: '2026-09-17', texto: 'Otro año más siendo la una para la otra. Siempre tendrás un lugar para refugiarte y reír como solo lo sabemos hacer nosotras. Feliz cumpleaños ratita. te amo con todo mi corazón, por y para siempre. 💛' }
     ]
   },
 
@@ -113,11 +113,11 @@ const AMIGOS = [
     asiento: '23B',
     categoria: 'normal',
     fotos: [
-      { src: 'assets/img/amigos/adriana-01.jpg', pie: 'La del barrio' },
-      { src: 'assets/img/amigos/adriana-02.jpg', pie: 'Meriendas eternas' }
+      { src: 'assets/img/amigos/Adriana1.jpg', pie: 'La del barrio' },
+      { src: 'assets/img/amigos/Adriana2.jpg', pie: 'Meriendas eternas' }
     ],
     sellos: [
-      { tipo: 'entrada', fecha: '2024-03-15', texto: 'Mensaje EDITABLE de Adriana.' }
+      { tipo: 'entrada', fecha: '2026-09-17', texto: 'No se nota ni nada cual es tu perfil bueno eh jajaja' }
     ]
   },
   {
@@ -129,10 +129,10 @@ const AMIGOS = [
     asiento: '23C',
     categoria: 'normal',
     fotos: [
-      { src: 'assets/img/amigos/iris-01.jpg', pie: 'Iris, la del barrio' }
+      { src: 'assets/img/amigos/Iris1.jpg', pie: 'Iris, la del barrio' }
     ],
     sellos: [
-      { tipo: 'entrada', fecha: '2023-09-01', texto: 'Mensaje EDITABLE de Iris.' }
+      { tipo: 'entrada', fecha: '2026-09-17', texto: 'Qué suerte haber coincidido contigo, feliz cumpleaños preciosa' }
     ]
   },
   {
@@ -144,11 +144,11 @@ const AMIGOS = [
     asiento: '23D',
     categoria: 'normal',
     fotos: [
-      { src: 'assets/img/amigos/nerea-01.jpg', pie: 'Risas aseguradas' },
-      { src: 'assets/img/amigos/nerea-02.jpg', pie: 'Fiesta del barrio' }
+      { src: 'assets/img/amigos/Nerea1.jpg', pie: 'Risas aseguradas' },
+      { src: 'assets/img/amigos/Nerea2.jpg', pie: 'Fiesta del barrio' }
     ],
     sellos: [
-      { tipo: 'entrada', fecha: '2024-04-10', texto: 'Mensaje EDITABLE de Nerea.' }
+      { tipo: 'entrada', fecha: '2026-09-17', texto: 'Cuál es la más oscura de las dos?' }
     ]
   },
   {
@@ -160,10 +160,10 @@ const AMIGOS = [
     asiento: '23E',
     categoria: 'normal',
     fotos: [
-      { src: 'assets/img/amigos/paula2-01.jpg', pie: 'La peque del grupo' }
+      { src: 'assets/img/amigos/PaulaR1.jpg', pie: 'La peque del grupo' }
     ],
     sellos: [
-      { tipo: 'entrada', fecha: '2024-07-03', texto: 'Mensaje EDITABLE de Paula.' }
+      { tipo: 'entrada', fecha: '2026-09-17', texto: 'Parecéis un piano jajajjaj' }
     ]
   },
 
@@ -177,13 +177,13 @@ const AMIGOS = [
     asiento: '14A',
     categoria: 'normal',
     fotos: [
-      { src: 'assets/img/amigos/bea-01.jpg', pie: 'Compañera y amiga' },
-      { src: 'assets/img/amigos/bea-02.jpg', pie: 'Vuelos compartidos' },
-      { src: 'assets/img/amigos/bea-03.jpg', pie: 'Escala en el paraíso' },
-      { src: 'assets/img/amigos/bea-04.jpg', pie: 'Después del turno' }
+      { src: 'assets/img/amigos/Bea1.jpg', pie: 'Compañera y amiga' },
+      { src: 'assets/img/amigos/Bea2.jpg', pie: 'Vuelos compartidos' },
+      { src: 'assets/img/amigos/Bea3.jpg', pie: 'Escala en el paraíso' },
+      { src: 'assets/img/amigos/Bea4.jpg', pie: 'Después del turno' }
     ],
     sellos: [
-      { tipo: 'entrada', fecha: '2024-01-20', texto: 'Mensaje EDITABLE de Bea.' }
+      { tipo: 'entrada', fecha: '2026-09-17', texto: 'Tu primer beso de 3' }
     ]
   },
   {
@@ -195,13 +195,13 @@ const AMIGOS = [
     asiento: '14B',
     categoria: 'normal',
     fotos: [
-      { src: 'assets/img/amigos/ines1-01.jpg', pie: 'Con Inés en cabina' },
-      { src: 'assets/img/amigos/ines1-02.jpg', pie: 'Turno de noche' },
-      { src: 'assets/img/amigos/ines1-03.jpg', pie: 'Escala en Roma' },
-      { src: 'assets/img/amigos/ines1-04.jpg', pie: 'Café antes del vuelo' }
+      { src: 'assets/img/amigos/InesB1.jpg', pie: 'Con Inés en cabina' },
+      { src: 'assets/img/amigos/InesB2.jpg', pie: 'Turno de noche' },
+      { src: 'assets/img/amigos/InesB3.jpg', pie: 'Escala en Roma' },
+      { src: 'assets/img/amigos/InesB4.jpg', pie: 'Café antes del vuelo' }
     ],
     sellos: [
-      { tipo: 'entrada', fecha: '2024-02-15', texto: 'Mensaje EDITABLE de Inés.' }
+      { tipo: 'entrada', fecha: '2026-09-17', texto: 'Pulgas aventureras por el mundo' }
     ]
   },
   {
@@ -213,14 +213,14 @@ const AMIGOS = [
     asiento: '14C',
     categoria: 'normal',
     fotos: [
-      { src: 'assets/img/amigos/julia-01.jpg', pie: 'La jefa de turno' },
-      { src: 'assets/img/amigos/julia-02.jpg', pie: 'Destino favorito' },
-      { src: 'assets/img/amigos/julia-03.jpg', pie: 'Noche en el hotel' },
-      { src: 'assets/img/amigos/julia-04.jpg', pie: 'Ruta Madrid - Nueva York' },
-      { src: 'assets/img/amigos/julia-05.jpg', pie: 'Después del último vuelo' }
+      { src: 'assets/img/amigos/Julia1.jpg', pie: 'La jefa de turno' },
+      { src: 'assets/img/amigos/Julia2.jpg', pie: 'Destino favorito' },
+      { src: 'assets/img/amigos/Julia3.jpg', pie: 'Noche en el hotel' },
+      { src: 'assets/img/amigos/Julia4.jpg', pie: 'Ruta Madrid - Nueva York' },
+      { src: 'assets/img/amigos/Julia5.jpg', pie: 'Después del último vuelo' }
     ],
     sellos: [
-      { tipo: 'entrada', fecha: '2024-05-22', texto: 'Mensaje EDITABLE de Julia.' }
+      { tipo: 'entrada', fecha: '2026-09-17', texto: 'Fotógrafa y viajera, aunque vas a acabar sin rodillas por agacharte a hacerte la foto' }
     ]
   },
   {
@@ -232,14 +232,14 @@ const AMIGOS = [
     asiento: '14D',
     categoria: 'normal',
     fotos: [
-      { src: 'assets/img/amigos/maria-01.jpg', pie: 'Compañera de fatigas' },
-      { src: 'assets/img/amigos/maria-02.jpg', pie: 'Siempre con una sonrisa' },
-      { src: 'assets/img/amigos/maria-03.jpg', pie: 'Layover en Estambul' },
-      { src: 'assets/img/amigos/maria-04.jpg', pie: 'Cenita después del vuelo' },
-      { src: 'assets/img/amigos/maria-05.jpg', pie: 'Equipo de cabina' }
+      { src: 'assets/img/amigos/Maria1.jpg', pie: 'Compañera de fatigas' },
+      { src: 'assets/img/amigos/Maria2.jpg', pie: 'Siempre con una sonrisa' },
+      { src: 'assets/img/amigos/Maria3.jpg', pie: 'Layover en Estambul' },
+      { src: 'assets/img/amigos/Maria4.jpg', pie: 'Cenita después del vuelo' },
+      { src: 'assets/img/amigos/Maria5.jpg', pie: 'Equipo de cabina' }
     ],
     sellos: [
-      { tipo: 'entrada', fecha: '2024-11-30', texto: 'Mensaje EDITABLE de María.' }
+      { tipo: 'entrada', fecha: '2026-09-17', texto: 'Vaya dos joyitas, en los vuelos dejáis ciego hasta al comandante y borracho a Adam' }
     ]
   },
 
@@ -253,13 +253,13 @@ const AMIGOS = [
     asiento: '09A',
     categoria: 'normal',
     fotos: [
-      { src: 'assets/img/amigos/aitana-01.jpg', pie: 'Fiesta de la urba' },
-      { src: 'assets/img/amigos/aitana-02.jpg', pie: 'Verano eterno' },
-      { src: 'assets/img/amigos/aitana-03.jpg', pie: 'Risas garantizadas' },
-      { src: 'assets/img/amigos/aitana-04.jpg', pie: 'Nochevieja juntas' }
+      { src: 'assets/img/amigos/Aitana1.jpg', pie: 'Fiesta de la urba' },
+      { src: 'assets/img/amigos/Aitana2.jpg', pie: 'Verano eterno' },
+      { src: 'assets/img/amigos/Aitana3.jpg', pie: 'Risas garantizadas' },
+      { src: 'assets/img/amigos/Aitana4.jpg', pie: 'Nochevieja juntas' }
     ],
     sellos: [
-      { tipo: 'entrada', fecha: '2023-06-15', texto: 'Mensaje EDITABLE de Aitana.' }
+      { tipo: 'entrada', fecha: '2026-09-17', texto: 'Zipi y Zape si tuviesen la regla. Os falta compartir el cigarro por la ventana. Desde bien pequeñitas siempre juntas.' }
     ]
   },
   {
@@ -271,12 +271,12 @@ const AMIGOS = [
     asiento: '09B',
     categoria: 'normal',
     fotos: [
-      { src: 'assets/img/amigos/claudia-01.jpg', pie: 'Claudia en estado puro' },
-      { src: 'assets/img/amigos/claudia-02.jpg', pie: 'Sesión de fotos' },
-      { src: 'assets/img/amigos/claudia-03.jpg', pie: 'Plan de domingo' }
+      { src: 'assets/img/amigos/Claudia3.jpg', pie: 'Claudia en estado puro' },
+      { src: 'assets/img/amigos/Claudia2.jpg', pie: 'Sesión de fotos' },
+      { src: 'assets/img/amigos/Claudia1.jpg', pie: 'Plan de domingo' }
     ],
     sellos: [
-      { tipo: 'entrada', fecha: '2023-03-08', texto: 'Mensaje EDITABLE de Claudia.' }
+      { tipo: 'entrada', fecha: '2026-09-17', texto: 'Esta tambien podría ser Zipi, pero tira más a ser de suecia. Prácticamente la has cuidado como si fuera tu hermana y estoy seguro de que ha aprendido mucho' }
     ]
   },
   {
@@ -286,14 +286,14 @@ const AMIGOS = [
     numeroPasaporte: 'M23-PDU-003',
     fechaEmision: '2019-01-25',
     asiento: '09C',
-    categoria: 'normal',
+    categoria: 'diplomatico',
     fotos: [
-      { src: 'assets/img/amigos/miky-01.jpg', pie: 'Miky de fiesta' },
-      { src: 'assets/img/amigos/miky-02.jpg', pie: 'Vacaciones en grupo' },
-      { src: 'assets/img/amigos/miky-03.jpg', pie: 'Plan espontáneo' }
+      { src: 'assets/img/amigos/Miky1.jpg', pie: 'Miky de fiesta' },
+      { src: 'assets/img/amigos/Miky2.jpg', pie: 'Vacaciones en grupo' },
+      { src: 'assets/img/amigos/Miky3.jpg', pie: 'Plan espontáneo' }
     ],
     sellos: [
-      { tipo: 'entrada', fecha: '2024-01-25', texto: 'Mensaje EDITABLE de Miky.' }
+      { tipo: 'entrada', fecha: '2026-09-17', texto: 'El Hermano Oso. Padre de la urba y un gran confidente para ti. Por muchas más partidas de cricket juntos.' }
     ]
   },
   {
@@ -305,11 +305,11 @@ const AMIGOS = [
     asiento: '09D',
     categoria: 'normal',
     fotos: [
-      { src: 'assets/img/amigos/paula1-01.jpg', pie: 'Risas con Paula' },
-      { src: 'assets/img/amigos/paula1-02.jpg', pie: 'Atardecer de urba' }
+      { src: 'assets/img/amigos/Paula1.jpg', pie: 'Risas con Paula' },
+      { src: 'assets/img/amigos/Paula2.jpg', pie: 'Atardecer de urba' }
     ],
     sellos: [
-      { tipo: 'entrada', fecha: '2024-04-12', texto: 'Mensaje EDITABLE de Paula.' }
+      { tipo: 'entrada', fecha: '2026-09-17', texto: 'Hasta de chiquitita la sacabas 3 cabezas. Por algo te llaman Klimanjaro' }
     ]
   },
   {
@@ -321,10 +321,10 @@ const AMIGOS = [
     asiento: '09E',
     categoria: 'normal',
     fotos: [
-      { src: 'assets/img/amigos/vicky-01.jpg', pie: 'Vicky y su flow' }
+      { src: 'assets/img/amigos/Vicky1.jpg', pie: 'Vicky y su flow' }
     ],
     sellos: [
-      { tipo: 'entrada', fecha: '2023-09-18', texto: 'Mensaje EDITABLE de Vicky.' }
+      { tipo: 'entrada', fecha: '2026-09-17', texto: 'La niña del pelo rizado. Eres como una hermana para ella.' }
     ]
   }
 
@@ -338,16 +338,16 @@ const GRUPOS_FOTO = [
   {
     id: 'urba-grupal',
     fotos: [
-      { src: 'assets/img/amigos/grupal-urba-01.jpg', pie: 'La Urba al completo' },
-      { src: 'assets/img/amigos/grupal-urba-02.jpg', pie: 'Fiesta de verano' },
-      { src: 'assets/img/amigos/grupal-urba-03.jpg', pie: 'Merienda en el parque' },
-      { src: 'assets/img/amigos/grupal-urba-04.jpg', pie: 'Escapada rural' },
-      { src: 'assets/img/amigos/grupal-urba-05.jpg', pie: 'Nochevieja' },
-      { src: 'assets/img/amigos/grupal-urba-06.jpg', pie: 'Después de cenar' }
+      { src: 'assets/img/amigos/Urba.jpg', pie: 'La Urba al completo' },
+      { src: 'assets/img/amigos/Urba2.jpg', pie: 'Fiesta de verano' },
+      { src: 'assets/img/amigos/Urba3.jpg', pie: 'Merienda en el parque' },
+      { src: 'assets/img/amigos/Urba4.jpg', pie: 'Escapada rural' },
+      { src: 'assets/img/amigos/Urba5.jpg', pie: 'Nochevieja' },
+      { src: 'assets/img/amigos/Urba6.jpg', pie: 'Después de cenar' }
     ],
     fecha: 'Verano 2023',
     lugar: 'La Urba',
-    personas: ['aitana', 'claudia', 'miky', 'paula-1', 'vicky'],
-    pie: 'El grupo de siempre, la Urba entera en una foto. (EDITABLE)'
+    personas: ['aitana', 'claudia', 'miky', 'paula-1', 'vicky','Sergio'],
+    pie: 'El grupo de siempre, con sus risas, sus bailes, sus peleas y sus dramas. Creo que todos podemos decir que nunca has sido nuestra amiga, eres nuestra hermana. Gracias por estar siempre ahí, por cuidarnos y por hacernos reír. Te queremos ahora y te querremos siempre, como parte de nuestras familias.'
   }
 ];

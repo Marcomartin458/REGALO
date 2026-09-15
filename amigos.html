@@ -54,7 +54,7 @@
       <rect y="180" width="1920" height="8" fill="#c9a227" opacity="0.4"/>
       <rect y="196" width="1920" height="2" fill="#c9a227" opacity="0.25"/>
 
-      <!-- ============== VENTANALES CON ATARDECER ============== -->
+      <!-- Ventanales con atardecer -->
       <g>
         <g transform="translate(120, 240)">
           <rect x="-6" y="-6" width="412" height="580" rx="4" fill="#6b4a2a"/>
@@ -129,7 +129,7 @@
 
       <ellipse cx="960" cy="440" rx="900" ry="140" fill="url(#amBrumaVentana)"/>
 
-      <!-- ============== LÁMPARAS COLGANTES ============== -->
+      <!-- Lámparas colgantes -->
       <g>
         <line x1="360" y1="0" x2="360" y2="180" stroke="#8a6a3a" stroke-width="2"/>
         <path d="M 320,180 L 400,180 L 380,240 L 340,240 Z" fill="#c9a227" opacity="0.9"/>
@@ -151,7 +151,7 @@
         <circle cx="1560" cy="255" r="60" fill="url(#amLuz)"/>
       </g>
 
-      <!-- ============== SUELO DE MÁRMOL EN DAMERO ============== -->
+      <!-- Suelo de mármol -->
       <rect y="880" width="1920" height="200" fill="url(#amSuelo)"/>
 
       <g opacity="0.35">
@@ -170,7 +170,7 @@
         <line x1="960" y1="880" x2="2120"  y2="1080" stroke="#a89878" stroke-width="1"/>
       </g>
 
-      <!-- ============== PLANTAS DE INTERIOR ============== -->
+      <!-- Plantas de interior -->
       <g transform="translate(30, 660)">
         <path d="M 20,260 L 140,260 L 130,340 L 30,340 Z" fill="#8a6a3a"/>
         <path d="M 20,260 L 140,260 L 130,280 L 30,280 Z" fill="#a88850"/>
@@ -189,7 +189,7 @@
         <ellipse cx="80" cy="170" rx="35" ry="28" fill="#6a8a50"/>
       </g>
 
-      <!-- ============== MOSTRADOR DE PASAPORTES ============== -->
+      <!-- Mostrador -->
       <g transform="translate(600, 720)" opacity="0.95">
         <rect x="0" y="0" width="720" height="180" rx="6" fill="#6b4a2a"/>
         <rect x="0" y="0" width="720" height="24" rx="6" fill="#8a6a3a"/>
@@ -238,6 +238,7 @@
       </div>
     </header>
 
+    <!-- ============== VISADOS COLECTIVOS ============== -->
     <section class="seccion-visados">
       <div class="contenedor">
         <div class="seccion-titulo">
@@ -251,6 +252,21 @@
 
     <div class="contenedor"><div class="divisor-elegante"><span>❖</span></div></div>
 
+    <!-- ============== LOS CAPITANES ============== -->
+    <section class="seccion-capitanes">
+      <div class="contenedor">
+        <div class="seccion-titulo seccion-titulo--capitanes">
+          <span class="adorno">★</span>
+          <h2>Los Capitanes</h2>
+          <span class="adorno">★</span>
+        </div>
+        <div id="fila-capitanes" class="fila-capitanes"></div>
+      </div>
+    </section>
+
+    <div class="contenedor"><div class="divisor-elegante"><span>❖</span></div></div>
+
+    <!-- ============== PERSONAL DIPLOMÁTICO ============== -->
     <section class="seccion-diplomatica">
       <div class="contenedor">
         <div class="seccion-titulo">
@@ -264,15 +280,43 @@
 
     <div class="contenedor"><div class="divisor-elegante"><span>❖</span></div></div>
 
-    <section class="seccion-pasaportes">
+    <!-- ============== REPÚBLICA DEL BARRIO ============== -->
+    <section class="seccion-pais seccion-pais--barrio">
       <div class="contenedor">
-        <div class="seccion-titulo">
-          <span class="adorno">✦</span>
-          <h2>Pasajeros · Pasaportes</h2>
-          <span class="adorno">✦</span>
+        <div class="seccion-titulo seccion-titulo--barrio">
+          <span class="adorno">◆</span>
+          <h2>República del Barrio</h2>
+          <span class="adorno">◆</span>
         </div>
-        <div id="chips-paises" class="chips-paises" role="group" aria-label="Filtrar por país emisor"></div>
-        <div id="grid-pasaportes" class="grid-pasaportes"></div>
+        <div id="grid-barrio" class="grid-pasaportes"></div>
+      </div>
+    </section>
+
+    <div class="contenedor"><div class="divisor-elegante"><span>❖</span></div></div>
+
+    <!-- ============== ESTADO DEL TRABAJO ============== -->
+    <section class="seccion-pais seccion-pais--trabajo">
+      <div class="contenedor">
+        <div class="seccion-titulo seccion-titulo--trabajo">
+          <span class="adorno">◆</span>
+          <h2>Estado del Trabajo</h2>
+          <span class="adorno">◆</span>
+        </div>
+        <div id="grid-trabajo" class="grid-pasaportes"></div>
+      </div>
+    </section>
+
+    <div class="contenedor"><div class="divisor-elegante"><span>❖</span></div></div>
+
+    <!-- ============== PRINCIPADO DE LA URBA ============== -->
+    <section class="seccion-pais seccion-pais--urba">
+      <div class="contenedor">
+        <div class="seccion-titulo seccion-titulo--urba">
+          <span class="adorno">◆</span>
+          <h2>Principado de la Urba</h2>
+          <span class="adorno">◆</span>
+        </div>
+        <div id="grid-urba" class="grid-pasaportes"></div>
       </div>
     </section>
   </main>

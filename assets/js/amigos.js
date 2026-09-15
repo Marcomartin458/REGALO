@@ -1,20 +1,20 @@
 /* ==========================================================================
    AMIGOS.JS — Control de Fronteras
-   - Renderiza visados colectivos (con carrusel en el modal), personal
-     especial (diplomáticos + capitanes) y pasaportes individuales.
-   - Filtros por país, apertura/cierre de pasaporte (expand in-place,
-     sin solapar vecinos), carrusel de fotos individuales.
+   - Visados colectivos (con carrusel en el modal)
+   - Los Capitanes
+   - Personal diplomático
+   - Pasaportes por país: Barrio / Trabajo / Urba (cada uno en su sección)
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
   const panelVisados = document.getElementById('visados-colectivos');
+  const filaCapitanes = document.getElementById('fila-capitanes');
   const filaDiplomatica = document.getElementById('personal-diplomatico');
-  const gridPasaportes = document.getElementById('grid-pasaportes');
-  const chipsPaises = document.getElementById('chips-paises');
+  const gridBarrio = document.getElementById('grid-barrio');
+  const gridTrabajo = document.getElementById('grid-trabajo');
+  const gridUrba = document.getElementById('grid-urba');
   const modal = document.getElementById('modal-visado');
 
-  if(!gridPasaportes || typeof AMIGOS === 'undefined') return;
-
-  let filtroActivo = 'todos';
+  if(!gridBarrio || typeof AMIGOS === 'undefined') return;
 
   /* ---------------------------------------------------------------
      UTILIDADES
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ---------------------------------------------------------------
-     MODAL VISADO COLECTIVO (con carrusel interno)
+     MODAL VISADO COLECTIVO
      --------------------------------------------------------------- */
   function abrirModalVisado(idGrupo){
     const grupo = GRUPOS_FOTO.find(g => g.id === idGrupo);
@@ -165,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
       codigoTapa = pais.codigo;
     }
 
-    // Bloque foto + miniaturas + indicador (va arriba de la columna izquierda)
     const bloqueFoto = `
       <div class="pasaporte__foto">
         <img class="js-foto-principal" src="${amigo.fotos[0].src}" alt="${amigo.nombre}" loading="lazy" onerror="this.parentElement.classList.add('sin-foto')">
@@ -182,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sellos = amigo.sellos.map((s, i) => `
       <div class="sello" style="--rot:${rotacionSello(amigo.id + i)}">
         <span class="sello__cabecera">CONTROL DE FRONTERAS · ${pais.codigo}</span>
-        <span class="sello__fecha">${formatearFecha(s.fecha)}</span>
+        <span class="sello__fecha">${s.fecha}</span>
         <p class="sello__texto">${s.texto}</p>
         <span class="sello__firma">Firmado ✕ ${amigo.nombre.split(' ')[0]}</span>
       </div>
@@ -258,11 +257,25 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ---------------------------------------------------------------
-     PERSONAL ESPECIAL (diplomáticos + capitanes)
+     CAPITANES
+     --------------------------------------------------------------- */
+  function renderCapitanes(){
+    if(!filaCapitanes) return;
+    const capitanes = AMIGOS.filter(a => a.categoria === 'capitanes');
+    if(!capitanes.length){
+      filaCapitanes.closest('.seccion-capitanes')?.setAttribute('hidden', '');
+      return;
+    }
+    filaCapitanes.innerHTML = capitanes.map((a, i) => marcadoPasaporte(a, i)).join('');
+    filaCapitanes.querySelectorAll('.pasaporte').forEach(enlazarInteracciones);
+  }
+
+  /* ---------------------------------------------------------------
+     DIPLOMÁTICOS
      --------------------------------------------------------------- */
   function renderDiplomaticos(){
     if(!filaDiplomatica) return;
-    const especiales = AMIGOS.filter(a => a.categoria !== 'normal');
+    const especiales = AMIGOS.filter(a => a.categoria === 'diplomatico');
     if(!especiales.length){
       filaDiplomatica.closest('.seccion-diplomatica')?.setAttribute('hidden', '');
       return;
@@ -272,53 +285,39 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ---------------------------------------------------------------
-     PASAPORTES NORMALES + FILTROS
+     PASAJEROS POR PAÍS (Barrio / Trabajo / Urba)
      --------------------------------------------------------------- */
-  function renderChips(){
-    if(!chipsPaises) return;
-    const entradas = Object.entries(PAISES);
-    chipsPaises.innerHTML = `<button class="chip ${filtroActivo === 'todos' ? 'activo' : ''}" data-pais="todos" type="button">Todos</button>` +
-      entradas.map(([clave, p]) => `<button class="chip ${filtroActivo === clave ? 'activo' : ''}" data-pais="${clave}" type="button">${p.nombre}</button>`).join('');
+  function renderPasaportesPorPais(){
+    const mapa = {
+      barrio:  gridBarrio,
+      trabajo: gridTrabajo,
+      urba:    gridUrba
+    };
 
-    chipsPaises.querySelectorAll('.chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        filtroActivo = chip.dataset.pais;
-        renderChips();
-        aplicarFiltro();
-      });
-    });
-  }
+    Object.entries(mapa).forEach(([clavePais, contenedor]) => {
+      if(!contenedor) return;
+      const amigosDelPais = AMIGOS.filter(a => a.categoria === 'normal' && a.pais === clavePais);
 
-  function renderPasaportesNormales(){
-    const normales = AMIGOS.filter(a => a.categoria === 'normal');
-    gridPasaportes.innerHTML = normales.map((a, i) => marcadoPasaporte(a, i)).join('');
-    gridPasaportes.querySelectorAll('.pasaporte').forEach(art => {
-      const idAmigo = art.dataset.id;
-      const amigo = normales.find(a => a.id === idAmigo);
-      art.dataset.pais = amigo.pais;
-      enlazarInteracciones(art);
+      if(!amigosDelPais.length){
+        contenedor.closest('.seccion-pais')?.setAttribute('hidden', '');
+        return;
+      }
+
+      contenedor.innerHTML = amigosDelPais.map((a, i) => marcadoPasaporte(a, i)).join('');
+      contenedor.querySelectorAll('.pasaporte').forEach(enlazarInteracciones);
     });
+
     if(typeof inicializarRevelado === 'function') inicializarRevelado();
     else if(typeof configurarRevelado === 'function') configurarRevelado();
-  }
-
-  function aplicarFiltro(){
-    gridPasaportes.querySelectorAll('.pasaporte').forEach(art => {
-      const visible = filtroActivo === 'todos' || art.dataset.pais === filtroActivo;
-      art.classList.toggle('oculto', !visible);
-    });
   }
 
   /* ---------------------------------------------------------------
      INICIO
      --------------------------------------------------------------- */
   renderVisados();
+  renderCapitanes();
   renderDiplomaticos();
-  renderChips();
-  renderPasaportesNormales();
-  aplicFiltroSafe();
-
-  function aplicFiltroSafe(){ aplicarFiltro(); }
+  renderPasaportesPorPais();
 
   if(typeof inicializarRevelado !== 'function' && typeof configurarRevelado !== 'function'){
     document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('revelado'));

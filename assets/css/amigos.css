@@ -1156,3 +1156,152 @@ footer.pie .corazon{ color: var(--oro); }
   .sello-grupal__anillo{ animation: none; }
   .pasaporte.abierto .pasaporte__interior{ animation: none; }
 }
+
+/* ==========================================================================
+   SECCIÓN — LOS CAPITANES (destacada)
+   ========================================================================== */
+.seccion-capitanes{
+  position: relative;
+  padding: clamp(2rem, 4vh, 3rem) 0;
+}
+
+.seccion-titulo--capitanes{
+  background: linear-gradient(160deg,
+    rgba(74, 40, 112, 0.14),
+    rgba(201, 162, 39, 0.14));
+  border-color: rgba(201, 162, 39, 0.55);
+  box-shadow:
+    0 8px 24px -10px rgba(74, 40, 112, 0.35),
+    0 0 30px -12px rgba(201, 162, 39, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.seccion-titulo--capitanes h2{
+  color: #4a2870;
+  text-shadow:
+    0 1px 0 rgba(255, 250, 235, 0.9),
+    0 0 20px rgba(201, 162, 39, 0.35);
+  letter-spacing: 0.16em;
+}
+
+.seccion-titulo--capitanes .adorno{
+  color: #b8923a;
+  text-shadow: 0 0 10px rgba(201, 162, 39, 0.7);
+}
+
+.fila-capitanes{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.6rem;
+  padding: 1rem 0;
+}
+
+.fila-capitanes .pasaporte{
+  max-width: 260px;
+  width: 100%;
+  flex: 1 1 260px;
+}
+
+.fila-capitanes .pasaporte__tapa{
+  box-shadow:
+    0 20px 40px -14px rgba(74, 40, 112, 0.5),
+    0 0 30px -12px rgba(201, 162, 39, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.fila-capitanes .pasaporte__tapa:hover{
+  box-shadow:
+    0 28px 50px -14px rgba(74, 40, 112, 0.6),
+    0 0 45px -8px rgba(201, 162, 39, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================================================
+   SECCIONES POR PAÍS — Barrio (rojo) / Trabajo (azul) / Urba (verde)
+   ========================================================================== */
+.seccion-pais{
+  position: relative;
+  padding: clamp(2rem, 4vh, 3rem) 0;
+}
+
+/* --- REPÚBLICA DEL BARRIO (burdeos / rojo) --- */
+.seccion-titulo--barrio{
+  background: linear-gradient(160deg,
+    rgba(107, 26, 40, 0.14),
+    rgba(201, 162, 39, 0.1));
+  border-color: rgba(107, 26, 40, 0.5);
+  box-shadow:
+    0 8px 24px -10px rgba(107, 26, 40, 0.35),
+    0 0 30px -12px rgba(107, 26, 40, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+.seccion-titulo--barrio h2{
+  color: #6b1a28;
+  text-shadow:
+    0 1px 0 rgba(255, 250, 235, 0.9),
+    0 0 20px rgba(107, 26, 40, 0.25);
+  letter-spacing: 0.14em;
+}
+.seccion-titulo--barrio .adorno{
+  color: #b3352f;
+  text-shadow: 0 0 10px rgba(179, 53, 47, 0.6);
+}
+
+/* --- ESTADO DEL TRABAJO (azul marino) --- */
+.seccion-titulo--trabajo{
+  background: linear-gradient(160deg,
+    rgba(22, 35, 63, 0.14),
+    rgba(201, 162, 39, 0.1));
+  border-color: rgba(22, 35, 63, 0.5);
+  box-shadow:
+    0 8px 24px -10px rgba(22, 35, 63, 0.35),
+    0 0 30px -12px rgba(22, 35, 63, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+.seccion-titulo--trabajo h2{
+  color: #16233f;
+  text-shadow:
+    0 1px 0 rgba(255, 250, 235, 0.9),
+    0 0 20px rgba(22, 35, 63, 0.3);
+  letter-spacing: 0.14em;
+}
+.seccion-titulo--trabajo .adorno{
+  color: #2c5f8a;
+  text-shadow: 0 0 10px rgba(44, 95, 138, 0.6);
+}
+
+/* --- PRINCIPADO DE LA URBA (verde bosque) --- */
+.seccion-titulo--urba{
+  background: linear-gradient(160deg,
+    rgba(30, 58, 40, 0.14),
+    rgba(201, 162, 39, 0.1));
+  border-color: rgba(30, 58, 40, 0.5);
+  box-shadow:
+    0 8px 24px -10px rgba(30, 58, 40, 0.35),
+    0 0 30px -12px rgba(30, 58, 40, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+.seccion-titulo--urba h2{
+  color: #1e3a28;
+  text-shadow:
+    0 1px 0 rgba(255, 250, 235, 0.9),
+    0 0 20px rgba(30, 58, 40, 0.25);
+  letter-spacing: 0.14em;
+}
+.seccion-titulo--urba .adorno{
+  color: #2f6e4f;
+  text-shadow: 0 0 10px rgba(47, 110, 79, 0.6);
+}
+
+/* ==========================================================================
+   RESPONSIVE — Ajustes para las secciones nuevas
+   ========================================================================== */
+@media (max-width: 600px){
+  .fila-capitanes .pasaporte{
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
