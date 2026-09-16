@@ -122,19 +122,69 @@ function configurarNavbar() {
   }, { passive: true });
 
   if (hamburguesa && enlaces) {
+
+    /* Estado del menú centralizado en estas dos funciones, para que
+       todas las formas de cerrarlo (enlace, tocar fuera, Escape,
+       rotar el móvil) dejen siempre el mismo estado y no se quede
+       aria-expanded="true" colgado. */
+    function abrirMenu() {
+      enlaces.classList.add('abierta');
+      hamburguesa.classList.add('abierta');
+      hamburguesa.setAttribute('aria-expanded', 'true');
+    }
+
+    function cerrarMenu() {
+      enlaces.classList.remove('abierta');
+      hamburguesa.classList.remove('abierta');
+      hamburguesa.setAttribute('aria-expanded', 'false');
+    }
+
+    function menuAbierto() {
+      return enlaces.classList.contains('abierta');
+    }
+
     hamburguesa.addEventListener('click', () => {
-      const abierta = enlaces.classList.toggle('abierta');
-      hamburguesa.classList.toggle('abierta', abierta);
-      hamburguesa.setAttribute('aria-expanded', String(abierta));
+      if (menuAbierto()) cerrarMenu();
+      else abrirMenu();
       AudioAeronautico.tocarClic();
     });
 
+    // Al pulsar cualquier enlace del menú
     enlaces.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        enlaces.classList.remove('abierta');
-        hamburguesa.classList.remove('abierta');
-      });
+      link.addEventListener('click', cerrarMenu);
     });
+
+    /* CIERRE AL TOCAR FUERA DEL MENÚ
+       Se usa 'pointerdown' y no 'click' porque en Safari iOS los taps
+       sobre elementos sin interactividad (un <p>, el fondo, etc.) no
+       siempre disparan 'click' a nivel de document, y el menú se
+       quedaba abierto sin forma de cerrarlo.
+       Se escucha en fase de captura para que funcione incluso si algún
+       contenedor detiene la propagación del evento. */
+    document.addEventListener('pointerdown', (e) => {
+      if (!menuAbierto()) return;
+      // Si el toque cae dentro de la propia navbar, no cerramos:
+      // de eso ya se encargan el botón y los enlaces.
+      if (nav.contains(e.target)) return;
+      cerrarMenu();
+    }, true);
+
+    // Cierre con la tecla Escape (escritorio y teclados externos)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menuAbierto()) {
+        cerrarMenu();
+        hamburguesa.focus();
+      }
+    });
+
+    /* Al girar el móvil o pasar a escritorio, el menú desplegable deja
+       de tener sentido y podría quedarse visible con el layout ancho. */
+    window.addEventListener('resize', () => {
+      if (menuAbierto() && window.innerWidth > 860) cerrarMenu();
+    });
+
+    // Estado inicial coherente
+    cerrarMenu();
   }
 
   // Detección de página activa

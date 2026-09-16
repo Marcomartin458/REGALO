@@ -61,7 +61,7 @@ const AMIGOS = [
     asiento: '01D',
     categoria: 'diplomatico',
     fotos: [
-      { src: 'assets/img/amigos/MarcoyMarta3.jpg', pie: 'Los dos' },
+      { src: 'assets/img/amigos/MarcoyMarta3.JPG', pie: 'Los dos' },
       { src: 'assets/img/amigos/MarcoyMarta2.jpg', pie: 'De viaje' },
       { src: 'assets/img/amigos/MarcoyMarta.jpg', pie: 'De viaje' }
     ],
@@ -345,7 +345,7 @@ const GRUPOS_FOTO = [
       { src: 'assets/img/amigos/Urba5.jpg', pie: 'Nochevieja' },
       { src: 'assets/img/amigos/Urba6.jpg', pie: 'Después de cenar' }
     ],
-    fecha: 'Verano 2023',
+    fecha: 'Mocosos',
     lugar: 'La Urba',
     personas: ['aitana', 'claudia', 'miky', 'paula-1', 'vicky','Sergio'],
     pie: 'El grupo de siempre, con sus risas, sus bailes, sus peleas y sus dramas. Creo que todos podemos decir que nunca has sido nuestra amiga, eres nuestra hermana. Gracias por estar siempre ahí, por cuidarnos y por hacernos reír. Te queremos ahora y te querremos siempre, como parte de nuestras familias.'
